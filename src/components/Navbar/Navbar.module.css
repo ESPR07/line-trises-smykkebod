@@ -1,0 +1,64 @@
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--highlight);
+  height: 60px;
+  color: var(--background);
+  padding-inline: 10px;
+}
+
+.navLogo {
+  display: block;
+  height: 60px;
+  width: 100px;
+  background-image: url("/logo.svg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.navList {
+  display: flex;
+  list-style: none;
+  gap: 40px;
+  font-size: 1.2rem;
+  padding: 0;
+}
+
+.navInteractions {
+  display: flex; 
+  list-style: none;
+  margin: 0;
+  padding: 0; 
+
+    li {
+      width: 35px;
+      height: 35px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    &:hover{
+      cursor: pointer;
+    }
+}
+
+.cartContainer {
+  background-image: url("/src/assets/cart_icon.svg");
+  display: flex;
+  justify-content: end;
+
+    .cartCount{
+      width: 25px;
+      height: 25px;
+      background-image: url("/src/assets/cart_count.svg");
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      translate: 5px -5px;
+      color: var(--highlight);
+      text-align: center;
+    }
+}

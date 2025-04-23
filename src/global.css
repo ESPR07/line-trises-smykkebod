@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'poppins';
+  src: url("/src/assets/fonts/Poppins-Regular.ttf");
+}
+
+@font-face {
+  font-family: 'splash';
+  src: url("/src/assets/fonts/Splash-Regular.ttf");
+}
+
+:root {
+  --background: rgba(255, 252, 240, 1);
+  --boxColor: rgba(255, 236, 210, 1);
+  --compContainer: rgba(61, 61, 61, 1);
+  --highlight: rgba(87, 142, 126, 1);
+  --CTA: rgba(241, 117, 9, 1);
+}
+
+html, body {
+  box-sizing: border-box;
+  background-color: var(--background);
+  font-family: 'poppins', 'Courier New', Courier, monospace;
+  margin: 0;
+  padding: 0;
+}
