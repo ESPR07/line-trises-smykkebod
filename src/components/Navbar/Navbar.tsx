@@ -3,7 +3,7 @@ import style from "./Navbar.module.css";
 import { useState } from "react";
 
 function Navbar() {
-  const [burgerToggle, setBurgerToggle] = useState(false);
+  const [burgerToggle, setBurgerToggle] = useState<boolean>(false);
 
   return(
     <>
