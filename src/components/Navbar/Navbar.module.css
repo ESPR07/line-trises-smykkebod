@@ -1,11 +1,14 @@
 nav {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   background-color: var(--highlight);
   height: 60px;
   color: var(--background);
   padding-inline: 10px;
+  position: relative;
+  z-index: 10;
 }
 
 .navLogo {
@@ -15,15 +18,17 @@ nav {
   background-image: url("/logo.svg");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: center left -5px;
 }
 
-.navList {
-  display: flex;
-  list-style: none;
-  gap: 40px;
-  font-size: 1.2rem;
-  padding: 0;
+.burgerIcon {
+  width: 50px;
+  height: 50px;
+  background-image: url("/src/assets/burger_icon.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  display: none;
 }
 
 .navInteractions {
@@ -61,4 +66,57 @@ nav {
       color: var(--highlight);
       text-align: center;
     }
+}
+
+.navList {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  gap: 40px;
+  font-size: 1.2rem;
+  padding: 0;
+  z-index: 10;
+  color: var(--background);
+}
+
+@media screen and (max-width: 900px) {
+  
+  .navLogo {
+    order: 2;
+  }
+
+  .burgerIcon {
+    display: block;
+    order: 1;
+  }
+
+  .navInteractions {
+    order: 3;
+  }
+
+  .navList {
+    background-color: var(--highlight);
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    padding-block: 20px;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    z-index: 5;
+  }
+
+  .open {
+    transform: translateY(0);
+    transition: transform 0.5s ease-out;
+  }
+
+  .close {
+    transform: translateY(-100%);
+    transition: transform 0.5s ease-in;
+  }
 }
