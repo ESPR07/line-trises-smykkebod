@@ -1,0 +1,104 @@
+.AdBannerContainer {
+  display: flex;
+  position: relative;
+  height: 300px;
+  margin-bottom: 100px;
+}
+
+.imageWrapper {
+  display: grid;
+  grid-auto-flow: column;
+  overflow: hidden;
+  scroll-behavior: smooth;
+
+   img {
+    width: 100vw;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+   }
+}
+
+.carouselDotList {
+  position: absolute;
+  bottom: 10px;
+  left: 15%;
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  gap: 15px;
+  padding: 0;
+
+  .activeDot{
+    background-color: var(--highlight);
+  }
+
+  li {
+    width: 25px;
+    height: 25px;
+    background-color: var(--background);
+    border-radius: 100%;
+
+    &:hover {
+      opacity: 0.5;
+      cursor: pointer;
+    }
+  }
+}
+
+.welcomeBox {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 236, 210, 0.7);
+  color: var(--highlight);
+  bottom: -50px;
+  right: 10%;
+  padding-block: 10px;
+  padding-inline: 50px;
+
+  h1 {
+    padding: 0;
+    margin: 0;
+    font-weight: 200;
+  }
+
+  img {
+    height: 150px;
+  }
+
+  button {
+    width: 80%;
+    height: 30px;
+    border: none;
+    background-color: var(--highlight);
+    border-radius: 5px;
+    color: var(--background);
+    font-size: 1.2rem;
+    transition: all 0.2s ease-out;
+
+    &:hover {
+      background-color: var(--background);
+      color: var(--highlight);
+      transition: all 0.2s ease-in;
+      cursor: pointer;
+    }
+  }
+}
+
+@media screen and (max-width: 900px){
+  .carouselDotList {
+    left: 10px;
+  }
+
+  .welcomeBox {
+    right: 0px;
+    padding-inline: 10px;
+
+    img{
+      height: 100px;
+    }
+  }
+}

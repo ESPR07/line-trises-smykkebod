@@ -1,7 +1,9 @@
+import AdBannerCarousel from "../components/AdBannerCarousel/AdBannerCarousel";
+
 function Homepage() {
   return (
     <main>
-      <p>Homepage!</p>
+      <AdBannerCarousel/>
     </main>
   )
 }

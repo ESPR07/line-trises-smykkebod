@@ -71,7 +71,9 @@ nav {
 .navList {
   position: absolute;
   top: 0;
-  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
   display: flex;
   justify-content: center;
   list-style: none;
