@@ -2,6 +2,7 @@ import './App.css'
 import { Outlet, Route, Routes } from 'react-router'
 import Navbar from './components/Navbar/Navbar'
 import Footer from './components/Footer/Footer'
+import Homepage from './pages/Homepage'
 
 function App() {
   
@@ -18,7 +19,7 @@ function App() {
   return (
     <Routes>
       <Route path='/' element={<Layout/>}>
-        <Route index element={<p>Hello</p>}/>
+        <Route index element={<Homepage/>}/>
       </Route>
     </Routes>
   )
