@@ -1,7 +1,7 @@
 .AdBannerContainer {
   display: flex;
   position: relative;
-  height: 300px;
+  height: 30vw;
   margin-bottom: 100px;
 }
 
@@ -66,7 +66,7 @@
   }
 
   img {
-    height: 150px;
+    height: 10vw;
   }
 
   button {
@@ -89,13 +89,16 @@
 }
 
 @media screen and (max-width: 900px){
-  .carouselDotList {
-    left: 10px;
+  .AdBannerContainer {
+    height: 250px;
   }
 
   .welcomeBox {
-    right: 0px;
     padding-inline: 10px;
+
+    h1 {
+      font-size: 1.5rem;
+    }
 
     img{
       height: 100px;
