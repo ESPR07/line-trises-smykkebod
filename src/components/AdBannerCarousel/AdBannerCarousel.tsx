@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import style from "./AdBannerCarousel.module.css"
+import NavigationButton from "../utils/Button/NavigationButton";
 
 // This will be replaced by real data later
 const images = [
@@ -54,7 +55,7 @@ function AdBannerCarousel() {
       <div className={style.welcomeBox}>
         <h1>Velkommen</h1>
         <img src="/src/assets/logo_green.svg"/>
-        <button>Oppdag</button>
+        <NavigationButton text="Oppdag" path="#" buttonWidth={100}/>
       </div>
     </div>
   )
