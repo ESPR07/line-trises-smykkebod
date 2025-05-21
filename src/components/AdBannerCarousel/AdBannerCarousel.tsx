@@ -37,14 +37,14 @@ function AdBannerCarousel() {
   }
 
   return(
-    <div className={style.AdBannerContainer} ref={activeImage}>
-      <div className={style.imageWrapper}>
+    <section className={style.AdBannerContainer} ref={activeImage}>
+      <article className={style.imageWrapper}>
         {images.map((image, index) => {
           return(
             <img key={index} id={`image-${index}`} src={image.imageurl} alt={image.imagealt} onError={fallbackImage}/>
           )
         })}
-      </div>
+      </article>
       <ul className={style.carouselDotList}>
         {images.map((_, index) => {
           return (
@@ -52,12 +52,12 @@ function AdBannerCarousel() {
           )
         })}
       </ul>
-      <div className={style.welcomeBox}>
+      <article className={style.welcomeBox}>
         <h1>Velkommen</h1>
         <img src="/src/assets/logo_green.svg"/>
         <NavigationButton text="Oppdag" path="#" buttonWidth={100}/>
-      </div>
-    </div>
+      </article>
+    </section>
   )
 }
 
