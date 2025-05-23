@@ -16,7 +16,7 @@
 
 .infoDivider {
   border: dotted 2px var(--highlight);
-  width: 99%;
+  width: calc(100% - 4px);
   margin-top: 10px;
   margin-bottom: 40px;
 }
