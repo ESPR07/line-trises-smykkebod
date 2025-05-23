@@ -1,0 +1,63 @@
+.carouselContainer {
+  background-color: var(--compContainer);
+  position: relative;
+  padding-block: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.newProductsHeader {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--highlight);
+  color: var(--background);
+  height: 50px;
+  padding-inline: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  width: 300px;
+}
+
+.sideSwipeLeft, .sideSwipeRight {
+  height: 50px;
+  width: 50px;
+  border: none;
+  background-color: rgba(0, 0, 0, 0);
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.sideSwipeLeft {
+  background-image: url("/src/assets/side_swipe.svg");
+
+    &:hover {
+      background-image: url("/src/assets/side_swipe_hovered.svg");
+    }
+}
+
+.sideSwipeRight {
+  background-image: url("/src/assets/side_swipe.svg");
+  rotate: 180deg;
+
+    &:hover {
+      background-image: url("/src/assets/side_swipe_hovered.svg");
+    }
+}
+
+.newProductList {
+  display: flex;
+  gap: 30px;
+  width: 85%;
+  overflow-x: hidden;
+  /* mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent 100% ); */
+  padding-left: 0;
+  margin-inline: 2vw;
+}
+

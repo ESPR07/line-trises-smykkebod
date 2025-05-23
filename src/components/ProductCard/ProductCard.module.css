@@ -55,11 +55,11 @@
     height: 25px;
     width: 45px;
     border-radius: 30px;
-    background-color: red;
+    background-color: rgb(236, 197, 66);
   }
 
   li:nth-child(2) {
-    background-color: blue;
+    background-color: rgb(184, 184, 184);
   }
 }
 
