@@ -1,0 +1,70 @@
+.infoBoxContainer {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.infoHeader {
+  text-align: center;
+  font-weight: 300;
+  font-size: 1.7rem;
+  margin: 0;
+}
+
+.infoDivider {
+  border: dotted 2px var(--highlight);
+  width: 99%;
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+
+.infoContentContainer {
+  display: flex;
+  justify-content: space-around;
+  width: 90%;
+}
+
+.infoImage {
+  width: 40vw;
+  object-fit: cover;
+}
+
+.infoTextContainer {
+  width: 40%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  text-align: center;
+}
+
+.infoText {
+  color: black;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 900px) {
+  .infoContentContainer {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .infoDivider {
+    margin-bottom: 15px;
+  }
+
+  .infoImage {
+    width: 90%;
+    margin-bottom: 20px;
+  }
+
+  .infoTextContainer {
+    width: 90%;
+  }
+}
