@@ -5,9 +5,10 @@ nav {
   align-items: center;
   background-color: var(--highlight);
   height: 60px;
+  width: calc(100% - 20px);
   color: var(--background);
   padding-inline: 10px;
-  position: relative;
+  position: fixed;
   z-index: 10;
 }
 
@@ -69,7 +70,7 @@ nav {
 }
 
 .navList {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
