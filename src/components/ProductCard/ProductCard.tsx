@@ -1,14 +1,14 @@
 import NavigationButton from "../utils/Button/NavigationButton";
 import style from "./ProductCard.module.css"
 
-function ProductCard() {
+function ProductCard({imageURL, name, price} : {imageURL: string, name: string, price: number}) {
   return(
     <article className={style.productCardContainer}>
-      <img src="/src/assets/pexels-gdtography-277628-6563393.jpg" alt="product" className={style.productImage}/>
+      <img src={imageURL} alt="product" className={style.productImage}/>
       <div className={style.productInfoContainer}>
         <div className={style.headers}>
-          <h1>Smykke Smykkis</h1>
-          <h2>kr 399</h2>
+          <h1>{name}</h1>
+          <h2>kr {price}</h2>
         </div>
         <div className={style.colors}>
           <p>Farger:</p>

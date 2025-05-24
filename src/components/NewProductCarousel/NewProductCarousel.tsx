@@ -1,9 +1,13 @@
 import { useRef } from "react";
 import ProductCard from "../ProductCard/ProductCard";
 import style from "./NewProductCarousel.module.css"
+import { getProductList } from "../../API/getProducts";
+import { FetchResult } from "../../types/Database";
 
 function NewProductCarousel() {
   const scrollRef = useRef<HTMLUListElement>(null);
+  const {productList, isLoading, isError} = getProductList();
+  console.log(productList);
 
   function scrollRight() {
     if(scrollRef.current) {
@@ -25,16 +29,42 @@ function NewProductCarousel() {
     }
   }
 
+  if(isLoading) {
+    return(
+      <section className={style.carouselContainer}>
+        <article className={style.newProductsHeader}>Nye produkter</article>
+        <button className={style.sideSwipeLeft} onClick={scrollLeft}></button>
+        <ul className={style.newProductList} ref={scrollRef}>
+          <p className={style.loader}>Loading...</p>
+        </ul>
+        <button className={style.sideSwipeRight} onClick={scrollRight}></button>
+      </section>
+    )
+  }
+
+  if(isError) {
+    return(
+      <section className={style.carouselContainer}>
+        <article className={style.newProductsHeader}>Nye produkter</article>
+        <button className={style.sideSwipeLeft} onClick={scrollLeft}></button>
+        <ul className={style.newProductList} ref={scrollRef}>
+          <p className={style.error}>Something went wrong!</p>
+        </ul>
+        <button className={style.sideSwipeRight} onClick={scrollRight}></button>
+      </section>
+    )
+  }
+
   return(
     <section className={style.carouselContainer}>
       <article className={style.newProductsHeader}>Nye produkter</article>
       <button className={style.sideSwipeLeft} onClick={scrollLeft}></button>
       <ul className={style.newProductList} ref={scrollRef}>
-        <ProductCard/>
-        <ProductCard/>
-        <ProductCard/>
-        <ProductCard/>
-        <ProductCard/>
+        {productList?.map((product : FetchResult) => {
+          return(
+            <ProductCard key={product.id} imageURL={product.image_url} name={product.name} price={product.price}/>
+          )
+        })}
       </ul>
       <button className={style.sideSwipeRight} onClick={scrollRight}></button>
     </section>

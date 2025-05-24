@@ -61,3 +61,15 @@
   margin-inline: 2vw;
 }
 
+.loader {
+  font-size: 3rem;
+  text-align: center;
+  width: 100%;
+}
+
+.error {
+  font-size: 2rem;
+  text-align: center;
+  width: 100%;
+}
+
