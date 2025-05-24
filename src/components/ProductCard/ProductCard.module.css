@@ -3,7 +3,6 @@
   display: flex;
   gap: 10px;
   align-items: center;
-  max-width: 35vw;
   min-width: 300px;
   height: 250px;
   background-color: var(--boxColor);
@@ -11,15 +10,17 @@
 
 .productImage {
   width: 60%;
-  min-width: 150px;
+  min-width: 200px;
   height: 90%;
-  margin-left: -5vw;
+  margin-left: -50px;
   object-fit: cover;
 }
 
 .productInfoContainer {
   flex-grow: 0.7;
   height: 90%;
+  min-width: 250px;
+  padding-right: 10px;
   color: black;
   display: flex;
   flex-direction: column;

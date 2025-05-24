@@ -55,7 +55,7 @@ function AdBannerCarousel() {
       <article className={style.welcomeBox}>
         <h1>Velkommen</h1>
         <img src="/src/assets/logo_green.svg"/>
-        <NavigationButton text="Oppdag" path="#" buttonWidth={100}/>
+        <NavigationButton text="Oppdag" path="browse" buttonWidth={100}/>
       </article>
     </section>
   )

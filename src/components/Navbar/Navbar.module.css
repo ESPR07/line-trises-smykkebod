@@ -85,6 +85,10 @@ nav {
   color: var(--background);
 }
 
+.link:hover {
+  color: var(--compContainer);
+}
+
 @media screen and (max-width: 900px) {
   
   .navLogo {

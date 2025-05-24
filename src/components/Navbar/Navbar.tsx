@@ -11,13 +11,13 @@ function Navbar() {
       <Link className={style.navLogo} to={"/"}/>
       <div className={style.burgerIcon} onClick={() => {setBurgerToggle(!burgerToggle)}}></div>
       <ul className={style.navInteractions}>
-        <li className={style.cartContainer}><span className={style.cartCount}>1</span></li>
+        <li className={style.cartContainer}><span className={style.cartCount}>0</span></li>
       </ul>
     </nav>
     <ul className={`${style.navList} ${burgerToggle? style.open : style.close}`}>
-      <li>Produkter</li>
-      <li>Om Meg</li>
-      <li>Kontakt</li>
+      <li><Link to={"browse"} className={style.link}>Produkter</Link></li>
+      <li><Link to={"about"} className={style.link}>Om Meg</Link></li>
+      <li><Link to={"contact"} className={style.link}>Kontakt</Link></li>
     </ul>
     </>
   )

@@ -7,7 +7,6 @@ import { FetchResult } from "../../types/Database";
 function NewProductCarousel() {
   const scrollRef = useRef<HTMLUListElement>(null);
   const {productList, isLoading, isError} = getProductList();
-  console.log(productList);
 
   function scrollRight() {
     if(scrollRef.current) {
@@ -62,7 +61,7 @@ function NewProductCarousel() {
       <ul className={style.newProductList} ref={scrollRef}>
         {productList?.map((product : FetchResult) => {
           return(
-            <ProductCard key={product.id} imageURL={product.image_url} name={product.name} price={product.price} discount={product.discount} discountPrice={product.discount_amount}/>
+            <ProductCard key={product.id} imageURL={product.image_url} name={product.name} price={product.price} discount={product.discount} discountPrice={product.discount_amount} id={product.id}/>
           )
         })}
       </ul>
