@@ -1,14 +1,23 @@
 import NavigationButton from "../utils/Button/NavigationButton";
 import style from "./ProductCard.module.css"
 
-function ProductCard({imageURL, name, price} : {imageURL: string, name: string, price: number}) {
+interface ProductCardProps {
+  imageURL : string,
+  name: string,
+  price: number,
+  discount: boolean,
+  discountPrice: number | null,
+}
+
+function ProductCard({imageURL, name, price, discount, discountPrice} : ProductCardProps) {
   return(
     <article className={style.productCardContainer}>
       <img src={imageURL} alt="product" className={style.productImage}/>
       <div className={style.productInfoContainer}>
         <div className={style.headers}>
           <h1>{name}</h1>
-          <h2>kr {price}</h2>
+          <h2 className={discount? style.discounted : ""}>kr {price}</h2>
+          {discount? <h3>kr {discountPrice}</h3> : ""}
         </div>
         <div className={style.colors}>
           <p>Farger:</p>

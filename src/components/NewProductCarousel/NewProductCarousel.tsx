@@ -62,7 +62,7 @@ function NewProductCarousel() {
       <ul className={style.newProductList} ref={scrollRef}>
         {productList?.map((product : FetchResult) => {
           return(
-            <ProductCard key={product.id} imageURL={product.image_url} name={product.name} price={product.price}/>
+            <ProductCard key={product.id} imageURL={product.image_url} name={product.name} price={product.price} discount={product.discount} discountPrice={product.discount_amount}/>
           )
         })}
       </ul>
