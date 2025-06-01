@@ -16,6 +16,12 @@
   --CTA: rgba(241, 117, 9, 1);
 }
 
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 html, body {
   box-sizing: border-box;
   background-color: var(--background);
@@ -27,6 +33,7 @@ html, body {
 
 main {
   padding-top: 60px;
+  flex: 1;
 }
 
 a {
