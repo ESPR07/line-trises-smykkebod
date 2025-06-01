@@ -13,7 +13,7 @@ interface ProductCardProps {
 
 function ProductCard({imageURL, name, price, discount, discountPrice, id} : ProductCardProps) {
   return(
-    <Link to={`produkt/${id}`}>
+    <Link to={`/produkt/${id}`}>
       <article className={style.productCardContainer}>
         <img src={imageURL} alt="product" className={style.productImage}/>
         <div className={style.productInfoContainer}>
@@ -30,7 +30,7 @@ function ProductCard({imageURL, name, price, discount, discountPrice, id} : Prod
             </ul>
           </div>
           <div className={style.productInteraction}>
-            <NavigationButton text="Se mer" path={`produkt/${id}`} buttonWidth={100}/>
+            <NavigationButton text="Se mer" path={`/produkt/${id}`} buttonWidth={100}/>
             <NavigationButton text="+" path="#" buttonWidth={30}/>
           </div>
         </div>

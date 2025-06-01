@@ -4,6 +4,7 @@ import Navbar from './components/Navbar/Navbar'
 import Footer from './components/Footer/Footer'
 import Homepage from './pages/Homepage'
 import BrowsePage from './pages/BrowsePage'
+import ProductPage from './pages/ProductPage'
 
 function App() {
   
@@ -22,6 +23,7 @@ function App() {
       <Route path='/' element={<Layout/>}>
         <Route index element={<Homepage/>}/>
         <Route path="browse" element={<BrowsePage/>}/>
+        <Route path="produkt/:id" element={<ProductPage/>}/>
       </Route>
     </Routes>
   )
