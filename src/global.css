@@ -40,3 +40,10 @@ a {
   text-decoration: none;
   color: var(--background);
 }
+
+input {
+  font-family: 'poppins', 'Courier New', Courier, monospace;
+  font-size: 1.3rem;
+  text-align: center;
+  color: var(--background);
+}
