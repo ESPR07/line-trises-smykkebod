@@ -1,0 +1,16 @@
+.eventButton {
+  height: 30px;
+  border: none;
+  background-color: var(--highlight);
+  border-radius: 5px;
+  color: var(--background);
+  font-size: 1.2rem;
+  transition: all 0.2s ease-out;
+
+  &:hover {
+    background-color: var(--background);
+    color: var(--highlight);
+    transition: all 0.2s ease-in;
+    cursor: pointer;
+  }
+}

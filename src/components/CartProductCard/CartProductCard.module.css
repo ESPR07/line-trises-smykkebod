@@ -1,0 +1,90 @@
+.item {
+  margin-block: 15px;
+  display: flex;
+  border-bottom: 2px solid var(--compContainer);
+  padding-bottom: 15px;
+  height: 15vw;
+}
+
+.item img {
+  width: 30vw;
+  margin-right: 10px;
+  object-fit: cover;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+
+  h2 {
+    margin: 0;
+    font-weight: 300;
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+  }
+
+  p {
+    color: black;
+    font-size: clamp(1.3rem, 2.5vw, 1.7rem);
+  }
+}
+
+.discount {
+  text-decoration: line-through;
+  text-decoration-color: red;
+  text-decoration-thickness: 2px;
+}
+
+.titleDeleteContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.deleteIcon {
+  height: 40px;
+  width: 40px;
+  background-image: url("/src/assets/back_arrow.svg"); /*TODO*/
+  background-repeat: no-repeat;
+  background-position: center;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.cartItemInteraction {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+.amountSelection {
+  display: flex;
+  flex-shrink: 1;
+  justify-content: space-around;
+  align-items: center;
+  gap: 20px;
+  padding-inline: 10px;
+  background-color: var(--highlight);
+  border-radius: 5px;
+  max-width: 200px;
+
+  p {
+    color: var(--background);
+    flex: 1;
+    text-align: center;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  input {
+    height: 90%;
+    width: 100%;
+    flex: 2;
+    background-color: var(--highlight);
+  }
+}
