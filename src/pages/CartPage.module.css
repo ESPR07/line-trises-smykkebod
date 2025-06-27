@@ -98,8 +98,6 @@
     width: 100%;
     flex: 2;
     background-color: var(--highlight);
-    -webkit-appearance: none;
-    -moz-appearance: textfield;
   }
 }
 
