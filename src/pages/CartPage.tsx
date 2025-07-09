@@ -14,19 +14,6 @@ function CartPage() {
     window.scrollTo(0, 0);
   }, []);
 
-  // function handleClear(
-  //   id: number,
-  //   name: string,
-  //   discountPrice: number | null,
-  //   price: number,
-  //   imageURL: string
-  // ) {
-  //   dispatch({
-  //     type: "clearCart",
-  //     payload: { id, name, discountPrice, price, imageURL, quantity: 0 },
-  //   });
-  // }
-
   useEffect(() => {
     setCurrentCart(state);
   }, [state]);
@@ -41,7 +28,7 @@ function CartPage() {
             <article className={style.cartInfo}>
               <h2>Oppsummering</h2>
               <p className={style.emptyMessage}>Her var det visst tomt!</p>
-              <NavigationButton text="Utforsk" path="browse" buttonWidth={100}/>
+              <NavigationButton text="Utforsk" path="/browse" buttonWidth={100}/>
             </article>
             <VippsButton />
             <button className={style.kortBetaling}>

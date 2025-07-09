@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import style from "./CartProductCard.module.css"; // or share style
+import style from "./CartProductCard.module.css";
 import { Cart } from "../../App";
 
 type Props = {
