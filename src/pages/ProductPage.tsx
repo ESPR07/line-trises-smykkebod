@@ -1,11 +1,26 @@
 import { Link, useParams } from "react-router";
 import style from "./ProductPage.module.css"
 import { getSingleProduct } from "../API/getSingleProduct";
-import NavigationButton from "../components/utils/Button/NavigationButton";
+import EventButton from "../components/utils/EventButton/EventButton";
+import { useContext } from "react";
+import { CartContext } from "../App";
+
+type AddToCart = {
+  id: number,
+  name: string,
+  discountPrice: number | null,
+  price: number,
+  imageURL: string,
+}
 
 function ProductPage() {
   let {id} = useParams();
   const {product, isLoading, isError} = getSingleProduct(Number(id));
+  const dispatch = useContext(CartContext).dispatch;
+
+  const handleAddToCart = ({id, name, discountPrice, price, imageURL}: AddToCart) => {
+    dispatch({type: "addToCart", payload: { id, name, discountPrice, price, imageURL, quantity: 1 }});
+  }
 
   if(isLoading) {
     <main className={style.productPageContainer}>
@@ -58,7 +73,7 @@ function ProductPage() {
               </ul>
               <p>Small</p>
             </div>
-            <NavigationButton text="Legg i Handlekurv" path="#" buttonWidth={100}/>
+            <EventButton text="Legg til i Handlekurv" event={() => {handleAddToCart({id: product[0].id, name: product[0].name, discountPrice: product[0].discount_amount, price: product[0].price, imageURL: product[0].image_url})}} buttonWidth={100}/>
           </article>
         </section>
         <section className={style.descriptionContainer}>
