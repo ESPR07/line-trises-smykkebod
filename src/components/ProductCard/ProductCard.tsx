@@ -1,6 +1,9 @@
 import { Link } from "react-router";
 import NavigationButton from "../utils/Button/NavigationButton";
 import style from "./ProductCard.module.css"
+import EventButton from "../utils/EventButton/EventButton";
+import { useContext } from "react";
+import { CartContext } from "../../App";
 
 interface ProductCardProps {
   imageURL : string,
@@ -11,7 +14,21 @@ interface ProductCardProps {
   id: number
 }
 
+type AddToCart = {
+  id: number,
+  name: string,
+  discountPrice: number | null,
+  price: number,
+  imageURL: string,
+}
+
 function ProductCard({imageURL, name, price, discount, discountPrice, id} : ProductCardProps) {
+  const dispatch = useContext(CartContext).dispatch;
+
+   const handleAddToCart = ({id, name, discountPrice, price, imageURL}: AddToCart) => {
+    dispatch({type: "addToCart", payload: { id, name, discountPrice, price, imageURL, quantity: 1 }});
+  }
+
   return(
     <Link to={`/produkt/${id}`}>
       <article className={style.productCardContainer}>
@@ -30,8 +47,8 @@ function ProductCard({imageURL, name, price, discount, discountPrice, id} : Prod
             </ul>
           </div>
           <div className={style.productInteraction}>
-            <NavigationButton text="Se mer" path={`/produkt/${id}`} buttonWidth={100}/>
-            <NavigationButton text="+" path="#" buttonWidth={30}/>
+            <NavigationButton text="Se Mer" path="browse" buttonWidth={100}/>
+            <EventButton text="+" event={() => {handleAddToCart({id, name, discountPrice, price, imageURL})}} buttonWidth={30}/>
           </div>
         </div>
       </article>
