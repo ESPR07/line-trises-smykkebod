@@ -20,6 +20,8 @@
 }
 
 .searchFilterMenu {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 10px;
 }
 
@@ -27,8 +29,9 @@ input {
   border-radius: 5px;
   border: none;
   height: 20px;
-  padding-left: 5px;
-  margin-right: 10px;
+  width: 90%;
+  color: black;
+  text-align: start;
 }
 
 .divider {
@@ -41,8 +44,13 @@ input {
 .productGrid {
   display: grid;
   justify-items: center;
+  align-items: center;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 20px;
+
+  a {
+    width: 100%;
+  }
 }
 
 .loader {
