@@ -1,7 +1,7 @@
 .AdBannerContainer {
   display: flex;
   position: relative;
-  height: 20vw;
+  height: 30vw;
   margin-bottom: 100px;
 }
 
@@ -73,7 +73,7 @@
 
 @media screen and (max-width: 900px){
   .AdBannerContainer {
-    height: 250px;
+    height: 300px;
   }
 
   .welcomeBox {
