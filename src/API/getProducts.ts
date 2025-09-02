@@ -24,6 +24,7 @@ export function getProductList() {
           setProductList(data);
         } else {
           console.log(error);
+          setIsError(true);
         }
       } catch (error) {
         setIsError(true);
