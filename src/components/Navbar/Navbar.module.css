@@ -9,7 +9,7 @@ nav {
   color: var(--background);
   padding-inline: 10px;
   position: fixed;
-  z-index: 10;
+  z-index: 100;
 }
 
 .navLogo {
@@ -81,7 +81,7 @@ nav {
   gap: 40px;
   font-size: 1.2rem;
   padding: 0;
-  z-index: 10;
+  z-index: 110;
   color: var(--background);
 }
 

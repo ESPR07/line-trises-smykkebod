@@ -13,6 +13,7 @@ import cartInteractions, {
   initialValue,
 } from "./Reducers/cartInteractions";
 import { getProductList } from './API/getProducts'
+import AboutPage from './pages/AboutPage'
 
 
 type APIInterface = {
@@ -77,6 +78,7 @@ function App() {
         <Route path="browse" element={<BrowsePage/>}/>
         <Route path="produkt/:id" element={<ProductPage/>}/>
         <Route path="cart" element={<CartPage/>}/>
+        <Route path="about" element={<AboutPage/>}/>
       </Route>
     </Routes>
   )

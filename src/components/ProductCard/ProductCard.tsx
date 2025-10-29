@@ -39,13 +39,6 @@ function ProductCard({imageURL, name, price, discount, discountPrice, id} : Prod
             <h2 className={discount? style.discounted : ""}>kr {price}</h2>
             {discount? <h3>kr {discountPrice}</h3> : ""}
           </div>
-          <div className={style.colors}>
-            <p>Farger:</p>
-            <ul className={style.colorSelection}>
-              <li></li>
-              <li></li>
-            </ul>
-          </div>
           <div className={style.productInteraction}>
             <NavigationButton text="Se Mer" path="browse" buttonWidth={100}/>
             <EventButton text="+" event={() => {handleAddToCart({id, name, discountPrice, price, imageURL})}} buttonWidth={30}/>

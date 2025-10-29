@@ -1,3 +1,4 @@
+import { useState } from "react";
 import style from "./EventButton.module.css";
 
 interface ButtonProps {
@@ -7,17 +8,26 @@ interface ButtonProps {
 }
 
 function EventButton({ text, event, buttonWidth }: ButtonProps) {
+  const [added, setAdded] = useState(false);
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    event(e);
+
+    // trigger “added” animation/text
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500); // revert after 1.5s
+  };
+
   return (
     <button
       style={{ width: `${buttonWidth}%` }}
-      className={style.eventButton}
-      onClick={(e) => {
-        e.stopPropagation();
-        e.preventDefault();
-        event(e);
-      }}
+      className={`${style.eventButton} ${added ? style.added : ""}`}
+      onClick={handleClick}
+      disabled={added}
     >
-      {text}
+      {added ? "✔" : text}
     </button>
   );
 }
