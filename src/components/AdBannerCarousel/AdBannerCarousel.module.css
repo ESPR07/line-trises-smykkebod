@@ -78,7 +78,7 @@
   flex-direction: row;
   list-style: none;
   width: fit-content;
-  transform: translateY(-180px) rotate(15deg);
+  transform: translateY(-14vw) rotate(15deg);
   margin-inline: 25px;
   gap: 15px;
   padding: 0;
@@ -106,7 +106,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 236, 210, 0.7);
+  background-color: rgba(224, 228, 231, 0.7);
   color: var(--highlight);
   top: 5vw;
   right: 10%;

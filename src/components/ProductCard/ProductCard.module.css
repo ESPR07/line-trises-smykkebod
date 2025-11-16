@@ -1,12 +1,13 @@
 .productCardContainer {
   display: flex;
-  height: 100%;
+  height: 500px;
   max-width: 300px;
   min-width: 300px;
   flex-direction: column;
   gap: 10px;
   align-items: center;
   background-color: var(--background);
+  overflow: hidden;
 
   button {
     position: absolute;
@@ -19,6 +20,12 @@
   width: 100%;
   height: 70%;
   object-fit: cover;
+  transition: width 0.3s ease;
+}
+
+.productImage:hover {
+  width: 110%;
+  transition: width 0.3s ease;
 }
 
 .priceContainer {
