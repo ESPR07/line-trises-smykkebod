@@ -16,7 +16,7 @@
 }
 
 .cartItemList {
-  border-top: 2px solid var(--compContainer);
+  border-top: 2px solid var(--highlight);
   flex: 3;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .cartInfo {
-  background-color: var(--compContainer);
+  background-color: var(--highlight);
   border-radius: 5px;
   padding: 10px;
 
