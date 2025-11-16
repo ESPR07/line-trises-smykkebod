@@ -1,5 +1,5 @@
 .carouselContainer {
-  background-color: var(--compContainer);
+  background-color: var(--boxColor);
   position: relative;
   padding-block: 30px;
   display: flex;
@@ -59,6 +59,22 @@
   /* mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent 100% ); TODO add logic */
   padding-left: 0;
   margin-inline: 2vw;
+}
+
+.newProductList a::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 4px;
+  bottom: 0;
+  left: 50%;
+  background-color: var(--CTA);
+  transition: all 0.4s;
+}
+
+.newProductList a:hover::before {
+  width: 100%;
+  left: 0;
 }
 
 .loader {

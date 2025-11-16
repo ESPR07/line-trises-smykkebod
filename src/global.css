@@ -8,12 +8,28 @@
   src: url("/src/assets/fonts/Splash-Regular.ttf");
 }
 
+@font-face {
+  font-family: 'londrinaOutline';
+  src: url("/src/assets/fonts/LondrinaOutline-Regular.ttf");
+}
+
+@font-face {
+  font-family: 'montserrat';
+  src: url("/src/assets/fonts/Montserrat-VariableFont_wght.ttf");
+}
+
+@font-face {
+  font-family: 'storyScript';
+  src: url("/src/assets/fonts/StoryScript-Regular.ttf");
+}
+
 :root {
-  --background: rgba(255, 252, 240, 1);
-  --boxColor: rgba(255, 236, 210, 1);
-  --compContainer: rgba(61, 61, 61, 1);
-  --highlight: rgba(87, 142, 126, 1);
-  --CTA: rgba(241, 117, 9, 1);
+  --background: rgba(224, 228, 231, 1);
+  --boxColor: rgba(189, 218, 236, 1);
+  --boxColorFade: rgba(189, 218, 236, .6);
+  --compContainer: rgba(235, 188, 168, 1);
+  --highlight: rgba(15, 105, 129, 1);
+  --CTA: rgba(234, 177, 170, 1);
 }
 
 #root {
@@ -25,8 +41,7 @@
 html, body {
   box-sizing: border-box;
   background-color: var(--background);
-  font-family: 'poppins', 'Courier New', Courier, monospace;
-  /* font-family: 'Georgia', 'Times New Roman', Times, serif; */
+  font-family: 'montserrat', 'Courier New', Courier, monospace;
   margin: 0;
   padding: 0;
 }
@@ -39,10 +54,28 @@ main {
 a {
   text-decoration: none;
   color: var(--background);
+  position: relative;
+  transition: 0.4s;
 }
 
+/* a::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 4px;
+  bottom: 0;
+  left: 50%;
+  background-color: var(--CTA);
+  transition: all 0.4s;
+}
+
+a:hover::before {
+  width: 100%;
+  left: 0;
+} */
+
 input {
-  font-family: 'poppins', 'Courier New', Courier, monospace;
+  font-family: 'montserrat', 'Courier New', Courier, monospace;
   font-size: 1.3rem;
   text-align: center;
   color: var(--background);
