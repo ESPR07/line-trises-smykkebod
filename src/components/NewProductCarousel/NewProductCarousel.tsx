@@ -1,18 +1,18 @@
-import { useRef } from "react";
+import { useContext, useRef } from "react";
 import ProductCard from "../ProductCard/ProductCard";
 import style from "./NewProductCarousel.module.css"
-import { getProductList } from "../../API/getProducts";
 import { FetchResult } from "../../types/Database";
+import { APIResult } from "../../App";
 
 function NewProductCarousel() {
   const scrollRef = useRef<HTMLUListElement>(null);
-  const {productList, isLoading, isError} = getProductList();
+  const {allProducts, loading, error} = useContext(APIResult);
 
   function scrollRight() {
     if(scrollRef.current) {
       const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
       scrollRef.current.scrollTo({
-        left: Math.min(scrollRef.current.scrollLeft + 350, maxScroll),
+        left: Math.min(scrollRef.current.scrollLeft + 330, maxScroll),
         behavior: "smooth",
       })
     }
@@ -22,13 +22,13 @@ function NewProductCarousel() {
     if(scrollRef.current) {
       const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
       scrollRef.current.scrollTo({
-        left: Math.min(scrollRef.current.scrollLeft - 350, maxScroll),
+        left: Math.min(scrollRef.current.scrollLeft - 330, maxScroll),
         behavior: "smooth",
       })
     }
   }
 
-  if(isLoading) {
+  if(loading) {
     return(
       <section className={style.carouselContainer}>
         <article className={style.newProductsHeader}>Nye produkter</article>
@@ -41,7 +41,7 @@ function NewProductCarousel() {
     )
   }
 
-  if(isError) {
+  if(error) {
     return(
       <section className={style.carouselContainer}>
         <article className={style.newProductsHeader}>Nye produkter</article>
@@ -59,7 +59,7 @@ function NewProductCarousel() {
       <article className={style.newProductsHeader}>Nye produkter</article>
       <button className={style.sideSwipeLeft} onClick={scrollLeft}></button>
       <ul className={style.newProductList} ref={scrollRef}>
-        {productList?.map((product : FetchResult) => {
+        {allProducts?.map((product : FetchResult) => {
           return(
             <ProductCard key={product.id} imageURL={product.image_url} name={product.name} price={product.price} discount={product.discount} discountPrice={product.discount_amount} id={product.id}/>
           )

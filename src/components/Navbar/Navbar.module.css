@@ -9,7 +9,7 @@ nav {
   color: var(--background);
   padding-inline: 10px;
   position: fixed;
-  z-index: 10;
+  z-index: 100;
 }
 
 .navLogo {
@@ -66,6 +66,7 @@ nav {
       translate: 5px -5px;
       color: var(--highlight);
       text-align: center;
+      font-size: 1.2rem;
     }
 }
 
@@ -81,12 +82,28 @@ nav {
   gap: 40px;
   font-size: 1.2rem;
   padding: 0;
-  z-index: 10;
+  z-index: 110;
   color: var(--background);
 }
 
-.link:hover {
+.navList li a:hover {
   color: var(--compContainer);
+}
+
+.navList li a::before {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 4px;
+  bottom: 0;
+  left: 50%;
+  background-color: var(--CTA);
+  transition: all 0.4s;
+}
+
+.navList li a:hover::before {
+  width: 100%;
+  left: 0;
 }
 
 @media screen and (max-width: 900px) {

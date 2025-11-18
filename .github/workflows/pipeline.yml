@@ -1,24 +1,35 @@
-name: Build
+name: Build and Tests
 
 on: 
     workflow_dispatch:
 
     push:
-        branches: ['main']
+        branches: ['main', 'dev']
 
     pull_request:
-        branches: ['main']
+        branches: ['main', 'dev']
         types: [opened, synchronize, reopened, ready_for_review]
 
 
 jobs:
-    build_and_test:
+    build:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
 
-            - name: installs dependencies
+            - name: install dependencies
               run: npm install
 
             - name: try to build
               run: npm run build
+    
+    tests:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: install dependencies
+              run: npm install
+
+            - name: runs the full test suites
+              run: npm run test
