@@ -73,3 +73,9 @@
   text-align: center;
   width: 100%;
 }
+
+@media screen and (max-width: 900px) {
+  .carouselContainer {
+    margin-top: 50px;
+  }
+}

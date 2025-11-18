@@ -1,0 +1,98 @@
+.customContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 20px;
+  margin-inline: 10vw;
+  margin-bottom: 50px;
+}
+
+.customImage {
+  max-height: 30vw;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.customInfoBox {
+  padding: 10px;
+  background-color: var(--boxColor);
+  width: 100%;
+  transform: translateX(-150px);
+}
+
+.customWrapper {
+  display: flex;
+  flex-direction: column;
+  border: 3px dotted var(--CTA);
+  padding: 10px;
+}
+
+.customWrapper button {
+  margin-top: 50px;
+}
+
+.customTextFormat {
+  display: grid;
+  grid-template-areas: "textField question";
+}
+
+.textWrapper {
+  grid-area: textField;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+}
+
+.textHighlight {
+  text-decoration: underline;
+  text-decoration-color: var(--CTA);
+  font-size: clamp(2rem, 4vw, 4rem);
+}
+
+.line1, .line2, .question {
+  color: var(--highlight);
+  font-size: clamp(1.5rem, 4vw, 3rem);
+}
+
+.line1 {
+  grid-area: line1;
+}
+
+.line2 {
+  grid-area: line2;
+}
+
+.question {
+  grid-area: question;
+  height: 100%;
+  font-size: 7rem;
+}
+
+@media screen and (max-width: 900px) {
+  .customContainer {
+    margin-inline: 10px;
+    padding: 0;
+    flex-direction: column;
+  }
+
+  .customImage {
+    max-height: 60vw;
+    margin-top: 20px;
+  }
+
+  .customInfoBox {
+    transform: translateX(0);
+    width: 85vw;
+    margin-top: 10px;
+  }
+
+  .customWrapper {
+    button {
+      margin-top: 0;
+    }
+  }
+
+  .textWrapper {
+  justify-content: center;
+  }
+}
