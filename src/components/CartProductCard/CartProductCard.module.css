@@ -1,7 +1,7 @@
 .item {
   margin-block: 15px;
   display: flex;
-  border-bottom: 2px solid var(--compContainer);
+  border-bottom: 2px solid var(--highlight);
   padding-bottom: 15px;
   height: 15vw;
 }
@@ -87,5 +87,6 @@
     width: 100%;
     flex: 2;
     background-color: var(--highlight);
+    text-align: center;
   }
 }

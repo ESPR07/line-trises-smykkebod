@@ -6,7 +6,7 @@
   font-size: 3rem;
   font-weight: 300;
   color: var(--highlight);
-  font-family: 'splash', 'Courier New', Courier, monospace;
+  font-family: 'storyScript', 'Courier New', Courier, monospace;
   margin: 40px 0px 0px 0px;
 }
 
@@ -16,7 +16,7 @@
 }
 
 .cartItemList {
-  border-top: 2px solid var(--compContainer);
+  border-top: 2px solid var(--highlight);
   flex: 3;
 }
 
@@ -28,7 +28,7 @@
 }
 
 .cartInfo {
-  background-color: var(--compContainer);
+  background-color: var(--highlight);
   border-radius: 5px;
   padding: 10px;
 
@@ -44,6 +44,11 @@
     font-size: 1.5rem;
     text-align: center;
     margin-top: 10px;
+  }
+
+  button {
+    background-color: var(--boxColor);
+    color: var(--highlight);
   }
 }
 

@@ -1,24 +1,55 @@
 .productCardContainer {
-  margin-left: 5vw;
   display: flex;
+  height: 500px;
+  max-width: 300px;
+  min-width: 300px;
+  flex-direction: column;
   gap: 10px;
   align-items: center;
-  min-width: 350px;
-  height: 300px;
-  background-color: var(--boxColor);
+  background-color: var(--background);
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid var(--highlight);
+
+  button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+}
+
+.productCardContainer:hover {
+  img {
+    max-height: 100%;
+    transition: all 0.3s ease;
+  }
 }
 
 .productImage {
-  min-width: 200px;
-  height: 90%;
-  margin-left: -50px;
+  width: 100%;
+  height: 100%;
+  max-height: 70%;
   object-fit: cover;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid var(--highlight);
+}
+
+.productImage:hover {
+  width: 110%;
+  transition: width 0.3s ease;
+}
+
+.priceContainer {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: end;
+  gap: 20px;
+  margin-block: 10px;
 }
 
 .productInfoContainer {
   flex-grow: 0.7;
-  height: 90%;
-  padding-right: 10px;
+  width: 90%;
   color: black;
   display: flex;
   flex-direction: column;
@@ -26,13 +57,14 @@
 
   h1 {
     font-size: clamp(1.4rem, 2vw, 1.6rem);
-    font-weight: 300;
+    font-weight: 400;
     margin: 0;
   }
 
   h2 {
+    text-align: end;
     margin: 0;
-    font-weight: 300;
+    font-weight: 400;
     font-size: 1.7rem;
   }
 
@@ -44,7 +76,7 @@
   }
 
   h3 {
-    font-weight: 300;
+    font-weight: 400;
     margin: 0;
     font-size: 1.7rem;
   }
@@ -78,27 +110,4 @@
 .productInteraction {
   display: flex;
   gap: 10px;
-}
-
-@media screen and (max-width: 900px) {
-  .productCardContainer {
-    height: calc(100% - 20px);
-    min-width: 280px;
-    margin-left: 0;
-    flex-direction: column;
-    align-items: start;
-    padding: 10px;
-  }
-
-  .productInfoContainer {
-    min-width: auto;
-    width: 100%;
-  }
-
-  .productImage {
-    margin-left: 0;
-    margin-inline: auto;
-    width: calc(100% - 20px);
-    height: auto;
-  }
 }

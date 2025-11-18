@@ -8,7 +8,7 @@
 .aboutBannerTextContainer {
   position: absolute;
   width: 55%;
-  background-color: var(--compContainer);
+  background-color: var(--boxColor);
   clip-path: polygon(0 0, 80% 0, 100% 100%, 0% 100%);
   z-index: 10;
   left: 0;
@@ -21,6 +21,7 @@
     font-size: clamp(1.5rem, 2.5vw, 2rem);
     margin-left: 5%;
     margin-right: 15%;
+    color: var(--highlight);
   }
 }
 
@@ -40,7 +41,7 @@
 .aboutBannerTextContainerRight {
   position: absolute;
   width: 55%;
-  background-color: var(--compContainer);
+  background-color: var(--boxColor);
   clip-path: polygon(18% 0, 100% 0, 100% 100%, 0% 100%);
   z-index: 10;
   right: 0;
@@ -53,5 +54,6 @@
     font-size: clamp(1.5rem, 2.5vw, 2rem);
     margin-left: 15%;
     margin-right: 5%;
+    color: var(--highlight);
   }
 }
