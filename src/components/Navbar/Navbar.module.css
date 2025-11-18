@@ -66,6 +66,7 @@ nav {
       translate: 5px -5px;
       color: var(--highlight);
       text-align: center;
+      font-size: 1.2rem;
     }
 }
 
