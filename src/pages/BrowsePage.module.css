@@ -44,8 +44,8 @@
   width: 80%;
   padding: 50px 10px 10px 10px;
   margin-bottom: 20px;
-  border : 2px solid var(--highlight);
-  border-radius: 10px;
+  /* border : 2px solid var(--highlight); */
+  border-radius: 30px;
   background-color: var(--background);
   transform: translateY(-300px);
 }
