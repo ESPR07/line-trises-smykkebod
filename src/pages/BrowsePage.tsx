@@ -30,6 +30,33 @@ function BrowsePage() {
   return (
     <main className={style.browseMain}>
       <div className={style.banner}></div>
+      <section className={style.browseContainer}>
+        <h1 className={style.browseHeader}>Alle Produkter</h1>
+        <article className={style.filterMenu}>
+          <select>
+            <option defaultValue={"Filter"} hidden>
+              Filter
+            </option>
+            <option value="Yellow">Yellow</option>
+          </select>
+        </article>
+        <span className={style.divider}></span>
+        <article className={style.productGrid}>
+          {productList?.map((product) => {
+            return (
+              <ProductCard
+                key={product.id}
+                imageURL={product.image_url}
+                name={product.name}
+                price={product.price}
+                discount={product.discount}
+                discountPrice={product.discount_amount}
+                id={product.id}
+              />
+            );
+          })}
+        </article>
+      </section>
       <div className={style.archContainer}>
         <svg viewBox="0 0 1440 150" className={style.arch}>
           <path
@@ -38,35 +65,7 @@ function BrowsePage() {
           ></path>
         </svg>
       </div>
-      <div className={style.browseContainerBackground}>
-        <section className={style.browseContainer}>
-          <h1 className={style.browseHeader}>Alle Produkter</h1>
-          <article className={style.filterMenu}>
-            <select>
-              <option defaultValue={"Filter"} hidden>
-                Filter
-              </option>
-              <option value="Yellow">Yellow</option>
-            </select>
-          </article>
-          <span className={style.divider}></span>
-          <article className={style.productGrid}>
-            {productList?.map((product) => {
-              return (
-                <ProductCard
-                  key={product.id}
-                  imageURL={product.image_url}
-                  name={product.name}
-                  price={product.price}
-                  discount={product.discount}
-                  discountPrice={product.discount_amount}
-                  id={product.id}
-                />
-              );
-            })}
-          </article>
-        </section>
-      </div>
+      <div className={style.browseContainerBackground}></div>
     </main>
   );
 }
