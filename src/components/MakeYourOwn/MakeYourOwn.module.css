@@ -18,6 +18,36 @@
   background-color: var(--boxColor);
   width: 100%;
   transform: translateX(-150px);
+  transition: all 0.3s ease;
+} 
+
+@keyframes shakeEffect {
+  0% {
+    rotate: 0deg;
+    
+  }
+  50% {
+    rotate: 5deg;
+  }
+  100% {
+    rotate: 0deg;
+  }
+}
+
+.customInfoBox {
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1) translateX(-150px);
+
+    .textHighlight {
+      animation-name: shakeEffect;
+      animation-iteration-count: 3;
+      animation-duration: 0.2s;
+      display: inline-block;
+      transform-origin: center;
+    }
+  }
 }
 
 .customWrapper {
@@ -78,12 +108,13 @@
   .customImage {
     max-height: 60vw;
     margin-top: 20px;
+    border-radius: 10px 10px 0 0;
   }
 
   .customInfoBox {
     transform: translateX(0);
     width: 85vw;
-    margin-top: 10px;
+    border-radius: 0 0 10px 10px;
   }
 
   .customWrapper {
