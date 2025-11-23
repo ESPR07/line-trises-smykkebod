@@ -79,6 +79,9 @@
     font-weight: 400;
     margin: 0;
     font-size: 1.7rem;
+    background-color: var(--compContainer);
+    padding: 5px;
+    border-radius: 10px;
   }
 
   p {

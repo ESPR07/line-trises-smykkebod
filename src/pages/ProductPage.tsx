@@ -65,14 +65,16 @@ function ProductPage() {
           <div className={style.backArrow}></div>
           <p className={style.backText}>Tilbake</p>
         </Link>
+        <h1 className={style.productHeader}>{singleProduct.name}</h1>
         <section className={style.productContainer}>
-          <img
-            src={singleProduct.image_url}
-            alt="Product Image"
-            className={style.productImage}
-          />
-          <article className={style.productInfo}>
-            <h1 className={style.productHeader}>{singleProduct.name}</h1>
+          <article className={style.imageContainer}>
+            <img
+              src={singleProduct.image_url}
+              alt="Product Image"
+              className={style.productImage}
+            />
+          </article>
+          <article className={style.productText}>
             <div className={style.priceContainer}>
               <p
                 className={`${style.productPrice} ${
@@ -92,10 +94,7 @@ function ProductPage() {
             <section className={style.descriptionContainer}>
               <ul>
                 <li>Beskrivelse</li>
-                <li>Detaljer</li>
-                <li>Omtaler</li>
               </ul>
-              <span className={style.descriptionDivider}></span>
               <p>{singleProduct.long_description}</p>
             </section>
             <EventButton
