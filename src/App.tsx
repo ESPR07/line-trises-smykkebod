@@ -14,6 +14,7 @@ import cartInteractions, {
 } from "./Reducers/cartInteractions";
 import { getProductList } from './API/getProducts'
 import AboutPage from './pages/AboutPage'
+import ContactPage from './pages/ContactPage'
 
 
 type APIInterface = {
@@ -79,6 +80,7 @@ function App() {
         <Route path="produkt/:id" element={<ProductPage/>}/>
         <Route path="cart" element={<CartPage/>}/>
         <Route path="about" element={<AboutPage/>}/>
+        <Route path="contact" element={<ContactPage/>}/>
       </Route>
     </Routes>
   )
