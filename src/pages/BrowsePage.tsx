@@ -65,7 +65,6 @@ function BrowsePage() {
           ></path>
         </svg>
       </div>
-      <div className={style.browseContainerBackground}></div>
     </main>
   );
 }

@@ -12,7 +12,7 @@ function NewProductCarousel() {
     if(scrollRef.current) {
       const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
       scrollRef.current.scrollTo({
-        left: Math.min(scrollRef.current.scrollLeft + 330, maxScroll),
+        left: Math.min(scrollRef.current.scrollLeft + 332, maxScroll),
         behavior: "smooth",
       })
     }
@@ -22,7 +22,7 @@ function NewProductCarousel() {
     if(scrollRef.current) {
       const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
       scrollRef.current.scrollTo({
-        left: Math.min(scrollRef.current.scrollLeft - 330, maxScroll),
+        left: Math.min(scrollRef.current.scrollLeft - 332, maxScroll),
         behavior: "smooth",
       })
     }
