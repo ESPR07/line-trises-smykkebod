@@ -20,7 +20,7 @@ const AboutPage: React.FC = () => {
       </section>
       <section className={style.aboutBannerRight}>
         <img
-          src="/src/assets/aboutSplashMe.webp"
+          src="/src/assets/aboutSplashMe2.webp"
           alt="Bilde av en smykkelager i arbeid"
           className={style.aboutBannerImage}
         />
