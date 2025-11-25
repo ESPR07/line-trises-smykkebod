@@ -1,6 +1,10 @@
 import EventButton from "../components/utils/EventButton/EventButton";
 import style from "./ContactPage.module.css";
 
+function sendMail() {
+  console.log("Test: Mail sent!");
+}
+
 function ContactPage() {
   return (
     <main className={style.contactMain}>
@@ -33,7 +37,7 @@ function ContactPage() {
           <label htmlFor="inquiry">Hva lurer du på?</label>
           <textarea id="inquiry" name="inquiry" required />
         </div>
-        <EventButton text="Send Melding" buttonWidth={100}/>
+        <EventButton text="Send Melding" event={sendMail} buttonWidth={100}/>
       </form>
     </main>
   );

@@ -25,7 +25,7 @@
 
 .contactBox1 {
   p {
-    color: black;
+    color: var(--background);
     background: var(--highlight);
     position: relative; /* needed for pseudo-elements */
     max-width: 50%;
