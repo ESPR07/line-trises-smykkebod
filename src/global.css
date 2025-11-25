@@ -64,3 +64,9 @@ input {
   text-align: center;
   color: var(--background);
 }
+
+.svg_style {
+  height: 40px;
+  width: 40px;
+  color: var(--background);
+}

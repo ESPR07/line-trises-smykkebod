@@ -15,6 +15,7 @@ import cartInteractions, {
 import { getProductList } from './API/getProducts'
 import AboutPage from './pages/AboutPage'
 import ContactPage from './pages/ContactPage'
+import AdminPage from './pages/AdminPage'
 
 
 type APIInterface = {
@@ -71,16 +72,24 @@ function Layout() {
   )
 }
 
+function AdminLayout() {
+  return <Outlet/>
+}
+
 function App() {
   return (
     <Routes>
-      <Route path='/' element={<Layout/>}>
-        <Route index element={<Homepage/>}/>
-        <Route path="browse" element={<BrowsePage/>}/>
-        <Route path="produkt/:id" element={<ProductPage/>}/>
-        <Route path="cart" element={<CartPage/>}/>
-        <Route path="about" element={<AboutPage/>}/>
-        <Route path="contact" element={<ContactPage/>}/>
+       <Route path="/" element={<Layout />}>
+        <Route index element={<Homepage />} />
+        <Route path="browse" element={<BrowsePage />} />
+        <Route path="produkt/:id" element={<ProductPage />} />
+        <Route path="cart" element={<CartPage />} />
+        <Route path="about" element={<AboutPage />} />
+        <Route path="contact" element={<ContactPage />} />
+      </Route>
+
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminPage />} />
       </Route>
     </Routes>
   )
