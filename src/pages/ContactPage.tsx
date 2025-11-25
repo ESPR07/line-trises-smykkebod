@@ -30,12 +30,16 @@ function ContactPage() {
       </div>
       <form className={style.contactForm}>
         <div className={style.formGroup}>
-          <label htmlFor="name">Mail / Ordre Nummer</label>
-          <input type="text" id="name" name="name" required />
+          <label htmlFor="mail">Email</label>
+          <input type="text" id="mail" name="mail" placeholder="f.eks ola@example.com" required />
+        </div>
+        <div className={style.formGroup}>
+          <label htmlFor="orderNumber">Ordre Nummer</label>
+          <input type="text" id="orderNumber" name="orderNumber" placeholder="f.eks 12345" required />
         </div>
         <div className={style.formGroup}>
           <label htmlFor="inquiry">Hva lurer du på?</label>
-          <textarea id="inquiry" name="inquiry" required />
+          <textarea id="inquiry" name="inquiry" placeholder='f.eks "Pakken ble skadet under levering"' required />
         </div>
         <EventButton text="Send Melding" event={sendMail} buttonWidth={100}/>
       </form>
