@@ -73,7 +73,15 @@ function Layout() {
 }
 
 function AdminLayout() {
-  return <Outlet/>
+  const { productList, isLoading, isError } = getProductList();
+
+  return (
+    <>
+      <APIResult.Provider value={{ allProducts: productList, loading: isLoading, error: isError}}>
+        <Outlet/>
+      </APIResult.Provider>
+    </>
+  )
 }
 
 function App() {
