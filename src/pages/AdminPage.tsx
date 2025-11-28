@@ -7,6 +7,7 @@ import { createClient } from "@supabase/supabase-js";
 import { useAuthStatus } from "../API/useAuthStatus";
 import AdminLogin from "../components/AdminComponents/AdminLogin/AdminLogin";
 import AdminTopBar from "../components/AdminComponents/AdminTopBar/AdminTopBar";
+import AdminProducts from "../components/AdminComponents/AdminProducts/AdminProducts";
 
 const supabaseURL: string = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAPIKey: string = import.meta.env.VITE_SUPABASE_KEY;
@@ -39,7 +40,7 @@ function AdminPage() {
       <section className={style.adminContentContainer}>
         <AdminTopBar/>
         {currentActive === "dashboard" && <AdminDashboard />}
-        {currentActive === "products" && <h2>Products Content</h2>}
+        {currentActive === "products" && <AdminProducts/>}
         {currentActive === "orders" && <h2>Orders Content</h2>}
         {currentActive === "settings" && <h2>Settings Page</h2>}
       </section>

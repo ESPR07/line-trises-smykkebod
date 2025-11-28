@@ -5,7 +5,7 @@ import ProductsIcon from "../../../assets/svg_components/ProductsIcon";
 import style from "./AdminSidebar.module.css";
 import EventButton from "../../utils/EventButton/EventButton";
 import SettingsIcon from "../../../assets/svg_components/SettingsIcon";
-import LogoutIcon from "../../../assets/svg_components/logoutIcon";
+import LogoutIcon from "../../../assets/svg_components/LogoutIcon";
 
 interface AdminSidebarProps {
   currentActive: "dashboard" | "products" | "orders" | "settings";

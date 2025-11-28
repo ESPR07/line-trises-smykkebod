@@ -1,0 +1,65 @@
+.updateModal {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.updateBox {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-color: var(--background);
+  height: 30vh;
+  width: 30vw;
+  padding: 10px;
+  border-radius: 10px;
+
+  p {
+    color: black;
+    text-align: center;
+    font-size: 1.5rem;
+  }
+}
+
+.closeButton {
+  border: none;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  font-size: 2rem;
+  background-color: var(--background);
+
+  &:hover {
+    cursor: pointer;
+  }
+
+}
+
+.updateButton {
+  background-color: rgb(224, 107, 107);
+  border: none;
+  border-radius: 10px;
+  color: var(--background);
+  padding: 20px;
+  font-size: 1.5rem;
+  margin-top: 20px;
+  opacity: 0.7;
+  transition: opacity 0.3s ease-in;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
+  }
+}

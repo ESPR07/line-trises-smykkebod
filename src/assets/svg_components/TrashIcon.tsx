@@ -1,11 +1,19 @@
-function TrashIcon() {
+import { Dispatch, SetStateAction } from "react";
+
+interface TrashIconProps {
+  removeValue: boolean;
+  removeItem: Dispatch<SetStateAction<boolean>>;
+}
+
+function TrashIcon({ removeValue, removeItem }: TrashIconProps) {
   return (
     <svg
-    className="svg_style"
+      className="svg_style"
       viewBox="0 0 1024 1024"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       fill="#000000"
+      onClick={() => removeItem(!removeValue)}
     >
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g

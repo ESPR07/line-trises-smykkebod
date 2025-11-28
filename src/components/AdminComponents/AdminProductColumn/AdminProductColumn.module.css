@@ -1,0 +1,31 @@
+.productColumnContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 50px;
+  max-height: 200px;
+  border-bottom: 2px dotted var(--highlight);
+  padding-bottom: 20px;
+
+  img {
+    margin-right: 20px;
+  }
+
+  h3 {
+    align-self: center;
+  }
+}
+
+.columnInteractions {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+
+  svg {
+    color: var(--highlight);
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
