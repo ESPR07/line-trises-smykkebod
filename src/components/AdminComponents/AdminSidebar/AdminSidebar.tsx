@@ -11,9 +11,10 @@ interface AdminSidebarProps {
   setCurrentActive: React.Dispatch<
     React.SetStateAction<"dashboard" | "products" | "orders" | "settings">
   >;
+  logout: any
 }
 
-function AdminSidebar({ currentActive, setCurrentActive }: AdminSidebarProps) {
+function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarProps) {
   const [highlightTop, setHighlightTop] = useState(0);
   const [highlightHeight, setHighlightHeight] = useState(0);
 
@@ -89,7 +90,7 @@ function AdminSidebar({ currentActive, setCurrentActive }: AdminSidebarProps) {
           <EventButton
             text="Logg Ut"
             event={() => {
-              console.log("logged out");
+              logout();
             }}
             buttonWidth={40}
           />

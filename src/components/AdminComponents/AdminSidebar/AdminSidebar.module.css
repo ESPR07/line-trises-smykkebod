@@ -35,9 +35,11 @@
       font-size: clamp(1.7rem, 2vw, 2.5rem);
       position: relative;
       z-index: 1;
+      border-radius: 10px 0 0 10px;
 
       &:hover {
         cursor: pointer;
+        background-color: rgba(224, 228, 231, 0.2);
       }
     }
   }
@@ -61,7 +63,6 @@
   }
 }
 
-
 .activeAdminLink {
   color: var(--highlight);
 
@@ -81,7 +82,6 @@
   transition: top 0.3s ease, height 0.3s ease;
   z-index: 0;
 }
-
 
 .dashboard {
   background-image: url("/src/assets/dashboard_icon.svg");

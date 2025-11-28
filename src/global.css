@@ -63,6 +63,7 @@ input {
   font-size: 1.3rem;
   text-align: center;
   color: var(--background);
+  border: none;
 }
 
 .svg_style {
