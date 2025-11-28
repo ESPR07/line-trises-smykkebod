@@ -5,6 +5,7 @@ import ProductsIcon from "../../../assets/svg_components/ProductsIcon";
 import style from "./AdminSidebar.module.css";
 import EventButton from "../../utils/EventButton/EventButton";
 import SettingsIcon from "../../../assets/svg_components/SettingsIcon";
+import LogoutIcon from "../../../assets/svg_components/logoutIcon";
 
 interface AdminSidebarProps {
   currentActive: "dashboard" | "products" | "orders" | "settings";
@@ -87,12 +88,14 @@ function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarP
           </ul>
         </article>
         <article className={style.adminSidebarInteractions}>
+          <LogoutIcon/>
           <EventButton
             text="Logg Ut"
             event={() => {
               logout();
             }}
             buttonWidth={40}
+            checkBox={false}
           />
         </article>
       </section>

@@ -48,6 +48,7 @@
 .adminSidebarInteractions {
   display: flex;
   justify-content: center;
+  align-items: center;
   margin-bottom: 50px;
   width: 100%;
 
@@ -57,7 +58,7 @@
     padding: 10px;
 
     &:hover {
-      background-color: var(--highlight);
+      background-color: rgba(224, 228, 231, 0.2);
       color: var(--background);
     }
   }

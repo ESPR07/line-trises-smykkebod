@@ -1,0 +1,47 @@
+.loginMainContainer {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.loginContainer {
+  background: var(--boxColor);
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+  width: 350px;
+  text-align: center;
+
+  p {
+    color: black;
+  }
+}
+
+.inputGroup {
+  text-align: left;
+  margin: 1rem 0;
+}
+
+.inputGroup label {
+  font-size: .9rem;
+  font-weight: 600;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: .6rem;
+  margin-top: .25rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  text-align: start;
+  color: var(--highlight);
+}
+
+.errorText {
+  color: #e53935 !important;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+}

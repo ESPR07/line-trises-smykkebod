@@ -1,12 +1,8 @@
 import AdminOverview from "../AdminOverview/AdminOverview";
-import AdminTopBar from "../AdminTopBar/AdminTopBar";
 
 function AdminDashboard() {
   return (
-    <>
-      <AdminTopBar/>
-      <AdminOverview/>
-    </>
+    <AdminOverview/>
   );
 }
 

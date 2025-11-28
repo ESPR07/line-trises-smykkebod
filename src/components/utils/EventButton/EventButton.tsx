@@ -5,9 +5,10 @@ interface ButtonProps {
   text: string;
   event: (e: React.MouseEvent<HTMLButtonElement>) => void;
   buttonWidth: number;
+  checkBox?: boolean;
 }
 
-function EventButton({ text, event, buttonWidth }: ButtonProps) {
+function EventButton({ text, event, buttonWidth, checkBox = true}: ButtonProps) {
   const [added, setAdded] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -19,6 +20,18 @@ function EventButton({ text, event, buttonWidth }: ButtonProps) {
     setAdded(true);
     setTimeout(() => setAdded(false), 1500); // revert after 1.5s
   };
+
+  if(!checkBox) {
+    return(
+      <button
+      style={{ width: `${buttonWidth}%` }}
+      className={`${style.eventButton}`}
+      onClick={event}
+    >
+      {text}
+    </button>
+    )
+  }
 
   return (
     <button
