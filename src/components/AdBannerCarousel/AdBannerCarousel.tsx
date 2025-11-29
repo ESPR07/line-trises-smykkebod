@@ -5,11 +5,11 @@ import NavigationButton from "../utils/Button/NavigationButton";
 // This will be replaced by real data later
 const images = [
   {
-    imageurl: "/src/assets//pexels-gdtography-277628-6563393.jpg",
+    imageurl: "/src/assets/images/pexels-gdtography-277628-6563393.jpg",
     imagealt: "this is a image!",
   },
   {
-    imageurl: "/src/assets//pexels-gdtography-277628-6563393.jpg",
+    imageurl: "/src/assets/images/pexels-gdtography-277628-6563393.jpg",
     imagealt: "this is a image!",
   },
 ];

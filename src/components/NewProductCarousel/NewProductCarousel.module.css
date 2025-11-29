@@ -62,6 +62,13 @@
   margin-inline: 2vw;
 }
 
+.emptyList {
+  width: 100%;
+  text-align: center;
+  color: var(--highlight);
+  font-size: 2rem;
+}
+
 .loader {
   font-size: 3rem;
   text-align: center;

@@ -1,0 +1,39 @@
+.adminProductsContainer {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  min-height: 80px;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+
+  h2 {
+    width: 100%;
+  }
+}
+
+.topSection {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.adminProductsHeader {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: bold;
+  padding: 10px 0;
+  border-bottom: 2px solid #ccc;
+  gap: 10px;
+}
+
+
+.adminProductsHeader span {
+  text-align: left
+}
+
+

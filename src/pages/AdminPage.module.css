@@ -1,0 +1,10 @@
+.adminPageContainer {
+  display: flex;
+  flex-direction: row;
+  padding-top: 0;
+}
+
+.adminContentContainer {
+  flex: 3;
+  margin-inline: 50px;
+}

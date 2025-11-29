@@ -1,11 +1,12 @@
-import { getProductList } from "../API/getProducts";
+import { useContext } from "react";
 import ProductCard from "../components/ProductCard/ProductCard";
 import style from "./BrowsePage.module.css";
+import { APIResult } from "../App";
 
 function BrowsePage() {
-  const { productList, isLoading, isError } = getProductList();
+  const { allProducts, loading, error } = useContext(APIResult);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <main className={style.browseMain}>
         <h1 className={style.browseHeader}>Alle Produkter</h1>
@@ -16,7 +17,7 @@ function BrowsePage() {
     );
   }
 
-  if (isError) {
+  if (error) {
     return (
       <main className={style.browseMain}>
         <h1 className={style.browseHeader}>Alle Produkter</h1>
@@ -42,7 +43,8 @@ function BrowsePage() {
         </article>
         <span className={style.divider}></span>
         <article className={style.productGrid}>
-          {productList?.map((product) => {
+          {allProducts?.length === 0 ? <h2>Ingen produkter til salgs</h2> : ""}
+          {allProducts?.map((product) => {
             return (
               <ProductCard
                 key={product.id}

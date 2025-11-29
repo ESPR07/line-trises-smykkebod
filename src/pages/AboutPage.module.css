@@ -1,3 +1,7 @@
+.aboutMain {
+  margin-inline: 10vw;
+}
+
 .aboutBanner {
   height: 600px;
   display: flex;
@@ -60,8 +64,14 @@
 }
 
 @media screen and (max-width: 900px) {
+  .aboutMain {
+    margin-top: 50px;
+  }
+
+
   .aboutBanner {
     flex-direction: column;
+    margin-bottom: 70px;
   }
 
   .aboutBannerTextContainer {

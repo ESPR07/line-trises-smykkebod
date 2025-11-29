@@ -4,8 +4,8 @@ import type { FetchResult } from '../types/Database';
 
 // --- Mock product data ---
 const mockProducts: FetchResult[] = [
-  { id: 1, name: 'Product A', price: 1, created_at: "A", discount: true, discount_amount: 1, image_url: "url", short_description: "short", long_description: "long" },
-  { id: 2, name: 'Product B', price: 2, created_at: "B", discount: false, discount_amount: 2, image_url: "url", short_description: "short", long_description: "long" },
+  { id: 1, name: 'Product A', price: 1, created_at: "A", discount: true, discount_amount: 1, image_url: "url", short_description: "short", long_description: "long", active_status: true },
+  { id: 2, name: 'Product B', price: 2, created_at: "B", discount: false, discount_amount: 2, image_url: "url", short_description: "short", long_description: "long", active_status: true },
 ];
 
 describe('getProductList hook', () => {

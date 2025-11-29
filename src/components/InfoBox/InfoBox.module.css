@@ -27,7 +27,8 @@
 }
 
 .infoImage {
-  width: 40vw;
+  width: 35vw;
+  max-height: 40vh;
   object-fit: cover;
   border-radius: 10px;
 }

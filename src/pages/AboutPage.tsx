@@ -3,7 +3,7 @@ import style from "./AboutPage.module.css";
 
 const AboutPage: React.FC = () => {
   return (
-    <main>
+    <main className={style.aboutMain}>
       <section className={style.aboutBanner}>
         <article className={style.aboutBannerTextContainer}>
           <h2>Hvem er jeg?</h2>
@@ -13,14 +13,14 @@ const AboutPage: React.FC = () => {
           </p>
         </article>
         <img
-          src="/src/assets/aboutSplashMe.webp"
+          src="/src/assets/images/aboutSplashMe.webp"
           alt="Bilde av en smykkelager i arbeid"
           className={style.aboutBannerImage}
         />
       </section>
       <section className={style.aboutBannerRight}>
         <img
-          src="/src/assets/aboutSplashMe2.webp"
+          src="/src/assets/images/aboutSplashMe2.webp"
           alt="Bilde av en smykkelager i arbeid"
           className={style.aboutBannerImage}
         />
@@ -40,7 +40,7 @@ const AboutPage: React.FC = () => {
           </p>
         </article>
         <img
-          src="/src/assets/aboutSplashMe.webp"
+          src="/src/assets/images/aboutSplashMe.webp"
           alt="Bilde av en smykkelager i arbeid"
           className={style.aboutBannerImage}
         />

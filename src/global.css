@@ -63,4 +63,11 @@ input {
   font-size: 1.3rem;
   text-align: center;
   color: var(--background);
+  border: none;
+}
+
+.svg_style {
+  height: 40px;
+  width: 40px;
+  color: var(--background);
 }
