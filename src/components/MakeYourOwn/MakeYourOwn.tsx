@@ -6,7 +6,7 @@ function MakeYourOwn() {
     <section className={style.customContainer}>
       <img
         className={style.customImage}
-        src="/src/assets/pexels-gdtography-277628-6563393.jpg"
+        src="/src/assets/images/encasedJewlery.webp"
         alt="Make your own jewelry"
       />
       <article className={style.customInfoBox}>

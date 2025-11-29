@@ -8,7 +8,7 @@
 .banner {
   width: 100%;
   height: 60vh;
-  background-image: url("/src/assets/workshop.jpg");
+  background-image: url("/src/assets/images/workshop.jpg");
   background-position: center;
   background-size: cover;
   position: fixed;
