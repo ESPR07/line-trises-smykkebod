@@ -8,25 +8,33 @@ const supabaseAPIKey = import.meta.env.VITE_SUPABASE_KEY;
 const supabaseClient = createClient<Database>(supabaseURL, supabaseAPIKey);
 
 export async function verifyCart(cartItems: CartItem[]) {
-  // Fetch authoritative prices from Supabase
+  // Fetch authoritative prices and discount prices from Supabase
   const { data, error } = await supabaseClient
     .from("products")
-    .select("id, price")
+    .select("id, price, discount_amount")
     .in("id", cartItems.map(item => item.id));
 
   if (error) throw error;
 
-  // Overwrite local prices with official prices
+  // Map local cart items to authoritative product info
   const verifiedCart = cartItems.map(item => {
     const product = data.find(p => p.id === item.id);
+    const price = product?.price ?? 0;
+    const discountPrice = product?.discount_amount ?? null;
+
     return {
       ...item,
-      price: product?.price ?? 0, // overwrite price
+      price,
+      discountPrice,
     };
   });
 
-  // Compute total based on authoritative prices
-  const total = verifiedCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // Compute total using discountPrice if available
+  const total = verifiedCart.reduce((sum, item) => {
+    const effectivePrice = item.discountPrice ?? 0;
+    const finalPrice = effectivePrice === 0 ? item.price : effectivePrice;
+    return sum + finalPrice * item.quantity;
+  }, 0);
 
   return { verifiedCart, total };
 }

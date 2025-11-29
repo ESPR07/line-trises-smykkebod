@@ -20,14 +20,10 @@ function ProductPage() {
 
   const handleAddToCart = ({
     id,
-    name,
-    discountPrice,
-    price,
-    imageURL,
   }: AddToCart) => {
     dispatch({
       type: "addToCart",
-      payload: { id, name, discountPrice, price, imageURL, quantity: 1 },
+      payload: { id, quantity: 1 },
     });
   };
 

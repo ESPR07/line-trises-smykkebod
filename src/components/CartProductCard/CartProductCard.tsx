@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import style from "./CartProductCard.module.css";
-import { Cart } from "../../App";
+import { CartItem } from "../../App";
 
 type Props = {
-  product: Cart["productList"][number];
-  onUpdate: (product: Cart["productList"][number], quantity: number) => void;
-  onRemove: (product: Cart["productList"][number]) => void;
+  product: CartItem;
+  onUpdate: (product: CartItem, quantity: number) => void;
+  onRemove: (product: CartItem) => void;
 };
 
 const CartProductCard = ({ product, onUpdate, onRemove }: Props) => {
