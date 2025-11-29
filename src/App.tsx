@@ -22,6 +22,7 @@ type APIInterface = {
   allProducts: FetchResult[] | undefined;
   loading: boolean;
   error: boolean;
+  fetchProducts: () => void;
 };
 
 export interface CartItem {
@@ -47,10 +48,11 @@ export const APIResult = createContext<APIInterface>({
   allProducts: [],
   loading: false,
   error: false,
+  fetchProducts: () => {}
 });
 
 function Layout() {
-  const { productList, isLoading, isError } = getProductList();
+  const { productList, isLoading, isError, fetchProducts} = getProductList();
 
   const localStoreCart = localStorage.getItem("cart");
 
@@ -62,7 +64,7 @@ function Layout() {
   return(
     <>
       <CartContext.Provider value={{ state: state, dispatch: dispatch}}>
-        <APIResult.Provider value={{ allProducts: productList, loading: isLoading, error: isError}}>
+        <APIResult.Provider value={{ allProducts: productList, loading: isLoading, error: isError, fetchProducts}}>
           <Navbar/>
           <Outlet/>
           <Footer/>
@@ -73,11 +75,11 @@ function Layout() {
 }
 
 function AdminLayout() {
-  const { productList, isLoading, isError } = getProductList();
+  const { productList, isLoading, isError, fetchProducts} = getProductList();
 
   return (
     <>
-      <APIResult.Provider value={{ allProducts: productList, loading: isLoading, error: isError}}>
+      <APIResult.Provider value={{ allProducts: productList, loading: isLoading, error: isError, fetchProducts}}>
         <Outlet/>
       </APIResult.Provider>
     </>

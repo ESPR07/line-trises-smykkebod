@@ -1,11 +1,13 @@
-import { getProductList } from "../../../API/getProducts";
+import { useContext } from "react";
 import AdminProductColumn from "../AdminProductColumn/AdminProductColumn";
 import style from "./AdminProducts.module.css";
+import { APIResult } from "../../../App";
+import EventButton from "../../utils/EventButton/EventButton";
 
 function AdminProducts() {
-  const { productList, isLoading, isError } = getProductList();
+  const { allProducts, loading, error } = useContext(APIResult);
 
-  if (isLoading) {
+  if (loading) {
     return (
       <article className={style.adminProductsContainer}>
         <h2>Laster...</h2>
@@ -13,25 +15,37 @@ function AdminProducts() {
     );
   }
 
-  if(isError) {
-    return(
+  if (error) {
+    return (
       <article className={style.adminProductsContainer}>
         <h2>Noe gikk galt</h2>
       </article>
-    )
+    );
   }
 
-  if(productList) {
+  if (allProducts) {
     return (
-    <article className={style.adminProductsContainer}>
-      <h2>Produkter</h2>
-      {productList?.map((product) => {
-        return(
-          <AdminProductColumn key={product.id} data={product}/>
-        )
-      })}
-    </article>
-  );
+      <article className={style.adminProductsContainer}>
+        <div className={style.topSection}>
+          <h2>Produkter</h2>
+          <EventButton text="Nytt Produkt" event={() => {console.log("Nytt Produkt!")}} buttonWidth={20}/>
+        </div>
+
+        {allProducts.length === 0 ? <h3>Her var det tomt</h3> : ""}
+
+        <div className={style.adminProductsHeader}>
+          <span>Bilde</span>
+          <span>Navn</span>
+          <span>Pris</span>
+          <span>Status</span>
+          <span>Handlinger</span>
+        </div>
+
+        {allProducts?.map((product) => {
+          return <AdminProductColumn key={product.id} data={product} />;
+        })}
+      </article>
+    );
   }
 }
 

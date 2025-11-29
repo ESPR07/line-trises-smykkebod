@@ -15,3 +15,25 @@
   }
 }
 
+.topSection {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.adminProductsHeader {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: bold;
+  padding: 10px 0;
+  border-bottom: 2px solid #ccc;
+  gap: 10px;
+}
+
+
+.adminProductsHeader span {
+  text-align: left
+}
+
+
