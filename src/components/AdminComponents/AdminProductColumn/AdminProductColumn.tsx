@@ -19,12 +19,12 @@ function AdminProductColumn({ data }: ProductCardProps) {
       <img src={data.image_url} alt={data.name} />
       <h3>{data.name}</h3>
       {data.discount ? <h3>{data.discount_amount}</h3> : <h3>{data.price}</h3>}
-      <h3>Aktiv</h3>
+      <h3>{data.active_status ? "Aktiv" : "Inaktiv"}</h3>
       <div className={style.columnInteractions}>
         <TrashIcon removeValue={deleteBox} removeItem={setDeleteBox}/>
         <EditIcon updateValue={updateBox} updateItem={setUpdateBox}/>
       </div>
-      {deleteBox ? <DeleteBox id={data.id} deleteBoxValue={deleteBox} toggleDeleteBox={setDeleteBox}/> : ""}
+      {deleteBox ? <DeleteBox id={data.id} imageUrl={data.image_url} deleteBoxValue={deleteBox} toggleDeleteBox={setDeleteBox}/> : ""}
       {updateBox ? <UpdateBox product={data} updateBoxValue={updateBox} toggleUpdateBox={setUpdateBox}/> : ""}
     </div>
   );

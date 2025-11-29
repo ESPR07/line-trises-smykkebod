@@ -44,7 +44,7 @@
   width: 100%;
 }
 
-.updateBox input {
+.updateBox input, .updateBox textArea {
   font-family: "montserrat", "Courier New", Courier, monospace;
   font-size: 1.3rem;
   padding: 10px;
@@ -92,11 +92,11 @@
 }
 
 .previewImage {
-  width: "150px";
-  height: "150px";
-  object-fit: "cover";
-  border-radius: "8px";
-  margin-top: "10px";
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-top: 10px;
 }
 
 .error, .previewError {

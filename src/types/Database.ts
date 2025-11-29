@@ -32,5 +32,6 @@ export type FetchResult = {
     discount_amount: number | null,
     image_url: string,
     short_description: string,
-    long_description: string
+    long_description: string,
+    active_status: boolean
   }
