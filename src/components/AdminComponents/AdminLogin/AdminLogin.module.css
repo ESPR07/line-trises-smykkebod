@@ -3,10 +3,14 @@
   height: 100vh;
   justify-content: center;
   align-items: center;
+  background-image: url("/src/assets/images/loginBackground.webp");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .loginContainer {
-  background: var(--boxColor);
+  background: var(--compContainer);
   padding: 2rem 3rem;
   border-radius: 12px;
   box-shadow: 0 4px 18px rgba(0,0,0,0.1);
@@ -44,4 +48,10 @@
   margin-bottom: 20px;
   font-size: 1rem;
   font-weight: 600;
+}
+
+.backgroundCredits {
+  position: absolute;
+  bottom: 30px;
+  color: var(--highlight);
 }

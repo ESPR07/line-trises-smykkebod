@@ -60,6 +60,7 @@ function AdminLogin() {
           checkBox={false}
         />
       </section>
+      <a className={style.backgroundCredits} href="https://www.freepik.com/free-photo/gold-heart-neutral-earth-tone-background_13311594.htm#fromView=search&page=1&position=41&uuid=c67c576a-e5f6-42f7-8cab-d33322e0de08&query=Jewelry+background">Image by rawpixel.com on Freepik</a>
     </main>
   );
 }

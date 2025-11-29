@@ -25,7 +25,7 @@ function AdminProductColumn({ data }: ProductCardProps) {
         <EditIcon updateValue={updateBox} updateItem={setUpdateBox}/>
       </div>
       {deleteBox ? <DeleteBox id={data.id} deleteBoxValue={deleteBox} toggleDeleteBox={setDeleteBox}/> : ""}
-      {updateBox ? <UpdateBox id={"2"} deleteBoxValue={deleteBox} toggleDeleteBox={setDeleteBox}/> : ""}
+      {updateBox ? <UpdateBox id={"2"} updateBoxValue={updateBox} toggleUpdateBox={setUpdateBox}/> : ""}
     </div>
   );
 }
