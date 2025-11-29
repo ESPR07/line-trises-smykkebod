@@ -164,6 +164,7 @@
 @media screen and (max-width: 900px) {
   .contactMain {
     margin-inline: 5vw;
+    margin-bottom: 50px;
   }
 
   .contactStatic {
