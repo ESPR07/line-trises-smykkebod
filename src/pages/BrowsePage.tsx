@@ -43,6 +43,7 @@ function BrowsePage() {
         </article>
         <span className={style.divider}></span>
         <article className={style.productGrid}>
+          {allProducts?.length === 0 ? <h2>Ingen produkter til salgs</h2> : ""}
           {allProducts?.map((product) => {
             return (
               <ProductCard
