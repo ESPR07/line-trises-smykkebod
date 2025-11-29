@@ -3,7 +3,7 @@ import style from "./AboutPage.module.css";
 
 const AboutPage: React.FC = () => {
   return (
-    <main>
+    <main className={style.aboutMain}>
       <section className={style.aboutBanner}>
         <article className={style.aboutBannerTextContainer}>
           <h2>Hvem er jeg?</h2>
