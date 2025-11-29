@@ -1,4 +1,4 @@
-import { Cart, CartItem } from "../App";
+import { Cart, CartItemMinimal } from "../App";
 
 export const initialValue: Cart = {
   productList: [],
@@ -7,72 +7,46 @@ export const initialValue: Cart = {
 
 export type InteractionAction = {
   type: "addToCart" | "updateProduct" | "clearCart";
-  payload: CartItem;
-};
-
-const calculateTotalPrice = (cart: CartItem[]): number => {
-  return cart.reduce((total, product) => {
-    const price = product.discountPrice ?? product.price;
-    return total + price * product.quantity;
-  }, 0);
+  payload: CartItemMinimal;
 };
 
 const syncLocalStorage = (cartState: Cart) => {
-  localStorage.setItem("cart", JSON.stringify(cartState));
+  localStorage.setItem("cart", JSON.stringify(cartState.productList));
   window.dispatchEvent(new Event("storage"));
 };
 
 const cartInteractions = (state: Cart, action: InteractionAction): Cart => {
   let cart = [...state.productList];
-  const payload = action.payload;
+  const { id, quantity } = action.payload;
 
   switch (action.type) {
     case "addToCart": {
-      const index = cart.findIndex((item) => item.id === payload.id);
-      const quantityToAdd = payload.quantity ?? 1;
-
-      const fullItem: CartItem = {
-        id: payload.id,
-        name: payload.name,
-        price: payload.price,
-        discountPrice: payload.discountPrice,
-        imageURL: payload.imageURL,
-        quantity: quantityToAdd,
-      };
+      const index = cart.findIndex((item) => item.id === id);
+      const quantityToAdd = quantity ?? 1;
 
       if (index === -1) {
-        cart.push(fullItem);
+        cart.push({ id, quantity: quantityToAdd });
       } else {
-        const existing = cart[index];
-        cart[index] = {
-          ...existing,
-          ...fullItem, // Fill in any missing fields
-          quantity: existing.quantity + quantityToAdd,
-        };
+        cart[index].quantity += quantityToAdd;
       }
 
-      const totalPrice = calculateTotalPrice(cart);
-      const newCartState = { productList: cart, totalPrice };
+      const newCartState = { productList: cart, totalPrice: 0 };
       syncLocalStorage(newCartState);
       return newCartState;
     }
 
     case "updateProduct": {
-      const index = cart.findIndex((item) => item.id === payload.id);
+      const index = cart.findIndex((item) => item.id === id);
 
       if (index !== -1) {
-        if ((payload.quantity ?? 0) < 1) {
-          cart.splice(index, 1); // Remove item
+        if (quantity < 1) {
+          cart.splice(index, 1);
         } else {
-          cart[index] = {
-            ...cart[index],
-            quantity: payload.quantity!,
-          };
+          cart[index].quantity = quantity;
         }
       }
 
-      const totalPrice = calculateTotalPrice(cart);
-      const newCartState = { productList: cart, totalPrice };
+      const newCartState = { productList: cart, totalPrice: 0 };
       syncLocalStorage(newCartState);
       return newCartState;
     }
