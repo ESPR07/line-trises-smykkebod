@@ -15,8 +15,6 @@ function CartPage() {
   const [totalDiscount, setTotalDiscount] = useState<number>(0);
   const [verifiedTotal, setVerifiedTotal] = useState<number | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  console.log("Discount", totalDiscount);
-  console.log("Total", totalPrice);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -48,7 +46,6 @@ function CartPage() {
     });
 
     const validItems = enriched.filter((p): p is CartItem => p !== null);
-    console.log(validItems);
 
     const calculatedAfterDiscount = validItems.reduce((sum, item) => {
       const discount = item.discountPrice ?? 0;
