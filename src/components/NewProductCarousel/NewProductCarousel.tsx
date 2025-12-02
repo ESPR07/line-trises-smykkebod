@@ -62,7 +62,7 @@ function NewProductCarousel() {
         {allProducts?.length === 0 ? <h2 className={style.emptyList}>Ingen produkter til salg</h2> : ""}
         {allProducts?.map((product : FetchResult) => {
           return(
-            <ProductCard key={product.id} imageURL={product.image_url} name={product.name} price={product.price} discount={product.discount} discountPrice={product.discount_amount} id={product.id}/>
+            <ProductCard key={product.id} imageURL={product.image_url || ""} name={product.name} price={product.price} discount={product.discount} discountPrice={product.discount_amount} id={product.id}/>
           )
         })}
       </ul>

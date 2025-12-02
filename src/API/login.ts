@@ -6,9 +6,5 @@ export async function login(email: string, password: string) {
     password,
   });
 
-  if (error) {
-    throw error;
-  }
-
-  return data;
+  return { data, error };
 }

@@ -17,7 +17,7 @@ export function useSingleProduct(id: string) {
           .from("products")
           .select("*")
           .eq("id", id)
-          .maybeSingle(); // returns single object or null
+          .single();
 
         if (error) {
           console.error("Error fetching product:", error.message);

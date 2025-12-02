@@ -25,8 +25,7 @@ function ProductPage() {
     });
   };
 
-  const singleProduct = product?.[0];
-  if (!singleProduct) return null;
+  if (!product) return null;
 
   if (isLoading) {
     return (
@@ -59,11 +58,11 @@ function ProductPage() {
           <div className={style.backArrow}></div>
           <p className={style.backText}>Tilbake</p>
         </Link>
-        <h1 className={style.productHeader}>{singleProduct.name}</h1>
+        <h1 className={style.productHeader}>{product.name}</h1>
         <section className={style.productContainer}>
           <article className={style.imageContainer}>
             <img
-              src={singleProduct.image_url}
+              src={product.image_url}
               alt="Product Image"
               className={style.productImage}
             />
@@ -72,14 +71,14 @@ function ProductPage() {
             <div className={style.priceContainer}>
               <p
                 className={`${style.productPrice} ${
-                  singleProduct.discount ? style.discounted : ""
+                  product.discount ? style.discounted : ""
                 }`}
               >
-                kr {singleProduct.price}
+                kr {product.price}
               </p>
-              {singleProduct.discount ? (
+              {product.discount ? (
                 <p className={style.discountedPrice}>
-                  kr {singleProduct.discount_amount}
+                  kr {product.discount_amount}
                 </p>
               ) : (
                 ""
@@ -90,16 +89,16 @@ function ProductPage() {
                 <li>Beskrivelse</li>
               </ul>
               <div className={style.textButtonWrapper}>
-                <p>{singleProduct.long_description}</p>
+                <p>{product.long_description}</p>
                 <EventButton
                   text="Legg til i Handlekurv"
                   event={() => {
                     handleAddToCart({
-                      id: singleProduct.id,
-                      name: singleProduct.name,
-                      discountPrice: singleProduct.discount_amount,
-                      price: singleProduct.price,
-                      imageURL: singleProduct.image_url,
+                      id: product.id,
+                      name: product.name,
+                      discountPrice: product.discount_amount,
+                      price: product.price,
+                      imageURL: product.image_url || "",
                     });
                   }}
                   buttonWidth={100}

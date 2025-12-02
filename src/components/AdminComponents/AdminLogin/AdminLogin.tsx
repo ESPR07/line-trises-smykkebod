@@ -16,7 +16,7 @@ function AdminLogin() {
     const { error } = await login(email, password);
 
     if (error) {
-      setErrorMessage(error.message);
+      setErrorMessage(error?.message || "Ukjent feil");
     }
 
     setLoading(false);

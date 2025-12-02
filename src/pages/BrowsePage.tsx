@@ -48,7 +48,7 @@ function BrowsePage() {
             return (
               <ProductCard
                 key={product.id}
-                imageURL={product.image_url}
+                imageURL={product.image_url || ""}
                 name={product.name}
                 price={product.price}
                 discount={product.discount}
