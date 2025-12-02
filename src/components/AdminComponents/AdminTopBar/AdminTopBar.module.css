@@ -11,6 +11,7 @@
 
 .searchBar {
   display: flex;
+  width: 95%;
 
   svg {
     height: 60px;
@@ -22,6 +23,7 @@
     background-color: var(--background);
     border: none;
     height: 60px;
+    width: 100%;
     color: var(--highlight);
     text-align: start;
     font-size: 2rem;

@@ -9,7 +9,7 @@ type Props = {
 };
 
 const CartProductCard = ({ product, onUpdate, onRemove }: Props) => {
-  const [quantity, setQuantity] = useState(product.quantity);
+  const [quantity, setQuantity] = useState<number>(product.quantity);
 
   useEffect(() => {
     setQuantity(product.quantity);

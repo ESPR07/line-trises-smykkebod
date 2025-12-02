@@ -104,7 +104,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
         <label>
           Produktnavn:
           <input
-            placeholder="F.eks. Super T-skjorte"
+            placeholder="F.eks. Rødt Smykke"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />

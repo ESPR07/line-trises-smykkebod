@@ -100,7 +100,7 @@
   flex-direction: column;
   margin-top: 20px;
   width: 100%;
-  margin-bottom: 20px;
+  height: 100%;
 
   ul {
     list-style: none;
@@ -128,6 +128,13 @@
   background-color: rgba(61, 61, 61, 0.4);
   height: 2px;
   transform: translateY(-2px);
+}
+
+.textButtonWrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
 }
 
 @media screen and (max-width: 900px) {

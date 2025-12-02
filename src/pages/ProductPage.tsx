@@ -18,9 +18,7 @@ function ProductPage() {
   const { product, isLoading, isError } = getSingleProduct(Number(id));
   const dispatch = useContext(CartContext).dispatch;
 
-  const handleAddToCart = ({
-    id,
-  }: AddToCart) => {
+  const handleAddToCart = ({ id }: AddToCart) => {
     dispatch({
       type: "addToCart",
       payload: { id, quantity: 1 },
@@ -91,21 +89,23 @@ function ProductPage() {
               <ul>
                 <li>Beskrivelse</li>
               </ul>
-              <p>{singleProduct.long_description}</p>
+              <div className={style.textButtonWrapper}>
+                <p>{singleProduct.long_description}</p>
+                <EventButton
+                  text="Legg til i Handlekurv"
+                  event={() => {
+                    handleAddToCart({
+                      id: singleProduct.id,
+                      name: singleProduct.name,
+                      discountPrice: singleProduct.discount_amount,
+                      price: singleProduct.price,
+                      imageURL: singleProduct.image_url,
+                    });
+                  }}
+                  buttonWidth={100}
+                />
+              </div>
             </section>
-            <EventButton
-              text="Legg til i Handlekurv"
-              event={() => {
-                handleAddToCart({
-                  id: singleProduct.id,
-                  name: singleProduct.name,
-                  discountPrice: singleProduct.discount_amount,
-                  price: singleProduct.price,
-                  imageURL: singleProduct.image_url,
-                });
-              }}
-              buttonWidth={100}
-            />
           </article>
         </section>
       </main>
