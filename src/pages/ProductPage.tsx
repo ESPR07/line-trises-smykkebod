@@ -1,12 +1,12 @@
 import { Link, useParams } from "react-router";
 import style from "./ProductPage.module.css";
-import { getSingleProduct } from "../API/getSingleProduct";
+import { useSingleProduct } from "../API/useSingleProduct";
 import EventButton from "../components/utils/EventButton/EventButton";
 import { useContext } from "react";
 import { CartContext } from "../App";
 
 type AddToCart = {
-  id: number;
+  id: string;
   name: string;
   discountPrice: number | null;
   price: number;
@@ -14,8 +14,8 @@ type AddToCart = {
 };
 
 function ProductPage() {
-  let { id } = useParams();
-  const { product, isLoading, isError } = getSingleProduct(Number(id));
+  const { id } = useParams() as { id: string };
+  const { product, isLoading, isError } = useSingleProduct(id);
   const dispatch = useContext(CartContext).dispatch;
 
   const handleAddToCart = ({ id }: AddToCart) => {

@@ -1,26 +1,39 @@
-import { useState, useEffect, useContext, ChangeEvent } from "react";
+import { useState, useEffect, useContext, ChangeEvent, useRef } from "react";
 import style from "./UpdateBox.module.css";
 import { useUpdateProduct } from "../../../API/useUpdateProduct";
 import { APIResult } from "../../../App";
 import { uploadImage } from "../../../API/uploadImage";
-import { FetchResult } from "../../../types/Database";
+import { FetchResult } from "../../../@types/Database";
+import { supabaseClient } from "../../../components/utils/supabaseClient"; // single Supabase v2 client
 
-// Hash utility for files
+// Utility: Hash a file for deduplication
 async function hashFile(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
   const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-// Deduplicated upload using hash
+// Upload file using hash as filename
 async function uploadImageWithHash(file: File): Promise<string | null> {
   const fileHash = await hashFile(file);
   const extension = file.name.split(".").pop();
   const fileName = `products/${fileHash}.${extension}`;
-
-  // uploadImage now accepts filename
   return uploadImage(file, fileName);
+}
+
+// Parse Supabase public URL into bucket & path
+function parseSupabaseFilePath(imageUrl: string) {
+  try {
+    const url = new URL(imageUrl);
+    const parts = url.pathname.split("/storage/v1/object/public/");
+    if (!parts[1]) return null;
+    const [bucket, ...fileParts] = parts[1].split("/");
+    const filePath = fileParts.join("/").split("?")[0];
+    return { bucket, filePath };
+  } catch {
+    return null;
+  }
 }
 
 interface UpdateBoxProps {
@@ -29,8 +42,9 @@ interface UpdateBoxProps {
   toggleUpdateBox: (val: boolean) => void;
 }
 
-function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: UpdateBoxProps) {
+export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: UpdateBoxProps) {
   const { fetchProducts } = useContext(APIResult);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [name, setName] = useState<string>(product.name);
   const [price, setPrice] = useState<string>(product.price.toString());
@@ -43,27 +57,26 @@ function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: UpdateBoxProps)
 
   const { updateProduct, isLoading, isSuccess, isError } = useUpdateProduct();
 
-  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
+  // Handle file input and upload
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setUploading(true);
-
     const uploadedUrl = await uploadImageWithHash(file);
     if (uploadedUrl) {
       setImageUrl(`${uploadedUrl}?cacheBust=${Date.now()}`);
       setPreviewError(false);
     }
-
     setUploading(false);
   };
 
+  // Numeric input sanitization
   const handleNumericInput = (value: string, setter: (val: string) => void) => {
     if (value === "") {
       setter("");
       return;
     }
-
     let sanitized = value.replace(/[^0-9.]/g, "");
     const parts = sanitized.split(".");
     if (parts.length > 2) sanitized = parts[0] + "." + parts[1];
@@ -72,10 +85,13 @@ function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: UpdateBoxProps)
     setter(sanitized);
   };
 
-  const handleUpdate = async (): Promise<void> => {
+  // Update product, delete old image if replaced
+  const handleUpdate = async () => {
     const numericPrice = Number(price) || 0;
     const numericDiscount = Number(discountAmount) || 0;
     const hasDiscount = numericDiscount > 0;
+
+    const oldUrl = product.image_url;
 
     await updateProduct(product.id, {
       name,
@@ -84,14 +100,28 @@ function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: UpdateBoxProps)
       discount_amount: numericDiscount,
       image_url: imageUrl,
     });
+
+    // Delete old image if replaced
+    if (oldUrl && oldUrl !== imageUrl) {
+      const parsed = parseSupabaseFilePath(oldUrl);
+      if (parsed) {
+        const { bucket, filePath } = parsed;
+        const { error } = await supabaseClient.storage.from(bucket).remove([filePath]);
+        if (error) console.error("Failed to delete old image:", error.message);
+      }
+    }
   };
 
+  // Close modal after success
   useEffect(() => {
     if (isSuccess) {
       fetchProducts();
-      setTimeout(() => toggleUpdateBox(false), 1200);
+      timeoutRef.current = setTimeout(() => toggleUpdateBox(false), 1200);
     }
-  }, [isSuccess, fetchProducts, toggleUpdateBox]);
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [isSuccess]);
 
   return (
     <div className={style.updateModal}>
@@ -138,7 +168,7 @@ function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: UpdateBoxProps)
 
         {imageUrl && !previewError && (
           <img
-          className={style.previewImage}
+            className={style.previewImage}
             src={imageUrl}
             alt="Preview"
             onError={() => setPreviewError(true)}
@@ -162,5 +192,3 @@ function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: UpdateBoxProps)
     </div>
   );
 }
-
-export default UpdateBox;

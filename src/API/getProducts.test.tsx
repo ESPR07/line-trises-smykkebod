@@ -1,11 +1,11 @@
 import { render, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { FetchResult } from '../types/Database';
+import type { FetchResult } from '../@types/Database';
 
 // --- Mock product data ---
 const mockProducts: FetchResult[] = [
-  { id: 1, name: 'Product A', price: 1, created_at: "A", discount: true, discount_amount: 1, image_url: "url", short_description: "short", long_description: "long", active_status: true },
-  { id: 2, name: 'Product B', price: 2, created_at: "B", discount: false, discount_amount: 2, image_url: "url", short_description: "short", long_description: "long", active_status: true },
+  { id: "1", name: 'Product A', price: 1, created_at: "A", discount: true, discount_amount: 1, image_url: "url", short_description: "short", long_description: "long", active_status: true },
+  { id: "2", name: 'Product B', price: 2, created_at: "B", discount: false, discount_amount: 2, image_url: "url", short_description: "short", long_description: "long", active_status: true },
 ];
 
 describe('getProductList hook', () => {
@@ -24,12 +24,12 @@ describe('getProductList hook', () => {
       };
     });
 
-    const { getProductList } = await import('./getProducts');
+    const { useProductList } = await import('./useProducts');
 
-    let hookResult: ReturnType<typeof getProductList> | undefined;
+    let hookResult: ReturnType<typeof useProductList> | undefined;
 
     const TestComponent: React.FC = () => {
-      hookResult = getProductList();
+      hookResult = useProductList();
       return null;
     };
 
@@ -52,12 +52,12 @@ describe('getProductList hook', () => {
       };
     });
 
-    const { getProductList } = await import('./getProducts');
+    const { useProductList } = await import('./useProducts');
 
-    let hookResult: ReturnType<typeof getProductList> | undefined;
+    let hookResult: ReturnType<typeof useProductList> | undefined;
 
     const TestComponent: React.FC = () => {
-      hookResult = getProductList();
+      hookResult = useProductList();
       return null;
     };
 

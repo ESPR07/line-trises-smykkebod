@@ -20,7 +20,7 @@ function Navbar() {
           .reduce((a, b) => a + b, 0)
       : 0;
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   function navigateCart() {
     navigate("/cart");

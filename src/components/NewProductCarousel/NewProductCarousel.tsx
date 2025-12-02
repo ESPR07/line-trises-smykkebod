@@ -1,7 +1,7 @@
 import { useContext, useRef } from "react";
 import ProductCard from "../ProductCard/ProductCard";
 import style from "./NewProductCarousel.module.css"
-import { FetchResult } from "../../types/Database";
+import { FetchResult } from "../../@types/Database";
 import { APIResult } from "../../App";
 
 function NewProductCarousel() {

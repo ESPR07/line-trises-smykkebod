@@ -1,8 +1,4 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-
-const supabaseURL: string = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAPIKey: string = import.meta.env.VITE_SUPABASE_KEY;
-const supabaseClient: SupabaseClient = createClient(supabaseURL, supabaseAPIKey);
+import { supabaseClient } from "../components/utils/supabaseClient";
 
 export async function uploadImage(file: File, fileName?: string): Promise<string | null> {
   try {
@@ -20,6 +16,11 @@ export async function uploadImage(file: File, fileName?: string): Promise<string
     const { data } = supabaseClient.storage
       .from("product.images")
       .getPublicUrl(filePath);
+
+    if (!data?.publicUrl) {
+      console.error("Failed to get public URL");
+      return null;
+    }
 
     return data.publicUrl + `?cacheBust=${Date.now()}`;
   } catch (err) {

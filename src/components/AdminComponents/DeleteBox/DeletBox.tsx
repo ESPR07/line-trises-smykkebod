@@ -4,7 +4,7 @@ import style from "./DeleteBox.module.css";
 import { APIResult } from "../../../App";
 
 interface DeleteBoxProps {
-  id: number;
+  id: string;
   imageUrl?: string;
   deleteBoxValue: boolean;
   toggleDeleteBox: (val: boolean) => void;
@@ -27,7 +27,7 @@ function DeleteBox({ id, imageUrl, deleteBoxValue, toggleDeleteBox }: DeleteBoxP
         toggleDeleteBox(false);
       }, 1500);
     }
-  }, [result]);
+  }, [result, fetchProducts, toggleDeleteBox]);
 
   // Show storage error message temporarily
   useEffect(() => {

@@ -1,13 +1,11 @@
-import { createClient } from "@supabase/supabase-js";
-import { Database, FetchResult } from "../types/Database";
 import { useEffect, useState } from "react";
+import { supabaseClient } from "../components/utils/supabaseClient";
+import { Database } from "../@types/Database";
 
-const supabaseURL: string = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAPIKey: string = import.meta.env.VITE_SUPABASE_KEY;
-const supabaseClient = createClient<Database>(supabaseURL, supabaseAPIKey);
-
-export function getProductList() {
-  const [productList, setProductList] = useState<FetchResult[]>();
+export function useProductList() {
+  const [productList, setProductList] = useState<
+    Database["public"]["Tables"]["products"]["Row"][] | undefined
+  >(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
 
@@ -18,14 +16,16 @@ export function getProductList() {
 
       const { data, error } = await supabaseClient
         .from("products")
-        .select();
+        .select("*");
 
       if (error) {
+        console.error("Error fetching products:", error.message);
         setIsError(true);
-      } else {
+      } else if (data) {
         setProductList(data);
       }
     } catch (err) {
+      console.error("Unexpected error:", err);
       setIsError(true);
     } finally {
       setIsLoading(false);

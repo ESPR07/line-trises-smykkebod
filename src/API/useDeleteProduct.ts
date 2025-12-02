@@ -1,12 +1,7 @@
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "../types/Database";
 import { useState } from "react";
+import { supabaseClient } from "../components/utils/supabaseClient";
 
-const supabaseURL: string = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAPIKey: string = import.meta.env.VITE_SUPABASE_KEY;
-const supabaseClient = createClient<Database>(supabaseURL, supabaseAPIKey);
-
-interface DeleteResult {
+export interface DeleteResult {
   tableDeleted: boolean;
   storageDeleted: boolean | null;
   error?: string;
@@ -16,7 +11,7 @@ export function useDeleteProduct() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DeleteResult | null>(null);
 
-  async function deleteProduct(id: number, imageUrl?: string) {
+  async function deleteProduct(id: string, imageUrl?: string): Promise<void> {
     setIsLoading(true);
     setResult(null);
 
@@ -24,7 +19,6 @@ export function useDeleteProduct() {
     let storageDeleted: boolean | null = null;
 
     try {
-      // Delete product row
       const { error: tableError } = await supabaseClient
         .from("products")
         .delete()
@@ -41,26 +35,20 @@ export function useDeleteProduct() {
 
       tableDeleted = true;
 
-      // Delete image from storage
       if (imageUrl) {
         storageDeleted = false;
         try {
           const url = new URL(imageUrl);
-          // URL pathname: /storage/v1/object/public/<bucket>/<filePath>
           const parts = url.pathname.split("/storage/v1/object/public/");
           if (parts[1]) {
             const [bucket, ...fileParts] = parts[1].split("/");
-            const filePath = fileParts.join("/").split("?")[0]; // remove query string
+            const filePath = fileParts.join("/").split("?")[0];
 
             const { error: storageError } = await supabaseClient.storage
               .from(bucket)
               .remove([filePath]);
 
-            if (!storageError) {
-              storageDeleted = true;
-            } else {
-              storageDeleted = false;
-            }
+            storageDeleted = !storageError;
           } else {
             storageDeleted = null;
           }

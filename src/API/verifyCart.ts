@@ -1,24 +1,32 @@
-import { createClient } from "@supabase/supabase-js";
+import { supabaseClient } from "../components/utils/supabaseClient";
 import { CartItem } from "../App";
-import { Database } from "../types/Database";
+import { Database } from "../@types/Database";
 
-const supabaseURL = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAPIKey = import.meta.env.VITE_SUPABASE_KEY;
-
-const supabaseClient = createClient<Database>(supabaseURL, supabaseAPIKey);
+type ProductPriceInfo = Pick<
+  Database["public"]["Tables"]["products"]["Row"],
+  "id" | "price" | "discount_amount"
+>;
 
 export async function verifyCart(cartItems: CartItem[]) {
-  // Fetch authoritative prices and discount prices from Supabase
+  if (cartItems.length === 0) {
+    return { verifiedCart: [] as (CartItem & { price: number; discountPrice: number | null })[], total: 0 };
+  }
+
+  // Fetch authoritative prices from Supabase
   const { data, error } = await supabaseClient
     .from("products")
     .select("id, price, discount_amount")
-    .in("id", cartItems.map(item => item.id));
+    .in(
+      "id",
+      cartItems.map((item) => item.id)
+    );
 
   if (error) throw error;
 
-  // Map local cart items to authoritative product info
-  const verifiedCart = cartItems.map(item => {
-    const product = data.find(p => p.id === item.id);
+  const products = data as ProductPriceInfo[];
+
+  const verifiedCart = cartItems.map((item) => {
+    const product = products.find((p) => p.id === item.id);
     const price = product?.price ?? 0;
     const discountPrice = product?.discount_amount ?? null;
 
@@ -29,11 +37,9 @@ export async function verifyCart(cartItems: CartItem[]) {
     };
   });
 
-  // Compute total using discountPrice if available
   const total = verifiedCart.reduce((sum, item) => {
-    const effectivePrice = item.discountPrice ?? 0;
-    const finalPrice = effectivePrice === 0 ? item.price : effectivePrice;
-    return sum + finalPrice * item.quantity;
+    const effectivePrice = item.discountPrice ?? item.price;
+    return sum + effectivePrice * item.quantity;
   }, 0);
 
   return { verifiedCart, total };

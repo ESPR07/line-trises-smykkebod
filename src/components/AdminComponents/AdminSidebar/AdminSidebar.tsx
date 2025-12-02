@@ -12,7 +12,7 @@ interface AdminSidebarProps {
   setCurrentActive: React.Dispatch<
     React.SetStateAction<"dashboard" | "products" | "orders" | "settings">
   >;
-  logout: any
+  logout: () => Promise<void>;
 }
 
 function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarProps) {

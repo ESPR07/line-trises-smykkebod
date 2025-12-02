@@ -10,11 +10,11 @@ interface ProductCardProps {
   price: number;
   discount: boolean;
   discountPrice: number | null;
-  id: number;
+  id: string;
 }
 
 type AddToCart = {
-  id: number;
+  id: string;
   name: string;
   discountPrice: number | null;
   price: number;

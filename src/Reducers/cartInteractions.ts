@@ -16,7 +16,7 @@ const syncLocalStorage = (cartState: Cart) => {
 };
 
 const cartInteractions = (state: Cart, action: InteractionAction): Cart => {
-  let cart = [...state.productList];
+  const cart = [...state.productList];
   const { id, quantity } = action.payload;
 
   switch (action.type) {

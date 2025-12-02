@@ -1,7 +1,7 @@
 import { useState } from "react";
 import EditIcon from "../../../assets/svg_components/EditIcon";
 import TrashIcon from "../../../assets/svg_components/TrashIcon";
-import { FetchResult } from "../../../types/Database";
+import { FetchResult } from "../../../@types/Database";
 import style from "./AdminProductColumn.module.css"
 import DeleteBox from "../DeleteBox/DeletBox";
 import UpdateBox from "../UpdateBox/UpdateBox";

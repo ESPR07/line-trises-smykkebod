@@ -11,11 +11,11 @@ import ContactPage from './pages/ContactPage'
 import AdminPage from './pages/AdminPage'
 import { createContext, useReducer } from "react";
 import cartInteractions, { InteractionAction, initialValue } from "./Reducers/cartInteractions"
-import { getProductList } from './API/getProducts'
-import { FetchResult } from './types/Database'
+import { useProductList } from './API/useProducts'
+import { Database } from './@types/Database'
 
 export interface CartItemMinimal {
-  id: number;
+  id: string;
   quantity: number;
 }
 
@@ -41,14 +41,14 @@ export const CartContext = createContext<{
 }>({ state: initialValue, dispatch: () => {} });
 
 export const APIResult = createContext({
-  allProducts: [] as FetchResult[] | undefined,
+  allProducts: [] as Database["public"]["Tables"]["products"]["Row"][] | undefined,
   loading: false,
   error: false,
   fetchProducts: () => {}
 });
 
 function Layout() {
-  const { productList, isLoading, isError, fetchProducts } = getProductList();
+  const { productList, isLoading, isError, fetchProducts } = useProductList();
   const localStoreCart = localStorage.getItem("cart");
 
   const [state, dispatch] = useReducer(
@@ -68,7 +68,7 @@ function Layout() {
 }
 
 function AdminLayout() {
-  const { productList, isLoading, isError, fetchProducts } = getProductList();
+  const { productList, isLoading, isError, fetchProducts } = useProductList();
 
   return (
     <APIResult.Provider value={{ allProducts: productList, loading: isLoading, error: isError, fetchProducts }}>

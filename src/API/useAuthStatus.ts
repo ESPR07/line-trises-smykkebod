@@ -1,22 +1,22 @@
 import { useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "../types/Database";
-
-const supabaseURL = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAPIKey = import.meta.env.VITE_SUPABASE_KEY;
-const supabaseClient = createClient<Database>(supabaseURL, supabaseAPIKey);
+import { Session } from "@supabase/supabase-js";
+import { supabaseClient } from "../components/utils/supabaseClient";
 
 export function useAuthStatus() {
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session | null>(null);
 
   useEffect(() => {
-    supabaseClient.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
+    supabaseClient.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) {
+        console.error("Failed to get session:", error.message);
+      } else {
+        setSession(session);
+      }
     });
 
     const { data: authListener } = supabaseClient.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
+      (_event, newSession) => {
+        setSession(newSession);
       }
     );
 

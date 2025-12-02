@@ -1,12 +1,8 @@
-import { createClient } from "@supabase/supabase-js";
 import { useState } from "react";
-import { Database } from "../types/Database";
+import { supabaseClient } from "../components/utils/supabaseClient";
+import { Database } from "../@types/Database";
 
-const supabaseURL = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAPIKey = import.meta.env.VITE_SUPABASE_KEY;
-const supabaseClient = createClient<Database>(supabaseURL, supabaseAPIKey);
-
-interface NewProductData {
+export interface NewProductData {
   name: string;
   price: number;
   discount: boolean;
@@ -21,18 +17,30 @@ export function useCreateProduct() {
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  async function createProduct(data: NewProductData) {
+  async function createProduct(data: NewProductData): Promise<Database["public"]["Tables"]["products"]["Row"] | null> {
     try {
       setIsLoading(true);
       setIsError(false);
       setIsSuccess(false);
 
-      const { error } = await supabaseClient.from("products").insert([data]);
+      const { data: insertedData, error } = await supabaseClient
+        .from("products")
+        .insert([data])
+        .select()
+        .single();
 
-      if (error) setIsError(true);
-      else setIsSuccess(true);
+      if (error) {
+        setIsError(true);
+        console.error("Insert error:", error.message);
+        return null;
+      } else {
+        setIsSuccess(true);
+        return insertedData;
+      }
     } catch (err) {
       setIsError(true);
+      console.error("Unexpected error:", err);
+      return null;
     } finally {
       setIsLoading(false);
     }
