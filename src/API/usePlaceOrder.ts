@@ -1,33 +1,6 @@
 import { useState } from "react";
 import { supabaseServiceClient } from "../components/utils/supabaseServiceClient";
-import { Database } from "../@types/Database";
-
-export interface NewOrderData {
-  customer: {
-    email: string;
-    phone: string;
-    firstName: string;
-    lastName: string;
-    adress: string;
-    sted: string;
-    postNr: string;
-  };
-  cart: {
-    id: string;
-    name: string;
-    quantity: number;
-    unitPrice: number;
-    lineTotal: number;
-  }[];
-  totals: {
-    verifiedTotal: number;
-    itemCount: number;
-  };
-  meta: {
-    createdAt: string;
-    clientPlatform: string;
-  };
-}
+import { Database, NewOrderData } from "../@types/Database";
 
 export function useCreateOrder() {
   const [isLoading, setIsLoading] = useState(false);

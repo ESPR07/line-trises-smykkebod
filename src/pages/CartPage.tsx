@@ -3,7 +3,7 @@ import style from "./CartPage.module.css";
 import { CartContext, CartItem, CartItemMinimal, APIResult } from "../App";
 import CartProductCard from "../components/CartProductCard/CartProductCard";
 import NavigationButton from "../components/utils/Button/NavigationButton";
-import { verifyCart } from "../API/verifyCart";
+import { handleCheckout as checkout } from "../API/checkout";
 import ShippingForm from "../components/utils/ShippingForm/ShippingForm";
 import { shippingData } from "../@types/Database";
 import { useCreateOrder } from "../API/usePlaceOrder";
@@ -11,7 +11,7 @@ import { useCreateOrder } from "../API/usePlaceOrder";
 function CartPage() {
   const { state: cartState, dispatch } = useContext(CartContext);
   const { allProducts } = useContext(APIResult);
-  const { createOrder, isLoading, isError, isSuccess } = useCreateOrder();
+  const { createOrder } = useCreateOrder();
 
   const [enrichedCart, setEnrichedCart] = useState<CartItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -70,79 +70,14 @@ function CartPage() {
     setTotalDiscount(calculatedDiscount);
   }, [cartState, allProducts]);
 
-  const handleCheckout = async () => {
-
-    if (enrichedCart.length === 0) return;
-
-    setIsProcessing(true);
-
-    try {
-      // SERVER VALIDATION (prevents all tampering)
-      const result = await verifyCart(enrichedCart);
-
-      // result should contain: items[], total, discounts, etc
-      const verifiedItems = result.verifiedCart;
-      const verifiedTotal = result.total;
-
-      setVerifiedTotal(verifiedTotal);
-
-      // Build full checkout payload
-      const checkoutPayload = {
-        customer_email: shippingData.email ?? "",
-        customer_phone: shippingData.phone ?? "",
-        customer_firstName: shippingData.firstName ?? "",
-        customer_lastName: shippingData.lastName ?? "",
-        customer_adress: shippingData.adress ?? "",
-        customer_place: shippingData.place ?? "",
-        customer_postNr: shippingData.postNr ?? "",
-
-        cart: verifiedItems.map((item) => {
-          const unitPrice =
-            item.discountPrice && item.discountPrice > 0
-              ? item.discountPrice
-              : item.price;
-
-          return {
-            id: item.id,
-            name: item.name,
-            quantity: item.quantity,
-            unitPrice,
-            lineTotal: unitPrice * item.quantity,
-          };
-        }),
-
-        totals: {
-          verifiedTotal,
-          itemCount: verifiedItems.reduce(
-            (sum, item) => sum + item.quantity,
-            0
-          ),
-        },
-
-        meta: {
-          createdAt: new Date().toISOString(),
-          clientPlatform: navigator.userAgent,
-        },
-      };
-
-      console.log("Checkout payload:", checkoutPayload);
-
-      const insertedOrder = await createOrder(checkoutPayload);
-
-      if (insertedOrder) {
-      console.log("Order successfully created:", insertedOrder);
-      // Optionally clear cart, redirect, or show success message
-      localStorage.removeItem("cart");
-    } else {
-      console.error("Failed to create order");
-    }
-    } catch (err) {
-      console.error("Checkout failed:", err);
-      localStorage.removeItem("cart");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  const handleCheckoutWrapper = () =>
+  checkout({
+    enrichedCart,
+    shippingData,
+    createOrder,
+    setVerifiedTotal,
+    setIsProcessing,
+  });
 
   if (enrichedCart.length === 0) {
     return (
@@ -208,7 +143,7 @@ function CartPage() {
             </div>
           </article>
           <ShippingForm
-            handleCheckout={handleCheckout}
+            handleCheckout={handleCheckoutWrapper}
             disabled={isProcessing}
             setShippingData={setShippingData}
           />

@@ -124,7 +124,7 @@ function ShippingForm({
           {...register("adress", {
             required: "Adresse mangler",
             pattern: {
-              value: /^[A-Za-zÆØÅæøå .\-]{2,}\s+[0-9]+[A-Za-z]?$/,
+              value: /^[A-Za-zÆØÅæøå .-]{2,}\s+[0-9]+[A-Za-z]?$/ ,
               message: "Ugyldig format",
             },
           })}

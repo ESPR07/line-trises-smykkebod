@@ -43,15 +43,13 @@ export type Database = {
       orders: {
         Row: {
           id: string;
-          customer: {
-            email: string;
-            phone: string;
-            firstName: string;
-            lastName: string;
-            adress: string;
-            sted: string;
-            postNr: string;
-          };
+          email: string;
+          phone: string;
+          firstName: string;
+          lastName: string;
+          adress: string;
+          sted: string;
+          postNr: string;
           cart: {
             id: string;
             name: string;
@@ -126,27 +124,53 @@ export type Database = {
   };
 };
 
-
 export type FetchResult = {
-    id: string;
-    name: string;
-    price: number;
-    discount: boolean;
-    discount_amount: number | null;
-    image_url?: string;
-    short_description?: string;
-    long_description?: string;
-    created_at?: string;
-    active_status?: boolean;
-}
+  id: string;
+  name: string;
+  price: number;
+  discount: boolean;
+  discount_amount: number | null;
+  image_url?: string;
+  short_description?: string;
+  long_description?: string;
+  created_at?: string;
+  active_status?: boolean;
+};
 
 export type shippingData = {
-  email: string,
-  phone: string,
-  firstName: string,
-  lastName: string,
-  adress: string,
-  place: string,
-  postNr: string
-}
+  email: string;
+  phone: string;
+  firstName: string;
+  lastName: string;
+  adress: string;
+  place: string;
+  postNr: string;
+};
 
+export interface NewOrderData {
+  customer_email: string;
+  customer_phone: string;
+  customer_firstName: string;
+  customer_lastName: string;
+  customer_adress: string;
+  customer_place: string;
+  customer_postNr: string;
+
+  cart: {
+    id: string;
+    name: string;
+    quantity: number;
+    unitPrice: number;
+    lineTotal: number;
+  }[];
+
+  totals: {
+    verifiedTotal: number;
+    itemCount: number;
+  };
+
+  meta: {
+    createdAt: string;
+    clientPlatform: string;
+  };
+}
