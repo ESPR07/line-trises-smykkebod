@@ -40,7 +40,7 @@ const AboutPage: React.FC = () => {
           </p>
         </article>
         <img
-          src="/src/assets/images/aboutSplashMe.webp"
+          src="/src/assets/images/aboutSplashMe3.webp"
           alt="Bilde av en smykkelager i arbeid"
           className={style.aboutBannerImage}
         />

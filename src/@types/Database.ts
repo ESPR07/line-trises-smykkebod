@@ -57,3 +57,13 @@ export type FetchResult = {
     active_status?: boolean;
 }
 
+export type shippingData = {
+  email: string,
+  phone: string,
+  firstName: string,
+  lastName: string,
+  adress: string,
+  place: string,
+  postNr: string
+}
+

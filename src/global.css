@@ -58,7 +58,7 @@ a {
   transition: 0.4s;
 }
 
-input {
+input, textarea {
   font-family: 'montserrat', 'Courier New', Courier, monospace;
   font-size: 1.3rem;
   text-align: center;

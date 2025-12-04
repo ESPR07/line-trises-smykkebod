@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from "react";
-import VippsButton from "../components/VippsButton/VippsButton";
 import style from "./CartPage.module.css";
 import { CartContext, CartItem, CartItemMinimal, APIResult } from "../App";
 import CartProductCard from "../components/CartProductCard/CartProductCard";
 import NavigationButton from "../components/utils/Button/NavigationButton";
 import { verifyCart } from "../API/verifyCart";
+import ShippingForm from "../components/utils/ShippingForm/ShippingForm";
+import { shippingData } from "../@types/Database";
 
 function CartPage() {
   const { state: cartState, dispatch } = useContext(CartContext);
@@ -14,7 +15,8 @@ function CartPage() {
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [totalDiscount, setTotalDiscount] = useState<number>(0);
   const [verifiedTotal, setVerifiedTotal] = useState<number | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [shippingData, setShippingData] = useState<Partial<shippingData>>({});
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -25,7 +27,7 @@ function CartPage() {
     if (!allProducts) return;
 
     const enriched = cartState.productList.map((cartItem: CartItemMinimal) => {
-      const product = allProducts.find((p) => p.id === cartItem.id);
+      const product = allProducts.find((product) => product.id === cartItem.id);
 
       if (!product) {
         console.warn("Product missing from API:", cartItem.id);
@@ -45,7 +47,9 @@ function CartPage() {
       } as CartItem;
     });
 
-    const validItems = enriched.filter((p): p is CartItem => p !== null);
+    const validItems = enriched.filter(
+      (product): product is CartItem => product !== null
+    );
 
     const calculatedAfterDiscount = validItems.reduce((sum, item) => {
       const discount = item.discountPrice ?? 0;
@@ -65,13 +69,66 @@ function CartPage() {
   }, [cartState, allProducts]);
 
   const handleCheckout = async () => {
+    console.log("Leveranse Detaljer: ", shippingData);
+
     if (enrichedCart.length === 0) return;
+
     setIsProcessing(true);
 
     try {
+      // SERVER VALIDATION (prevents all tampering)
       const result = await verifyCart(enrichedCart);
-      setVerifiedTotal(result.total);
-      console.log("Proceeding with verified total:", result.total);
+
+      // result should contain: items[], total, discounts, etc
+      const verifiedItems = result.verifiedCart;
+      const verifiedTotal = result.total;
+
+      setVerifiedTotal(verifiedTotal);
+
+      // Build full checkout payload
+      const checkoutPayload = {
+        customer: {
+          email: shippingData.email ?? "",
+          phone: shippingData.phone ?? "",
+          firstName: shippingData.firstName ?? "",
+          lastName: shippingData.lastName ?? "",
+          adress: shippingData.adress ?? "",
+          sted: shippingData.place ?? "",
+          postNr: shippingData.postNr ?? "",
+        },
+
+        cart: verifiedItems.map((item) => {
+          const unitPrice =
+            item.discountPrice && item.discountPrice > 0
+              ? item.discountPrice
+              : item.price;
+
+          return {
+            id: item.id,
+            name: item.name,
+            quantity: item.quantity,
+            unitPrice,
+            lineTotal: unitPrice * item.quantity,
+          };
+        }),
+
+        totals: {
+          verifiedTotal,
+          itemCount: verifiedItems.reduce(
+            (sum, item) => sum + item.quantity,
+            0
+          ),
+        },
+
+        meta: {
+          createdAt: new Date().toISOString(),
+          clientPlatform: navigator.userAgent,
+        },
+      };
+
+      console.log("Checkout payload:", checkoutPayload);
+
+      // TODO: Send checkoutPayload → Supabase or to your API route
     } catch (err) {
       console.error("Checkout failed:", err);
       alert("Something went wrong during checkout. Please try again.");
@@ -97,10 +154,6 @@ function CartPage() {
                 buttonWidth={100}
               />
             </article>
-            <VippsButton />
-            <button className={style.kortBetaling} disabled>
-              Kortbetaling
-            </button>
           </div>
         </section>
       </main>
@@ -148,14 +201,11 @@ function CartPage() {
               </p>
             </div>
           </article>
-          <VippsButton />
-          <button
-            className={style.kortBetaling}
-            onClick={handleCheckout}
+          <ShippingForm
+            handleCheckout={handleCheckout}
             disabled={isProcessing}
-          >
-            Kortbetaling
-          </button>
+            setShippingData={setShippingData}
+          />
         </div>
       </section>
     </main>
