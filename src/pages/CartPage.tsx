@@ -6,10 +6,12 @@ import NavigationButton from "../components/utils/Button/NavigationButton";
 import { verifyCart } from "../API/verifyCart";
 import ShippingForm from "../components/utils/ShippingForm/ShippingForm";
 import { shippingData } from "../@types/Database";
+import { useCreateOrder } from "../API/usePlaceOrder";
 
 function CartPage() {
   const { state: cartState, dispatch } = useContext(CartContext);
   const { allProducts } = useContext(APIResult);
+  const { createOrder, isLoading, isError, isSuccess } = useCreateOrder();
 
   const [enrichedCart, setEnrichedCart] = useState<CartItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -69,7 +71,6 @@ function CartPage() {
   }, [cartState, allProducts]);
 
   const handleCheckout = async () => {
-    console.log("Leveranse Detaljer: ", shippingData);
 
     if (enrichedCart.length === 0) return;
 
@@ -87,15 +88,13 @@ function CartPage() {
 
       // Build full checkout payload
       const checkoutPayload = {
-        customer: {
-          email: shippingData.email ?? "",
-          phone: shippingData.phone ?? "",
-          firstName: shippingData.firstName ?? "",
-          lastName: shippingData.lastName ?? "",
-          adress: shippingData.adress ?? "",
-          sted: shippingData.place ?? "",
-          postNr: shippingData.postNr ?? "",
-        },
+        customer_email: shippingData.email ?? "",
+        customer_phone: shippingData.phone ?? "",
+        customer_firstName: shippingData.firstName ?? "",
+        customer_lastName: shippingData.lastName ?? "",
+        customer_adress: shippingData.adress ?? "",
+        customer_place: shippingData.place ?? "",
+        customer_postNr: shippingData.postNr ?? "",
 
         cart: verifiedItems.map((item) => {
           const unitPrice =
@@ -128,10 +127,17 @@ function CartPage() {
 
       console.log("Checkout payload:", checkoutPayload);
 
-      // TODO: Send checkoutPayload → Supabase or to your API route
+      const insertedOrder = await createOrder(checkoutPayload);
+
+      if (insertedOrder) {
+      console.log("Order successfully created:", insertedOrder);
+      // Optionally clear cart, redirect, or show success message
+      localStorage.removeItem("cart");
+    } else {
+      console.error("Failed to create order");
+    }
     } catch (err) {
       console.error("Checkout failed:", err);
-      alert("Something went wrong during checkout. Please try again.");
       localStorage.removeItem("cart");
     } finally {
       setIsProcessing(false);

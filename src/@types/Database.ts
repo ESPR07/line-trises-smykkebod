@@ -40,9 +40,92 @@ export type Database = {
           active_status?: boolean;
         };
       };
+      orders: {
+        Row: {
+          id: string;
+          customer: {
+            email: string;
+            phone: string;
+            firstName: string;
+            lastName: string;
+            adress: string;
+            sted: string;
+            postNr: string;
+          };
+          cart: {
+            id: string;
+            name: string;
+            quantity: number;
+            unitPrice: number;
+            lineTotal: number;
+          }[];
+          totals: {
+            verifiedTotal: number;
+            itemCount: number;
+          };
+          meta: {
+            createdAt: string;
+            clientPlatform: string;
+          };
+        };
+        Insert: {
+          id?: string;
+          customer: {
+            email: string;
+            phone: string;
+            firstName: string;
+            lastName: string;
+            adress: string;
+            sted: string;
+            postNr: string;
+          };
+          cart: {
+            id: string;
+            name: string;
+            quantity: number;
+            unitPrice: number;
+            lineTotal: number;
+          }[];
+          totals: {
+            verifiedTotal: number;
+            itemCount: number;
+          };
+          meta: {
+            createdAt: string;
+            clientPlatform: string;
+          };
+        };
+        Update: {
+          customer?: {
+            email?: string;
+            phone?: string;
+            firstName?: string;
+            lastName?: string;
+            adress?: string;
+            sted?: string;
+            postNr?: string;
+          };
+          cart?: {
+            id: string;
+            name: string;
+            quantity: number;
+            unitPrice: number;
+            lineTotal: number;
+          }[];
+          totals?: {
+            verifiedTotal?: number;
+            itemCount?: number;
+          };
+          meta?: {
+            createdAt?: string;
+            clientPlatform?: string;
+          };
+        };
+      };
     };
   };
 };
+
 
 export type FetchResult = {
     id: string;
