@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { supabaseServiceClient } from "../components/utils/supabaseServiceClient";
 import { Database, NewOrderData } from "../@types/Database";
 
 export function useCreateOrder() {
@@ -15,20 +14,22 @@ export function useCreateOrder() {
       setIsError(false);
       setIsSuccess(false);
 
-      const { data: insertedData, error } = await supabaseServiceClient
-        .from("orders")
-        .insert([data])
-        .select()
-        .single();
+      const response = await fetch("/.netlify/functions/createOrder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-      if (error) {
+      const json = await response.json();
+
+      if (!response.ok) {
         setIsError(true);
-        console.error("Insert error:", error.message);
+        console.error("Order creation error:", json.error);
         return null;
-      } else {
-        setIsSuccess(true);
-        return insertedData;
       }
+
+      setIsSuccess(true);
+      return json as Database["public"]["Tables"]["orders"]["Row"];
     } catch (err) {
       setIsError(true);
       console.error("Unexpected error:", err);

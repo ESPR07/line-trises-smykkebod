@@ -73,6 +73,8 @@ function CartPage() {
   const handleCheckoutWrapper = () =>
   checkout({
     enrichedCart,
+    setEnrichedCart,
+    dispatch,
     shippingData,
     createOrder,
     setVerifiedTotal,
@@ -145,7 +147,7 @@ function CartPage() {
           <ShippingForm
             handleCheckout={handleCheckoutWrapper}
             disabled={isProcessing}
-            setShippingData={setShippingData}
+            setShippingInfo={setShippingData}
           />
         </div>
       </section>

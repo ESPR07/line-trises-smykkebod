@@ -9,10 +9,9 @@ type ProductPriceInfo = Pick<
 
 export async function verifyCart(cartItems: CartItem[]) {
   if (cartItems.length === 0) {
-    return { verifiedCart: [] as (CartItem & { price: number; discountPrice: number | null })[], total: 0 };
+    return { verifiedCart: [], total: 0 };
   }
 
-  // Fetch authoritative prices from Supabase
   const { data, error } = await supabaseClient
     .from("products")
     .select("id, price, discount_amount")
@@ -38,9 +37,10 @@ export async function verifyCart(cartItems: CartItem[]) {
   });
 
   const total = verifiedCart.reduce((sum, item) => {
-    const effectivePrice = item.discountPrice ?? item.price;
+    const effectivePrice = item.discountPrice != null && item.discountPrice > 0 ? item.discountPrice : item.price;
     return sum + effectivePrice * item.quantity;
   }, 0);
 
   return { verifiedCart, total };
 }
+

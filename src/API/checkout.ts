@@ -1,9 +1,13 @@
+import { SetStateAction } from "react";
 import { Database, NewOrderData } from "../@types/Database";
 import { CartItem } from "../App";
 import { verifyCart } from "./verifyCart";
+import { InteractionAction } from "../Reducers/cartInteractions";
 
 export interface CheckoutDependencies {
   enrichedCart: CartItem[];
+  setEnrichedCart: React.Dispatch<SetStateAction<CartItem[]>>;
+  dispatch: (action: InteractionAction) => void;
   shippingData: Partial<{
     email: string;
     phone: string;
@@ -20,17 +24,21 @@ export interface CheckoutDependencies {
 
 export async function handleCheckout({
   enrichedCart,
+  setEnrichedCart,
+  dispatch,
   shippingData,
   createOrder,
   setVerifiedTotal,
   setIsProcessing,
 }: CheckoutDependencies) {
+  
   if (enrichedCart.length === 0) return;
 
   setIsProcessing?.(true);
 
   try {
     const result = await verifyCart(enrichedCart);
+    console.log(result);
     const verifiedItems = result.verifiedCart;
     const verifiedTotal = result.total;
 
@@ -79,6 +87,8 @@ export async function handleCheckout({
     if (insertedOrder) {
       console.log("Order successfully created:", insertedOrder);
       localStorage.removeItem("cart");
+      setEnrichedCart([])
+      dispatch({ type: "clearCart", payload: { id: "", quantity: 0 } });
     } else {
       console.error("Failed to create order");
     }

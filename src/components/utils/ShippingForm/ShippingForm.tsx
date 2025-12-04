@@ -6,11 +6,11 @@ import VippsButton from "../../VippsButton/VippsButton";
 
 function ShippingForm({
   handleCheckout,
-  setShippingData,
+  setShippingInfo,
   disabled,
 }: {
   handleCheckout: () => Promise<void>;
-  setShippingData: React.Dispatch<React.SetStateAction<Partial<shippingData>>>;
+  setShippingInfo: React.Dispatch<React.SetStateAction<Partial<shippingData>>>;
   disabled: boolean;
 }) {
   const {
@@ -27,8 +27,8 @@ function ShippingForm({
   const formValues = useWatch({ control });
 
   useEffect(() => {
-    setShippingData(formValues);
-  }, [formValues, setShippingData]);
+    setShippingInfo(formValues);
+  }, [formValues, setShippingInfo]);
 
   return (
     <form className={style.shippingForm} onSubmit={handleSubmit(handleCheckout)}>
