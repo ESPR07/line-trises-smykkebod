@@ -4,7 +4,8 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useProductList } from "./useProducts";
 import type { Database } from "../@types/Database";
 
-const mockProducts: Database["public"]["Tables"]["products"]["Row"][] = [
+vi.mock("../components/utils/supabaseClient", () => {
+  const mockProducts: Database["public"]["Tables"]["products"]["Row"][] = [
   {
     id: "1",
     name: "Product A",
@@ -29,7 +30,6 @@ const mockProducts: Database["public"]["Tables"]["products"]["Row"][] = [
   },
 ];
 
-vi.mock("../components/utils/supabaseClient", () => {
   return {
     supabaseClient: {
       from: vi.fn().mockReturnValue({
@@ -40,6 +40,31 @@ vi.mock("../components/utils/supabaseClient", () => {
 });
 
 describe("useProductList hook", () => {
+  const mockProducts: Database["public"]["Tables"]["products"]["Row"][] = [
+  {
+    id: "1",
+    name: "Product A",
+    price: 1,
+    discount: true,
+    discount_amount: 1,
+    short_description: "short",
+    long_description: "long",
+    image_url: "url",
+    active_status: true,
+  },
+  {
+    id: "2",
+    name: "Product B",
+    price: 2,
+    discount: false,
+    discount_amount: 0,
+    short_description: "short",
+    long_description: "long",
+    image_url: "url",
+    active_status: true,
+  },
+];
+
   beforeEach(() => {
     vi.resetModules();
   });
