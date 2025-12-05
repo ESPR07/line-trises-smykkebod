@@ -1,0 +1,85 @@
+.adminOrdersContainer {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  min-height: 80px;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+}
+
+.adminOrdersContainer h2 {
+  width: 100%;
+}
+
+.adminOrdersHeader {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: bold;
+  padding: 10px 0;
+  border-bottom: 2px solid #e5e7eb;
+  gap: 10px;
+}
+
+.adminOrdersHeader span {
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+
+.adminOrdersHeader span:hover {
+  background-color: #f3f4f6;
+  cursor: pointer;
+  color: #2563eb;
+}
+
+.adminOrdersHeader .amount:hover {
+  background-color: transparent;
+  cursor: default;
+  color: inherit;
+}
+
+.adminOrdersHeader span.activeSort {
+  color: #2563eb;
+  background-color: #eff6ff;
+}
+
+.orderId, .amount, .status {
+  flex: 1;
+}
+
+.customerName, .date, .adress {
+  flex: 2;
+}
+
+.adminOrdersListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.adminOrdersHeader span svg,
+.adminOrdersHeader span .arrow {
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+  font-size: 0.75em;
+  margin-left: 4px;
+}
+
+.adminOrdersHeader span:hover svg,
+.adminOrdersHeader span:hover .arrow {
+  opacity: 1;
+}
+
+.adminOrdersHeader span.activeSort svg,
+.adminOrdersHeader span.activeSort .arrow {
+  opacity: 1;
+}

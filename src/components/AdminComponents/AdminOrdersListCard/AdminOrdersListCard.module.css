@@ -1,0 +1,58 @@
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  height: 100px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  padding-left: 10px;
+  transform: scale(1);
+  transition: box-shadow 0.3s ease-in, transform 0.3s ease-in;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.02);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease-in, transform 0.3s ease-in;
+
+  }
+}
+
+.orderId, .amount, .status {
+  flex: 1;
+  align-content: center;
+}
+
+.customerName, .date, .adress {
+  flex: 2;
+  align-content: center;
+}
+
+.interactionSpan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  button {
+    border-radius: 100%;
+    width: 30px;
+    height: 30px;
+    border: 2px solid var(--highlight);
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.pending, .complete {
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.pending {
+  background-color: #F7CB73;
+}
+
+.complete {
+  background-color: #077E8C;
+}
