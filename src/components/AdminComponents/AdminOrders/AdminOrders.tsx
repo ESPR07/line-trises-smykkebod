@@ -66,7 +66,7 @@ function AdminOrders() {
 
   return (
     <article className={style.adminOrdersContainer}>
-      <h2>Orders</h2>
+      <h2>Bestillinger</h2>
 
       <div className={style.adminOrdersHeader}>
         <span onClick={() => handleSort("order_id")} className={style.orderId}>
