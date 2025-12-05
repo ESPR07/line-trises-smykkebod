@@ -7,19 +7,26 @@ function AdminOrdersListCard({
 }: {
   orderItem: OrderItem | undefined;
 }) {
-
-  if(!orderItem) return
-
+  if(!orderItem) return null;
+  
   return (
     <div className={style.listItem}>
-      <span className={style.orderId}>{orderItem.order_id}</span>
+      <span className={style.orderId}>#{orderItem.order_id}</span>
       <span className={style.date}>{dateFormatting(orderItem.meta.createdAt)}</span>
-      <span className={style.customerName}>{`${orderItem.customer_firstName} ${orderItem.customer_lastName}`}</span>
+      <span className={style.customerName}>
+        {orderItem.customer_firstName} {orderItem.customer_lastName}
+      </span>
       <span className={style.adress}>{orderItem.customer_adress}</span>
-      <span className={style.amount}>{orderItem.totals.verifiedTotal}</span>
+      <span className={style.amount}>
+        {orderItem.totals.verifiedTotal.toLocaleString('nb-NO')} kr
+      </span>
       <div className={style.status}>
-        {orderItem.status === "pending" ? <span className={style.pending}>Venter</span> : ""}
-        {orderItem.status === "complete" ? <span className={style.complete}>Fullført</span> : ""}
+        {orderItem.status === "pending" && (
+          <span className={style.pending}>Venter</span>
+        )}
+        {orderItem.status === "complete" && (
+          <span className={style.complete}>Fullført</span>
+        )}
       </div>
     </div>
   );

@@ -15,7 +15,9 @@
   "dependencies": {
     "@netlify/functions": "^5.1.0",
     "@supabase/supabase-js": "^2.49.8",
+    "chart.js": "^4.5.1",
     "react": "^19.0.0",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.68.0",
     "react-router": "^7.4.1"

@@ -13,20 +13,75 @@ interface ProductCardProps {
 function AdminProductColumn({ data }: ProductCardProps) {
   const [deleteBox, setDeleteBox] = useState<boolean>(false);
   const [updateBox, setUpdateBox] = useState<boolean>(false);
-
+  
   return (
-    <div className={style.productColumnContainer}>
-      <img src={data.image_url} alt={data.name} />
-      <h3>{data.name}</h3>
-      {data.discount ? <h3>{data.discount_amount}</h3> : <h3>{data.price}</h3>}
-      <h3>{data.active_status ? "Aktiv" : "Inaktiv"}</h3>
-      <div className={style.columnInteractions}>
-        <TrashIcon removeValue={deleteBox} removeItem={setDeleteBox}/>
-        <EditIcon updateValue={updateBox} updateItem={setUpdateBox}/>
+    <>
+      <div className={style.productColumnContainer}>
+        <div className={style.imageWrapper}>
+          <img src={data.image_url} alt={data.name} />
+        </div>
+        
+        <div className={style.productName}>
+          <h3>{data.name}</h3>
+        </div>
+        
+        <div className={style.productPrice}>
+          {data.discount ? (
+            <>
+              <span className={style.discountPrice}>
+                {data.discount_amount?.toLocaleString('nb-NO')} kr
+              </span>
+              <span className={style.originalPrice}>
+                {data.price.toLocaleString('nb-NO')} kr
+              </span>
+            </>
+          ) : (
+            <span className={style.regularPrice}>
+              {data.price.toLocaleString('nb-NO')} kr
+            </span>
+          )}
+        </div>
+        
+        <div className={style.productStatus}>
+          <span className={data.active_status ? style.statusActive : style.statusInactive}>
+            {data.active_status ? "Aktiv" : "Inaktiv"}
+          </span>
+        </div>
+        
+        <div className={style.columnInteractions}>
+          <button 
+            className={style.editButton}
+            onClick={() => setUpdateBox(true)}
+            aria-label="Rediger produkt"
+          >
+            <EditIcon updateValue={updateBox} updateItem={setUpdateBox}/>
+          </button>
+          <button 
+            className={style.deleteButton}
+            onClick={() => setDeleteBox(true)}
+            aria-label="Slett produkt"
+          >
+            <TrashIcon removeValue={deleteBox} removeItem={setDeleteBox}/>
+          </button>
+        </div>
       </div>
-      {deleteBox ? <DeleteBox id={data.id} imageUrl={data.image_url} deleteBoxValue={deleteBox} toggleDeleteBox={setDeleteBox}/> : ""}
-      {updateBox ? <UpdateBox product={data} updateBoxValue={updateBox} toggleUpdateBox={setUpdateBox}/> : ""}
-    </div>
+      
+      {deleteBox && (
+        <DeleteBox 
+          id={data.id} 
+          imageUrl={data.image_url} 
+          deleteBoxValue={deleteBox} 
+          toggleDeleteBox={setDeleteBox}
+        />
+      )}
+      {updateBox && (
+        <UpdateBox 
+          product={data} 
+          updateBoxValue={updateBox} 
+          toggleUpdateBox={setUpdateBox}
+        />
+      )}
+    </>
   );
 }
 
