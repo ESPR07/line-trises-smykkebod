@@ -2,18 +2,20 @@ import './App.css'
 import { Outlet, Route, Routes } from 'react-router'
 import Navbar from './components/Navbar/Navbar'
 import Footer from './components/Footer/Footer'
-import Homepage from './pages/Homepage'
-import BrowsePage from './pages/BrowsePage'
-import ProductPage from './pages/ProductPage'
-import CartPage from './pages/CartPage'
-import AboutPage from './pages/AboutPage'
-import ContactPage from './pages/ContactPage'
-import AdminPage from './pages/AdminPage'
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, lazy, Suspense } from "react";
 import cartInteractions, { InteractionAction, initialValue } from "./Reducers/cartInteractions"
 import { useProductList } from './API/useProducts'
 import { Database } from './@types/Database'
 import { useGetOrders } from './API/useGetOrders'
+
+// Lazy-load pages only
+const Homepage = lazy(() => import('./pages/Homepage'));
+const BrowsePage = lazy(() => import('./pages/BrowsePage'));
+const ProductPage = lazy(() => import('./pages/ProductPage'));
+const CartPage = lazy(() => import('./pages/CartPage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const ContactPage = lazy(() => import('./pages/ContactPage'));
+const AdminPage = lazy(() => import('./pages/AdminPage'));
 
 export interface CartItemMinimal {
   id: string;
@@ -33,7 +35,7 @@ export type CartItem = CartItemMinimal & {
 
 export interface Cart {
   productList: CartItemMinimal[];
-  totalPrice: number; // For convenience, can calculate dynamically
+  totalPrice: number;
 }
 
 export const CartContext = createContext<{
@@ -90,20 +92,22 @@ function AdminLayout() {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Homepage />} />
-        <Route path="browse" element={<BrowsePage />} />
-        <Route path="produkt/:id" element={<ProductPage />} />
-        <Route path="cart" element={<CartPage />} />
-        <Route path="about" element={<AboutPage />} />
-        <Route path="contact" element={<ContactPage />} />
-      </Route>
+    <Suspense fallback={<div>Laster...</div>}>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Homepage />} />
+          <Route path="browse" element={<BrowsePage />} />
+          <Route path="produkt/:id" element={<ProductPage />} />
+          <Route path="cart" element={<CartPage />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="contact" element={<ContactPage />} />
+        </Route>
 
-      <Route path="/admin" element={<AdminLayout />}>
-        <Route index element={<AdminPage />} />
-      </Route>
-    </Routes>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminPage />} />
+        </Route>
+      </Routes>
+    </Suspense>
   );
 }
 

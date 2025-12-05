@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Prevent admin panel from being indexed
+Disallow: /admin
+Disallow: /admin/
+
+# Sitemap (optional but recommended)
+Sitemap: https://linetrises.no/sitemap.xml

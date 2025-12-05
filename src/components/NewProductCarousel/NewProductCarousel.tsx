@@ -57,16 +57,16 @@ function NewProductCarousel() {
   return(
     <section className={style.carouselContainer}>
       <article className={style.newProductsHeader}>Nye produkter</article>
-      <button className={style.sideSwipeLeft} onClick={scrollLeft}></button>
-      <ul className={style.newProductList} ref={scrollRef}>
+      <button aria-label={"Left Scroll"} className={style.sideSwipeLeft} onClick={scrollLeft}></button>
+      <article className={style.newProductList} ref={scrollRef}>
         {allProducts?.length === 0 ? <h2 className={style.emptyList}>Ingen produkter til salg</h2> : ""}
         {allProducts?.map((product : FetchResult) => {
           return(
             <ProductCard key={product.id} imageURL={product.image_url || ""} name={product.name} price={product.price} discount={product.discount} discountPrice={product.discount_amount} id={product.id}/>
           )
         })}
-      </ul>
-      <button className={style.sideSwipeRight} onClick={scrollRight}></button>
+      </article>
+      <button aria-label="Right Scroll" className={style.sideSwipeRight} onClick={scrollRight}></button>
     </section>
   )
 }

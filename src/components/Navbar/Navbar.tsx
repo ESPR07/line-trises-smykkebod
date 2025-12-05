@@ -29,7 +29,7 @@ function Navbar() {
   return (
     <header>
       <nav>
-        <Link className={style.navLogo} to={"/"} />
+        <Link className={style.navLogo} to={"/"} aria-label="Home Link"/>
         <div
           className={style.burgerIcon}
           onClick={() => {

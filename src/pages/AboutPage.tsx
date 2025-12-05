@@ -3,7 +3,10 @@ import style from "./AboutPage.module.css";
 
 const AboutPage: React.FC = () => {
   return (
-    <main className={style.aboutMain}>
+    <>
+      <title>Om meg - Line Trises Smykkebod</title>
+      <meta name="description" content="Les historien bak Line Trises Smykkebod. Håndlagde smykker inspirert av natur, tradisjon og moderne design."/>
+      <main className={style.aboutMain}>
       <section className={style.aboutBanner}>
         <article className={style.aboutBannerTextContainer}>
           <h2>Hvem er jeg?</h2>
@@ -46,6 +49,7 @@ const AboutPage: React.FC = () => {
         />
       </section>
     </main>
+    </>
   );
 };
 

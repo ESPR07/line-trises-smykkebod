@@ -27,20 +27,25 @@ function AdminPage() {
   if (!session) return <AdminLogin />;
 
   return (
-    <main className={style.adminPageContainer}>
-      <AdminSidebar
-        currentActive={currentActive}
-        setCurrentActive={setCurrentActive}
-        logout={handleLogout}
-      />
-      <section className={style.adminContentContainer}>
-        <AdminTopBar />
-        {currentActive === "dashboard" && <AdminDashboard />}
-        {currentActive === "products" && <AdminProducts />}
-        {currentActive === "orders" && <AdminOrders/>}
-        {currentActive === "settings" && <h2>Settings Page</h2>}
-      </section>
-    </main>
+    <>
+      <title>Adminpanel - Line Trises Smykkebod</title>
+      <meta name="description" content="Intern administrasjon av produkter og ordre."/>
+      <meta name="robots" content="noindex, nofollow" />
+      <main className={style.adminPageContainer}>
+        <AdminSidebar
+          currentActive={currentActive}
+          setCurrentActive={setCurrentActive}
+          logout={handleLogout}
+        />
+        <section className={style.adminContentContainer}>
+          <AdminTopBar />
+          {currentActive === "dashboard" && <AdminDashboard />}
+          {currentActive === "products" && <AdminProducts />}
+          {currentActive === "orders" && <AdminOrders/>}
+          {currentActive === "settings" && <h2>Settings Page</h2>}
+        </section>
+      </main>
+    </>
   );
 }
 

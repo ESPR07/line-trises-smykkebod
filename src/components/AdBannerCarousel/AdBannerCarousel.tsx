@@ -46,6 +46,7 @@ function AdBannerCarousel() {
           {images.map((image, index) => {
             return (
               <img
+              fetchPriority="high"
                 key={index}
                 id={`image-${index}`}
                 src={image.imageurl}
@@ -57,7 +58,7 @@ function AdBannerCarousel() {
         </article>
         <article className={style.welcomeBox}>
           <h1>Velkommen</h1>
-          <img src="/src/assets/logo_green.svg" />
+          <img src="/src/assets/logo_green.svg" alt="Logo"/>
           <NavigationButton text="Oppdag" path="browse" buttonWidth={100} />
         </article>
       </section>

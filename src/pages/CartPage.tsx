@@ -83,75 +83,83 @@ function CartPage() {
 
   if (enrichedCart.length === 0) {
     return (
-      <main className={style.cartPageContainer}>
-        <h1 className={style.cartHeader}>Handlekurv</h1>
-        <section className={style.contentContainer}>
-          <article className={style.cartItemList}></article>
-          <div className={style.cartPaymentInfo}>
-            <article className={style.cartInfo}>
-              <h2>Oppsummering</h2>
-              <p className={style.emptyMessage}>Her var det visst tomt!</p>
-              <NavigationButton
-                text="Utforsk"
-                path="/browse"
-                buttonWidth={100}
-              />
-            </article>
-          </div>
-        </section>
-      </main>
+      <>
+        <title>Tom Handlekurv | Line Trises Smykkebod</title>
+        <meta name="description" content="Handlekurven din er visst tom"/>
+        <main className={style.cartPageContainer}>
+          <h1 className={style.cartHeader}>Handlekurv</h1>
+          <section className={style.contentContainer}>
+            <article className={style.cartItemList}></article>
+            <div className={style.cartPaymentInfo}>
+              <article className={style.cartInfo}>
+                <h2>Oppsummering</h2>
+                <p className={style.emptyMessage}>Her var det visst tomt!</p>
+                <NavigationButton
+                  text="Utforsk"
+                  path="/browse"
+                  buttonWidth={100}
+                />
+              </article>
+            </div>
+          </section>
+        </main>
+      </>
     );
   }
 
   return (
-    <main className={style.cartPageContainer}>
-      <h1 className={style.cartHeader}>Handlekurv</h1>
-      <section className={style.contentContainer}>
-        <article className={style.cartItemList}>
-          {enrichedCart.map((product) => (
-            <CartProductCard
-              key={product.id}
-              product={product}
-              onUpdate={(p, quantity) =>
-                dispatch({
-                  type: "updateProduct",
-                  payload: { id: p.id, quantity },
-                })
-              }
-              onRemove={(p) =>
-                dispatch({
-                  type: "updateProduct",
-                  payload: { id: p.id, quantity: 0 },
-                })
-              }
-            />
-          ))}
-        </article>
-        <div className={style.cartPaymentInfo}>
-          <article className={style.cartInfo}>
-            <h2>Oppsummering</h2>
-            <div className={style.cartInfoRow}>
-              <p>Rabatter:</p>
-              <p>kr {totalDiscount.toFixed(2)}</p>
-            </div>
-            <div className={style.cartInfoRow}>
-              <p>Totalt:</p>
-              <p>
-                kr{" "}
-                {verifiedTotal !== null
-                  ? verifiedTotal.toFixed(2)
-                  : totalPrice.toFixed(2)}
-              </p>
-            </div>
+    <>
+      <title>Handlekurv | Line Trises Smykkebod</title>
+      <meta name="description" content="Se varene dine og fullfør kjøpet av håndlagde smykker hos Line Trises Smykkebod."/>
+      <main className={style.cartPageContainer}>
+        <h1 className={style.cartHeader}>Handlekurv</h1>
+        <section className={style.contentContainer}>
+          <article className={style.cartItemList}>
+            {enrichedCart.map((product) => (
+              <CartProductCard
+                key={product.id}
+                product={product}
+                onUpdate={(p, quantity) =>
+                  dispatch({
+                    type: "updateProduct",
+                    payload: { id: p.id, quantity },
+                  })
+                }
+                onRemove={(p) =>
+                  dispatch({
+                    type: "updateProduct",
+                    payload: { id: p.id, quantity: 0 },
+                  })
+                }
+              />
+            ))}
           </article>
-          <ShippingForm
-            handleCheckout={handleCheckoutWrapper}
-            disabled={isProcessing}
-            setShippingInfo={setShippingData}
-          />
-        </div>
-      </section>
-    </main>
+          <div className={style.cartPaymentInfo}>
+            <article className={style.cartInfo}>
+              <h2>Oppsummering</h2>
+              <div className={style.cartInfoRow}>
+                <p>Rabatter:</p>
+                <p>kr {totalDiscount.toFixed(2)}</p>
+              </div>
+              <div className={style.cartInfoRow}>
+                <p>Totalt:</p>
+                <p>
+                  kr{" "}
+                  {verifiedTotal !== null
+                    ? verifiedTotal.toFixed(2)
+                    : totalPrice.toFixed(2)}
+                </p>
+              </div>
+            </article>
+            <ShippingForm
+              handleCheckout={handleCheckoutWrapper}
+              disabled={isProcessing}
+              setShippingInfo={setShippingData}
+            />
+          </div>
+        </section>
+      </main>
+    </>
   );
 }
 
