@@ -7,6 +7,7 @@ import AdminTopBar from "../components/AdminComponents/AdminTopBar/AdminTopBar";
 import AdminProducts from "../components/AdminComponents/AdminProducts/AdminProducts";
 import { useAuthStatus } from "../API/useAuthStatus";
 import { supabaseClient } from "../components/utils/supabaseClient";
+import AdminOrders from "../components/AdminComponents/AdminOrders/AdminOrders";
 
 function AdminPage() {
   const [currentActive, setCurrentActive] = useState<
@@ -36,7 +37,7 @@ function AdminPage() {
         <AdminTopBar />
         {currentActive === "dashboard" && <AdminDashboard />}
         {currentActive === "products" && <AdminProducts />}
-        {currentActive === "orders" && <h2>Orders Content</h2>}
+        {currentActive === "orders" && <AdminOrders/>}
         {currentActive === "settings" && <h2>Settings Page</h2>}
       </section>
     </main>

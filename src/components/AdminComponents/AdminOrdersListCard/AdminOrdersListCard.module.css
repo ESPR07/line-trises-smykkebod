@@ -1,0 +1,118 @@
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 60px;
+  padding: 16px 20px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  transition: all 0.2s ease;
+}
+
+.listItem:hover {
+  cursor: pointer;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: #d1d5db;
+}
+
+.orderId, .amount, .status {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.customerName, .date, .adress {
+  flex: 2;
+  display: flex;
+  align-items: center;
+}
+
+/* Column-specific styling */
+.orderId {
+  font-weight: 600;
+  color: #6366f1;
+  font-size: 0.9em;
+}
+
+.date {
+  color: #6b7280;
+  font-size: 0.9em;
+}
+
+.customerName {
+  font-weight: 500;
+  color: #111827;
+}
+
+.adress {
+  color: #6b7280;
+  font-size: 0.9em;
+}
+
+.amount {
+  font-weight: 600;
+  color: #111827;
+  font-size: 0.95em;
+}
+
+.status {
+  display: flex;
+  justify-content: flex-start;
+}
+
+/* Status badges */
+.pending, .complete {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.pending {
+  background-color: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.complete {
+  background-color: #d1fae5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+/* Optional: Add a subtle hover effect to badges */
+.listItem:hover .pending,
+.listItem:hover .complete {
+  transform: scale(1.05);
+}
+
+.interactionSpan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.interactionSpan button {
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--highlight);
+  background: transparent;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.interactionSpan button:hover {
+  cursor: pointer;
+  background: var(--highlight);
+  transform: scale(1.1);
+}

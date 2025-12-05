@@ -75,7 +75,7 @@ function ShippingForm({
             {...register("firstName", {
               required: "Fornavn mangler",
               pattern: {
-                value: /^[A-Za-z]+$/i,
+                value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i,
                 message: "Kun bokstaver",
               },
               minLength: {
@@ -99,7 +99,7 @@ function ShippingForm({
             {...register("lastName", {
               required: "Etternavn mangler",
               pattern: {
-                value: /^[A-Za-z]+$/i,
+                value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i,
                 message: "Kun bokstaver",
               },
               minLength: {

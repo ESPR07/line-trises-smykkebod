@@ -7,4 +7,5 @@
 .adminContentContainer {
   flex: 3;
   margin-inline: 50px;
+  margin-bottom: 50px;
 }

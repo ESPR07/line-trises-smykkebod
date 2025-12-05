@@ -13,6 +13,7 @@ import { createContext, useReducer } from "react";
 import cartInteractions, { InteractionAction, initialValue } from "./Reducers/cartInteractions"
 import { useProductList } from './API/useProducts'
 import { Database } from './@types/Database'
+import { useGetOrders } from './API/useGetOrders'
 
 export interface CartItemMinimal {
   id: string;
@@ -47,6 +48,13 @@ export const APIResult = createContext({
   fetchProducts: () => {}
 });
 
+export const ordersResult = createContext({
+  allOrders: [] as Database["public"]["Tables"]["orders"]["Row"][] | undefined,
+  loading: false,
+  error: false,
+  fetchOrders: (_sortBy?: string, _ascending?: boolean) => {}
+});
+
 function Layout() {
   const { productList, isLoading, isError, fetchProducts } = useProductList();
   const localStoreCart = localStorage.getItem("cart");
@@ -69,10 +77,13 @@ function Layout() {
 
 function AdminLayout() {
   const { productList, isLoading, isError, fetchProducts } = useProductList();
+  const { orderList, ordersLoading, ordersError, fetchOrders } = useGetOrders();
 
   return (
     <APIResult.Provider value={{ allProducts: productList, loading: isLoading, error: isError, fetchProducts }}>
-      <Outlet />
+      <ordersResult.Provider value={{ allOrders: orderList, loading: ordersLoading, error: ordersError, fetchOrders}}>
+        <Outlet />
+      </ordersResult.Provider>
     </APIResult.Provider>
   );
 }

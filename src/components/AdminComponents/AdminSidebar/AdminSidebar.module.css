@@ -6,7 +6,14 @@
   justify-content: space-between;
   background-color: var(--highlight);
   color: var(--background);
+  max-width: 400px;
+
+  /* Sticky behavior */
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
+
 
 .adminSidebarContent {
   display: flex;

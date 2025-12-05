@@ -1,10 +1,14 @@
-import style from "./AdminOverview.module.css"
+import AdminOrders from "../AdminOrders/AdminOrders";
+import AdminProducts from "../AdminProducts/AdminProducts";
+import AdminSalesStats from "../AdminSalesStats/AdminSalesStats";
 
 function AdminOverview() {
   return (
-    <article className={style.adminOverviewContainer}>
-      <h2>Dashboard Oversikt</h2>
-    </article>
+    <>
+      <AdminSalesStats/>
+      <AdminProducts/>
+      <AdminOrders/>
+    </>
   )
 }
 

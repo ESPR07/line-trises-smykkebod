@@ -43,13 +43,15 @@ export type Database = {
       orders: {
         Row: {
           id: string;
-          email: string;
-          phone: string;
-          firstName: string;
-          lastName: string;
-          adress: string;
-          sted: string;
-          postNr: string;
+          order_id: string;
+          customer_email: string;
+          customer_phone: string;
+          customer_firstName: string;
+          customer_lastName: string;
+          customer_adress: string;
+          customer_sted: string;
+          customer_postNr: string;
+          status: string;
           cart: {
             id: string;
             name: string;
@@ -174,3 +176,31 @@ export interface NewOrderData {
     clientPlatform: string;
   };
 }
+
+export type OrderItem = {
+  id: string;
+  order_id: string;
+  customer_email: string;
+  customer_phone: string;
+  customer_firstName: string;
+  customer_lastName: string;
+  customer_adress: string;
+  customer_sted: string;
+  customer_postNr: string;
+  status: string;
+  cart: {
+    id: string;
+    name: string;
+    quantity: number;
+    unitPrice: number;
+    lineTotal: number;
+  }[];
+  totals: {
+    verifiedTotal: number;
+    itemCount: number;
+  };
+  meta: {
+    createdAt: string;
+    clientPlatform: string;
+  };
+};
