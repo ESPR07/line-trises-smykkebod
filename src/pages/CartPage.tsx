@@ -7,11 +7,13 @@ import { handleCheckout as checkout } from "../API/checkout";
 import ShippingForm from "../components/utils/ShippingForm/ShippingForm";
 import { shippingData } from "../@types/Database";
 import { useCreateOrder } from "../API/usePlaceOrder";
+import { useNavigate } from "react-router";
 
 function CartPage() {
   const { state: cartState, dispatch } = useContext(CartContext);
   const { allProducts } = useContext(APIResult);
   const { createOrder } = useCreateOrder();
+  const navigate = useNavigate();
 
   const [enrichedCart, setEnrichedCart] = useState<CartItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
@@ -79,6 +81,7 @@ function CartPage() {
     createOrder,
     setVerifiedTotal,
     setIsProcessing,
+    navigate,
   });
 
   if (enrichedCart.length === 0) {

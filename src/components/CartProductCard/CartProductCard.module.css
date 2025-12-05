@@ -43,9 +43,13 @@
 }
 
 .deleteIcon {
-  height: 30px;
-  width: 30px;
-  background-image: url("/src/assets/bin_icon.svg"); /*TODO*/
+  height: 100%;
+  min-height: 30px;
+  min-height: 30px;
+  width: 100%;
+  min-width: 30px;
+  max-width: 30px;
+  background-image: url("/src/assets/bin_icon.svg");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -88,5 +92,11 @@
     flex: 2;
     background-color: var(--highlight);
     text-align: center;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .item {
+    height: 100%;
   }
 }

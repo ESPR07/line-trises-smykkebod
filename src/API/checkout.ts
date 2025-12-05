@@ -3,6 +3,7 @@ import { Database, NewOrderData } from "../@types/Database";
 import { CartItem } from "../App";
 import { verifyCart } from "./verifyCart";
 import { InteractionAction } from "../Reducers/cartInteractions";
+import { useNavigate } from "react-router";
 
 export interface CheckoutDependencies {
   enrichedCart: CartItem[];
@@ -20,6 +21,7 @@ export interface CheckoutDependencies {
   createOrder: (data: NewOrderData) => Promise<Database["public"]["Tables"]["orders"]["Row"] | null>;
   setVerifiedTotal?: (total: number) => void;
   setIsProcessing?: (processing: boolean) => void;
+  navigate: ReturnType<typeof useNavigate>;
 }
 
 export async function handleCheckout({
@@ -30,6 +32,7 @@ export async function handleCheckout({
   createOrder,
   setVerifiedTotal,
   setIsProcessing,
+  navigate,
 }: CheckoutDependencies) {
   
   if (enrichedCart.length === 0) return;
@@ -89,6 +92,7 @@ export async function handleCheckout({
       localStorage.removeItem("cart");
       setEnrichedCart([])
       dispatch({ type: "clearCart", payload: { id: "", quantity: 0 } });
+      navigate(`/success?order=${insertedOrder.order_id}&name=${insertedOrder.customer_firstName}`)
     } else {
       console.error("Failed to create order");
     }

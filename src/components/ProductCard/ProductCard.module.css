@@ -65,11 +65,11 @@
     text-align: end;
     margin: 0;
     font-weight: 400;
-    font-size: 1.7rem;
+    font-size: 1.7rem
   }
 
   .discounted {
-    font-size: 1.7rem;
+    font-size: 1.3rem;
     text-decoration: line-through;
     text-decoration-thickness: 2px;
     text-decoration-color: red;
@@ -113,4 +113,11 @@
 .productInteraction {
   display: flex;
   gap: 10px;
+}
+
+@media screen and (max-width: 900px) {
+  .productCardContainer {
+    max-width: 250px;
+    min-width: 250px;
+  }
 }

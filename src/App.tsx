@@ -7,6 +7,7 @@ import cartInteractions, { InteractionAction, initialValue } from "./Reducers/ca
 import { useProductList } from './API/useProducts'
 import { Database } from './@types/Database'
 import { useGetOrders } from './API/useGetOrders'
+import PurchaseSuccess from './pages/PurchaseSucessPage';
 
 // Lazy-load pages only
 const Homepage = lazy(() => import('./pages/Homepage'));
@@ -101,6 +102,7 @@ function App() {
           <Route path="cart" element={<CartPage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="contact" element={<ContactPage />} />
+          <Route path="success" element={<PurchaseSuccess/>} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>

@@ -1,127 +1,178 @@
 import { Link, useParams } from "react-router";
-import style from "./ProductPage.module.css";
-import { useSingleProduct } from "../API/useSingleProduct";
-import EventButton from "../components/utils/EventButton/EventButton";
-import { useContext } from "react";
+import { useContext, useState } from "react";
+import style from "./ProductPage.module.css"
 import { CartContext } from "../App";
+import { useSingleProduct } from "../API/useSingleProduct";
 
-type AddToCart = {
-  id: string;
-  name: string;
-  discountPrice: number | null;
-  price: number;
-  imageURL: string;
-};
-
-function ProductPage() {
+function SingleProduct() {
   const { id } = useParams() as { id: string };
   const { product, isLoading, isError } = useSingleProduct(id);
   const dispatch = useContext(CartContext).dispatch;
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
-  const handleAddToCart = ({ id }: AddToCart) => {
+  const handleAddToCart = () => {
+    if (!product) return;
+    
     dispatch({
       type: "addToCart",
-      payload: { id, quantity: 1 },
+      payload: { id: product.id, quantity },
     });
+    
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
   };
 
-  if (!product) return null;
+  const handleQuantityChange = (change: number) => {
+    const newQuantity = quantity + change;
+    if (newQuantity >= 1 && newQuantity <= 10) {
+      setQuantity(newQuantity);
+    }
+  };
 
   if (isLoading) {
     return (
       <>
         <title>Laster... | Line Trises Smykkebod</title>
-        <meta name="description" content="Laster inn produkt."/>
         <main className={style.productPageContainer}>
-          <Link to="/browse" className={style.backButtonContainer}>
-            <div className={style.backArrow}></div>
-            <p className={style.backText}>Tilbake</p>
-          </Link>
-          <h1>Loading...</h1>
+          <div className={style.loadingContainer}>
+            <div className={style.spinner}></div>
+            <p>Laster produkt...</p>
+          </div>
         </main>
       </>
     );
   }
 
-  if (isError) {
+  if (isError || !product) {
     return (
       <>
         <title>Fant ikke produkt | Line Trises Smykkebod</title>
-        <meta name="description" content="Fant ikke produktet du leter etter"/>
         <main className={style.productPageContainer}>
-          <Link to="/browse" className={style.backButtonContainer}>
-            <div className={style.backArrow}></div>
-            <p className={style.backText}>Tilbake</p>
-          </Link>
-          <h1>Something went wrong!</h1>
+          <div className={style.errorContainer}>
+            <div className={style.errorIcon}>⚠️</div>
+            <h1>Produktet ble ikke funnet</h1>
+            <p>Beklager, vi kunne ikke finne produktet du leter etter.</p>
+            <Link to="/browse" className={style.backButton}>
+              Tilbake til produkter
+            </Link>
+          </div>
         </main>
       </>
     );
   }
 
-  if (product) {
-    return (
-      <>
-        <title>{`${product.name} - Håndlaget smykke | Line Trises Smykkebod`}</title>
-        <meta name="description" content={`Kjøp ${product.name} - et unikt, håndlaget smykke fra Line Trises Smykkebod. Laget og designet for daglig bruk og spesielle anledninger.`}/>
-        <main className={style.productPageContainer}>
-          <Link to="/browse" className={style.backButtonContainer}>
-            <div className={style.backArrow}></div>
-            <p className={style.backText}>Tilbake</p>
-          </Link>
-          <h1 className={style.productHeader}>{product.name}</h1>
-          <section className={style.productContainer}>
-            <article className={style.imageContainer}>
-              <img
-                src={product.image_url}
-                alt="Product Image"
+  const displayPrice = product.discount ? product.discount_amount : product.price;
+  const savings = product.discount ? product.price - product.discount_amount : 0;
+  const savingsPercent = savings > 0 ? Math.round((savings / product.price) * 100) : 0;
+
+  return (
+    <>
+      <title>{`${product.name} | Line Trises Smykkebod`}</title>
+      <meta name="description" content={product.short_description || product.long_description || `Kjøp ${product.name}`} />
+      
+      <main className={style.productPageContainer}>
+        {/* Back Button */}
+        <Link to="/browse" className={style.backLink}>
+          <div className={style.backArrow}></div>
+          <span>Tilbake til produkter</span>
+        </Link>
+
+        {/* Product Container */}
+        <section className={style.productContainer}>
+          {/* Image Section */}
+          <article className={style.imageSection}>
+            {product.discount && savingsPercent > 0 && (
+              <div className={style.discountBadge}>
+                -{savingsPercent}%
+              </div>
+            )}
+            <div className={style.imageWrapper}>
+              <img 
+                src={product.image_url || "/placeholder-image.jpg"} 
+                alt={product.name}
                 className={style.productImage}
               />
-            </article>
-            <article className={style.productText}>
+            </div>
+          </article>
+
+          {/* Info Section */}
+          <article className={style.infoSection}>
+            <div className={style.productHeader}>
+              <h1 className={style.productName}>{product.name}</h1>
+              {product.short_description && (
+                <p className={style.shortDescription}>{product.short_description}</p>
+              )}
+            </div>
+
+            {/* Price Section */}
+            <div className={style.priceSection}>
               <div className={style.priceContainer}>
-                <p
-                  className={`${style.productPrice} ${
-                    product.discount ? style.discounted : ""
-                  }`}
-                >
-                  kr {product.price}
-                </p>
                 {product.discount ? (
-                  <p className={style.discountedPrice}>
-                    kr {product.discount_amount}
-                  </p>
+                  <>
+                    <span className={style.currentPrice}>kr {displayPrice}</span>
+                    <span className={style.originalPrice}>kr {product.price}</span>
+                  </>
                 ) : (
-                  ""
+                  <span className={style.currentPrice}>kr {product.price}</span>
                 )}
               </div>
-              <section className={style.descriptionContainer}>
-                <ul>
-                  <li>Beskrivelse</li>
-                </ul>
-                <div className={style.textButtonWrapper}>
-                  <p>{product.long_description}</p>
-                  <EventButton
-                    text="Legg til i Handlekurv"
-                    event={() => {
-                      handleAddToCart({
-                        id: product.id,
-                        name: product.name,
-                        discountPrice: product.discount_amount,
-                        price: product.price,
-                        imageURL: product.image_url || "",
-                      });
-                    }}
-                    buttonWidth={100}
-                  />
+              {savings > 0 && (
+                <div className={style.savingsInfo}>
+                  Du sparer kr {savings}
                 </div>
-              </section>
-            </article>
-          </section>
-        </main>
-      </>
-    );
-  }
+              )}
+              <h2 className={style.descriptionTitle}>Beskrivelse</h2>
+              <p className={style.descriptionText}>{product.long_description}</p>
+            </div>
+
+            {/* Quantity Selector */}
+            <div className={style.quantitySection}>
+              <label className={style.quantityLabel}>Antall:</label>
+              <div className={style.quantityControls}>
+                <button 
+                  className={style.quantityButton}
+                  onClick={() => handleQuantityChange(-1)}
+                  disabled={quantity <= 1}
+                >
+                  −
+                </button>
+                <span className={style.quantityDisplay}>{quantity}</span>
+                <button 
+                  className={style.quantityButton}
+                  onClick={() => handleQuantityChange(1)}
+                  disabled={quantity >= 10}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            {/* Add to Cart Button */}
+            <button 
+              className={`${style.addToCartButton} ${addedToCart ? style.added : ''}`}
+              onClick={handleAddToCart}
+              disabled={!product.active_status}
+            >
+              {addedToCart ? '✓ Lagt til!' : 'Legg til i handlekurv'}
+            </button>
+
+            {!product.active_status && (
+              <div className={style.unavailableNotice}>
+                Dette produktet er ikke tilgjengelig for øyeblikket
+              </div>
+            )}
+
+            {/* Features/Benefits */}
+            <div className={style.featuresSection}>
+              <h2 className={style.featuresTitle}>Viktig Informasjon</h2>
+              <p>✨ Alle varer er håndlaget og kan derfor variere litt i størrelse og form</p>
+            </div>
+          </article>
+        </section>
+      </main>
+    </>
+  );
 }
 
-export default ProductPage;
+export default SingleProduct;

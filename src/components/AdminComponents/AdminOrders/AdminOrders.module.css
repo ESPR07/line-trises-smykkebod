@@ -83,3 +83,54 @@
 .adminOrdersHeader span.activeSort .arrow {
   opacity: 1;
 }
+
+/* Mobile responsive styles */
+@media screen and (max-width: 900px) {
+  .adminOrdersContainer {
+    padding: 16px;
+    margin-top: 20px;
+    overflow-x: auto;
+  }
+
+  .adminOrdersHeader {
+    min-width: 700px;
+    gap: 8px;
+    padding: 8px 0;
+  }
+
+  .adminOrdersHeader span {
+    padding: 6px 8px;
+    font-size: 0.85em;
+  }
+
+  .adminOrdersListContainer {
+    min-width: 700px;
+    gap: 12px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .adminOrdersContainer {
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  .adminOrdersContainer h2 {
+    font-size: 1.3rem;
+  }
+
+  .adminOrdersHeader {
+    min-width: 650px;
+    gap: 6px;
+  }
+
+  .adminOrdersHeader span {
+    padding: 4px 6px;
+    font-size: 0.75em;
+  }
+
+  .adminOrdersHeader span svg,
+  .adminOrdersHeader span .arrow {
+    font-size: 0.7em;
+  }
+}

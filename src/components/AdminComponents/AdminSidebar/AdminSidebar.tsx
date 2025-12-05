@@ -18,7 +18,8 @@ interface AdminSidebarProps {
 function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarProps) {
   const [highlightTop, setHighlightTop] = useState(0);
   const [highlightHeight, setHighlightHeight] = useState(0);
-
+  const [isOpen, setIsOpen] = useState(false);
+  
   const liRefs = {
     dashboard: useRef<HTMLLIElement>(null),
     products: useRef<HTMLLIElement>(null),
@@ -34,9 +35,28 @@ function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarP
     }
   }, [currentActive]);
 
+  const handleMenuItemClick = (item: "dashboard" | "products" | "orders" | "settings") => {
+    setCurrentActive(item);
+    setIsOpen(false); // Close sidebar on mobile after selection
+  };
+
   return (
     <>
-      <section className={style.adminSidebarContainer}>
+      {/* Mobile toggle button */}
+      <button 
+        className={style.mobileToggle} 
+        onClick={() => setIsOpen(!isOpen)}
+        aria-label="Toggle menu"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      {/* Overlay for mobile */}
+      {isOpen && <div className={style.overlay} onClick={() => setIsOpen(false)} />}
+
+      <section className={`${style.adminSidebarContainer} ${isOpen ? style.open : ''}`}>
         <article className={style.adminSidebarContent}>
           <h1>Line Trise's Smykkebod</h1>
           <ul>
@@ -50,7 +70,7 @@ function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarP
                 currentActive === "dashboard" ? style.activeAdminLink : ""
               }
               ref={liRefs.dashboard}
-              onClick={() => setCurrentActive("dashboard")}
+              onClick={() => handleMenuItemClick("dashboard")}
             >
               <DashboardIcon />
               Dashboard
@@ -60,7 +80,7 @@ function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarP
                 currentActive === "products" ? style.activeAdminLink : ""
               }
               ref={liRefs.products}
-              onClick={() => setCurrentActive("products")}
+              onClick={() => handleMenuItemClick("products")}
             >
               <ProductsIcon />
               Produkter
@@ -70,17 +90,17 @@ function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarP
                 currentActive === "orders" ? style.activeAdminLink : ""
               }
               ref={liRefs.orders}
-              onClick={() => setCurrentActive("orders")}
+              onClick={() => handleMenuItemClick("orders")}
             >
               <OrdersIcon />
-              Ordre
+              Bestillinger
             </li>
             <li
               className={
                 currentActive === "settings" ? style.activeAdminLink : ""
               }
               ref={liRefs.settings}
-              onClick={() => setCurrentActive("settings")}
+              onClick={() => handleMenuItemClick("settings")}
             >
               <SettingsIcon/>
               Instillinger
