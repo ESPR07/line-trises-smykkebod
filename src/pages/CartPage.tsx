@@ -1,20 +1,24 @@
 import { useContext, useEffect, useState } from "react";
-import VippsButton from "../components/VippsButton/VippsButton";
 import style from "./CartPage.module.css";
 import { CartContext, CartItem, CartItemMinimal, APIResult } from "../App";
 import CartProductCard from "../components/CartProductCard/CartProductCard";
 import NavigationButton from "../components/utils/Button/NavigationButton";
-import { verifyCart } from "../API/verifyCart";
+import { handleCheckout as checkout } from "../API/checkout";
+import ShippingForm from "../components/utils/ShippingForm/ShippingForm";
+import { shippingData } from "../@types/Database";
+import { useCreateOrder } from "../API/usePlaceOrder";
 
 function CartPage() {
   const { state: cartState, dispatch } = useContext(CartContext);
   const { allProducts } = useContext(APIResult);
+  const { createOrder } = useCreateOrder();
 
   const [enrichedCart, setEnrichedCart] = useState<CartItem[]>([]);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [totalDiscount, setTotalDiscount] = useState<number>(0);
   const [verifiedTotal, setVerifiedTotal] = useState<number | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [shippingData, setShippingData] = useState<Partial<shippingData>>({});
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -25,7 +29,7 @@ function CartPage() {
     if (!allProducts) return;
 
     const enriched = cartState.productList.map((cartItem: CartItemMinimal) => {
-      const product = allProducts.find((p) => p.id === cartItem.id);
+      const product = allProducts.find((product) => product.id === cartItem.id);
 
       if (!product) {
         console.warn("Product missing from API:", cartItem.id);
@@ -45,7 +49,9 @@ function CartPage() {
       } as CartItem;
     });
 
-    const validItems = enriched.filter((p): p is CartItem => p !== null);
+    const validItems = enriched.filter(
+      (product): product is CartItem => product !== null
+    );
 
     const calculatedAfterDiscount = validItems.reduce((sum, item) => {
       const discount = item.discountPrice ?? 0;
@@ -64,22 +70,16 @@ function CartPage() {
     setTotalDiscount(calculatedDiscount);
   }, [cartState, allProducts]);
 
-  const handleCheckout = async () => {
-    if (enrichedCart.length === 0) return;
-    setIsProcessing(true);
-
-    try {
-      const result = await verifyCart(enrichedCart);
-      setVerifiedTotal(result.total);
-      console.log("Proceeding with verified total:", result.total);
-    } catch (err) {
-      console.error("Checkout failed:", err);
-      alert("Something went wrong during checkout. Please try again.");
-      localStorage.removeItem("cart");
-    } finally {
-      setIsProcessing(false);
-    }
-  };
+  const handleCheckoutWrapper = () =>
+  checkout({
+    enrichedCart,
+    setEnrichedCart,
+    dispatch,
+    shippingData,
+    createOrder,
+    setVerifiedTotal,
+    setIsProcessing,
+  });
 
   if (enrichedCart.length === 0) {
     return (
@@ -97,10 +97,6 @@ function CartPage() {
                 buttonWidth={100}
               />
             </article>
-            <VippsButton />
-            <button className={style.kortBetaling} disabled>
-              Kortbetaling
-            </button>
           </div>
         </section>
       </main>
@@ -148,14 +144,11 @@ function CartPage() {
               </p>
             </div>
           </article>
-          <VippsButton />
-          <button
-            className={style.kortBetaling}
-            onClick={handleCheckout}
+          <ShippingForm
+            handleCheckout={handleCheckoutWrapper}
             disabled={isProcessing}
-          >
-            Kortbetaling
-          </button>
+            setShippingInfo={setShippingData}
+          />
         </div>
       </section>
     </main>

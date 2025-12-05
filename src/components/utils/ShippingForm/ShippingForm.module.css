@@ -1,0 +1,90 @@
+.shippingForm {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 20px);
+  padding: 10px;
+  background-color: var(--boxColor);
+  border-radius: 5px;
+  gap: 5px;
+
+  input {
+    font-family: "montserrat", "Courier New", Courier, monospace;
+    font-size: 1.2rem;
+    padding: 5px;
+    color: var(--highlight);
+    text-align: start;
+    border-radius: 5px;
+    width: calc(100% - 10px);
+    margin-bottom: 10px;
+  }
+
+  h3 {
+    color: var(--highlight);
+    margin: 0;
+    font-size: 1.5rem;
+    border-bottom: 1px solid var(--highlight);
+    margin-bottom: 15px;
+  }
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  color: var(--highlight);
+}
+
+.nameInputs, .adressInputs {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  width: 100%;
+}
+
+.adressInputs label:first-child {
+  flex: 2;
+}
+
+.adressInputs label:last-child {
+  flex: 1;
+}
+
+.kortBetaling {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  height: 2.75rem;
+  border: none;
+  border-radius: 0.3rem;
+  background-color: var(--highlight);
+  color: var(--background);
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  margin-top: 10px;
+
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.1s ease-in
+  }
+}
+
+.cardIcons {
+  height: 100%;
+  width: 110px;
+  background-image: url("/src/assets/card_icons.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.inputError {
+  border: 2px solid rgb(212, 79, 79);
+}
+
+.error {
+  color: rgb(212, 79, 79);
+  font-size: 1rem;
+  transform: translateY(-5px);
+}
