@@ -4,7 +4,6 @@
   align-items: center;
   background-color: var(--boxColor)
 }
-
 .banner {
   width: 100%;
   height: 60vh;
@@ -13,19 +12,16 @@
   background-size: cover;
   position: fixed;
 }
-
 .archContainer {
   width: 100%;
   background-color: transparent;
   position: fixed;
   margin-top: 53vh;
-
   svg {
     height: 100%;
     width: 100%;
   }
 }
-
 .browseContainerBackground {
   display: flex;
   justify-content: center;
@@ -35,7 +31,6 @@
   position: fixed;
   margin-top: 43vw;
 }
-
 .browseContainer {
   position: relative;
   display: flex;
@@ -48,7 +43,6 @@
   background-color: var(--background);
   z-index: 2;
 }
-
 .browseHeader {
   text-align: center;
   font-family: 'storyScript';
@@ -63,22 +57,18 @@
   position: absolute;
   top: -70px;
 }
-
-
 .filterMenu {
   display: flex;
   justify-content: end;
   margin-bottom: 10px;
   width: 100%;
 }
-
 .divider {
   display: block;
   border-bottom: 2px dotted var(--highlight);
   width: 100%;
   margin-bottom: 20px;
 }
-
 .productGrid {
   display: flex;
   flex-wrap: wrap;
@@ -86,12 +76,57 @@
   align-items: center;
   gap: 20px;
   padding: 10px;
+  margin-bottom: 30px;
+  width: 100%;
+}
+.loader {
+  font-size: 3rem;
+  text-align: center;
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
   margin-bottom: 50px;
   width: 100%;
 }
 
-.loader {
-  font-size: 3rem;
+.paginationButton {
+  padding: 12px 24px;
+  background-color: var(--highlight);
+  color: var(--background);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: opacity 0.3s ease, transform 0.2s ease;
+}
+
+.paginationButton:hover:not(:disabled) {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}
+
+.paginationButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.paginationButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pageInfo {
+  padding: 10px 20px;
+  color: var(--highlight);
+  font-size: 1.1rem;
+  font-weight: 600;
+  min-width: 80px;
   text-align: center;
 }
 
@@ -100,8 +135,21 @@
     font-size: 1.5rem;
     top: -50px;
   }
-
   .browseContainer {
     width: calc(100% - 20px);
+  }
+  
+  .pagination {
+    gap: 8px;
+  }
+  
+  .paginationButton {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+  
+  .pageInfo {
+    font-size: 1rem;
+    min-width: 70px;
   }
 }

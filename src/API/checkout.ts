@@ -68,6 +68,7 @@ export async function handleCheckout({
           quantity: item.quantity,
           unitPrice,
           lineTotal: unitPrice * item.quantity,
+          metadata: item.metadata ?? {},
         };
       }),
 

@@ -49,7 +49,7 @@ export type Database = {
           customer_firstName: string;
           customer_lastName: string;
           customer_adress: string;
-          customer_sted: string;
+          customer_place: string;
           customer_postNr: string;
           status: string;
           cart: {
@@ -185,7 +185,7 @@ export type OrderItem = {
   customer_firstName: string;
   customer_lastName: string;
   customer_adress: string;
-  customer_sted: string;
+  customer_place: string;
   customer_postNr: string;
   status: string;
   cart: {

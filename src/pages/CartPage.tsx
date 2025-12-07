@@ -31,25 +31,40 @@ function CartPage() {
     if (!allProducts) return;
 
     const enriched = cartState.productList.map((cartItem: CartItemMinimal) => {
-      const product = allProducts.find((product) => product.id === cartItem.id);
+  const product = allProducts.find((product) => product.id === cartItem.id);
 
-      if (!product) {
-        console.warn("Product missing from API:", cartItem.id);
-        return null;
-      }
-
+  if (!product) {
+    // If it’s a custom product, return it directly
+    if (cartItem.metadata) {
       return {
-        id: product.id,
-        name: product.name,
-        price: Number(product.price), // Full price
-        discountPrice:
-          product.discount_amount !== null
-            ? Number(product.discount_amount) // Already discounted final price
-            : null,
-        imageURL: product.image_url,
+        id: cartItem.id,
+        name: cartItem.name ?? "Custom product",
+        price: cartItem.price ?? 0,
+        discountPrice: null,
+        imageURL: "/src/assets/images/image_placeholder.webp", // Optionally provide a placeholder or preview image
         quantity: cartItem.quantity,
+        metadata: cartItem.metadata, // Keep selections for display
+        isCustom: true, // Flag for the CartProductCard if needed
       } as CartItem;
-    });
+    }
+
+    console.warn("Product missing from API:", cartItem.id);
+    return null;
+  }
+
+  return {
+    id: product.id,
+    name: product.name,
+    price: Number(product.price),
+    discountPrice:
+      product.discount_amount !== null
+        ? Number(product.discount_amount)
+        : null,
+    imageURL: product.image_url,
+    quantity: cartItem.quantity,
+  } as CartItem;
+});
+
 
     const validItems = enriched.filter(
       (product): product is CartItem => product !== null

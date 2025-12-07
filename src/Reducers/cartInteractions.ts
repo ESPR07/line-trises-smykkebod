@@ -25,7 +25,8 @@ const cartInteractions = (state: Cart, action: InteractionAction): Cart => {
       const quantityToAdd = quantity ?? 1;
 
       if (index === -1) {
-        cart.push({ id, quantity: quantityToAdd });
+        // Push the full payload (including metadata and price)
+        cart.push({ ...action.payload, quantity: quantityToAdd });
       } else {
         cart[index].quantity += quantityToAdd;
       }
@@ -39,10 +40,10 @@ const cartInteractions = (state: Cart, action: InteractionAction): Cart => {
       const index = cart.findIndex((item) => item.id === id);
 
       if (index !== -1) {
-        if (quantity < 1) {
+        if (quantity! < 1) {
           cart.splice(index, 1);
         } else {
-          cart[index].quantity = quantity;
+          cart[index].quantity = quantity!;
         }
       }
 

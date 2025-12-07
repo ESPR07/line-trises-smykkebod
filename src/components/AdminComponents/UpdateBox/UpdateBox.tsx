@@ -47,17 +47,19 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [name, setName] = useState<string>(product.name);
+  const [shortDescription, setShortDescription] = useState<string>(product.short_description || "");
+  const [longDescription, setLongDescription] = useState<string>(product.long_description || "");
   const [price, setPrice] = useState<string>(product.price.toString());
   const [discountAmount, setDiscountAmount] = useState<string>(
     (product.discount_amount || 0).toFixed(2)
   );
+  const [activeStatus, setActiveStatus] = useState<boolean>(product.active_status ?? true);
   const [imageUrl, setImageUrl] = useState<string>(product.image_url || "");
   const [previewError, setPreviewError] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
 
   const { updateProduct, isLoading, isSuccess, isError } = useUpdateProduct();
 
-  // Handle file input and upload
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -71,7 +73,6 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
     setUploading(false);
   };
 
-  // Numeric input sanitization
   const handleNumericInput = (value: string, setter: (val: string) => void) => {
     if (value === "") {
       setter("");
@@ -85,7 +86,6 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
     setter(sanitized);
   };
 
-  // Update product, delete old image if replaced
   const handleUpdate = async () => {
     const numericPrice = Number(price) || 0;
     const numericDiscount = Number(discountAmount) || 0;
@@ -95,13 +95,15 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
 
     await updateProduct(product.id, {
       name,
+      short_description: shortDescription,
+      long_description: longDescription,
       price: numericPrice,
       discount: hasDiscount,
       discount_amount: numericDiscount,
       image_url: imageUrl,
+      active_status: activeStatus,
     });
 
-    // Delete old image if replaced
     if (oldUrl && oldUrl !== imageUrl) {
       const parsed = parseSupabaseFilePath(oldUrl);
       if (parsed) {
@@ -112,7 +114,6 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
     }
   };
 
-  // Close modal after success
   useEffect(() => {
     if (isSuccess) {
       fetchProducts();
@@ -123,19 +124,19 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
     };
   }, [isSuccess]);
 
-  useEffect(() => { //Prevents scroll on elements behind modal
-  if (updateBoxValue) {
-    const scrollY = window.scrollY;
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = "100%";
-    return () => {
-      document.body.style.position = "";
-      document.body.style.top = "";
-      window.scrollTo(0, scrollY);
-    };
-  }
-}, [updateBoxValue]);
+  useEffect(() => {
+    if (updateBoxValue) {
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+      return () => {
+        document.body.style.position = "";
+        document.body.style.top = "";
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [updateBoxValue]);
 
   return (
     <div className={style.updateModal}>
@@ -154,6 +155,16 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
         </label>
 
         <label>
+          Kort beskrivelse:
+          <input value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} />
+        </label>
+
+        <label>
+          Lang beskrivelse:
+          <textarea value={longDescription} onChange={(e) => setLongDescription(e.target.value)} />
+        </label>
+
+        <label>
           Pris:
           <input
             type="text"
@@ -168,6 +179,15 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
             type="text"
             value={discountAmount}
             onChange={(e) => handleNumericInput(e.target.value, setDiscountAmount)}
+          />
+        </label>
+
+        <label>
+          Aktiv:
+          <input
+            type="checkbox"
+            checked={activeStatus}
+            onChange={(e) => setActiveStatus(e.target.checked)}
           />
         </label>
 
@@ -204,3 +224,4 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
     </div>
   );
 }
+

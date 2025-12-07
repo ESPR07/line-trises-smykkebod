@@ -23,7 +23,7 @@
   align-items: center;
   background-color: var(--background);
   width: 90%;
-  max-width: 600px;
+  max-width: 1000px;
   padding: 32px 36px;
   border-radius: 16px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -358,5 +358,136 @@
   .previewError {
     font-size: 0.85rem;
     padding: 6px 10px;
+  }
+}
+
+/* ==========================
+   Order Details Section Styling
+   ========================== */
+
+.updateBox .orderDetails {
+  width: 100%;
+  padding: 16px 20px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Each line inside details */
+.updateBox .orderDetails p {
+  margin: 0;
+  font-size: 1rem;
+  color: #374151;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.updateBox .orderDetails p:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* Highlight values slightly */
+.updateBox .orderDetails p strong {
+  color: var(--highlight);
+  font-weight: 600;
+}
+
+/* Optional small fade-in animation for text lines */
+.updateBox .orderDetails p {
+  opacity: 0;
+  transform: translateY(4px);
+  animation: slideIn 0.25s ease forwards;
+}
+
+.updateBox .orderDetails p:nth-child(1) { animation-delay: 0.05s; }
+.updateBox .orderDetails p:nth-child(2) { animation-delay: 0.10s; }
+.updateBox .orderDetails p:nth-child(3) { animation-delay: 0.15s; }
+.updateBox .orderDetails p:nth-child(4) { animation-delay: 0.20s; }
+.updateBox .orderDetails p:nth-child(5) { animation-delay: 0.25s; }
+.updateBox .orderDetails p:nth-child(6) { animation-delay: 0.30s; }
+
+.buttonContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  gap: 20px;
+
+  button:first-of-type {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%)
+  }
+
+  button:last-of-type {
+    background: #ef4444;
+  }
+}
+
+.orderProducts {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+.orderProducts h4 {
+  margin-bottom: 12px;
+  font-size: 1.4rem;
+  color: var(--highlight);
+  font-weight: 600;
+}
+
+.cartList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 6px; /* prevent scrollbar overlaying text */
+}
+
+.cartItem {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 12px;
+  padding: 10px 14px;
+  background-color: #f9fafb;
+  border-radius: 10px;
+  align-items: center;
+  font-size: 1.1rem;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+
+.cartItem:hover {
+  background-color: #e0f2fe; /* subtle hover */
+}
+
+.cartName {
+  font-weight: 500;
+}
+
+.cartQuantity,
+.cartTotal {
+  text-align: right;
+  font-weight: 400;
+  color: #1f2937;
+}
+
+
+/* Responsive behavior */
+@media screen and (max-width: 480px) {
+  .updateBox .orderDetails {
+    padding: 12px 14px;
+  }
+
+  .updateBox .orderDetails p {
+    font-size: 0.9rem;
   }
 }

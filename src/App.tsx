@@ -1,30 +1,41 @@
-import './App.css'
-import { Outlet, Route, Routes } from 'react-router'
-import Navbar from './components/Navbar/Navbar'
-import Footer from './components/Footer/Footer'
-import { createContext, useReducer, lazy, Suspense } from "react";
-import cartInteractions, { InteractionAction, initialValue } from "./Reducers/cartInteractions"
-import { useProductList } from './API/useProducts'
-import { Database } from './@types/Database'
-import { useGetOrders } from './API/useGetOrders'
-import PurchaseSuccess from './pages/PurchaseSucessPage';
+import "./App.css";
+import { Outlet, Route, Routes } from "react-router";
+import Navbar from "./components/Navbar/Navbar";
+import Footer from "./components/Footer/Footer";
+import {
+  createContext,
+  useReducer,
+  lazy,
+  Suspense,
+  useEffect,
+  useState,
+} from "react";
+import cartInteractions, {
+  InteractionAction,
+  initialValue,
+} from "./Reducers/cartInteractions";
+import { useProductList } from "./API/useProducts";
+import { useGetOrders } from "./API/useGetOrders";
+import { Database } from "./@types/Database";
+import PurchaseSuccess from "./pages/PurchaseSucessPage";
+import MakeYourOwnPage from "./pages/MakeYourOwnPage";
 
-// Lazy-load pages only
-const Homepage = lazy(() => import('./pages/Homepage'));
-const BrowsePage = lazy(() => import('./pages/BrowsePage'));
-const ProductPage = lazy(() => import('./pages/ProductPage'));
-const CartPage = lazy(() => import('./pages/CartPage'));
-const AboutPage = lazy(() => import('./pages/AboutPage'));
-const ContactPage = lazy(() => import('./pages/ContactPage'));
-const AdminPage = lazy(() => import('./pages/AdminPage'));
+// Lazy-loaded pages
+const Homepage = lazy(() => import("./pages/Homepage"));
+const BrowsePage = lazy(() => import("./pages/BrowsePage"));
+const ProductPage = lazy(() => import("./pages/ProductPage"));
+const CartPage = lazy(() => import("./pages/CartPage"));
+const AboutPage = lazy(() => import("./pages/AboutPage"));
+const ContactPage = lazy(() => import("./pages/ContactPage"));
+const AdminPage = lazy(() => import("./pages/AdminPage"));
 
+// -------------------- Types --------------------
 export interface CartItemMinimal {
   id: string;
   quantity: number;
-}
-
-export interface CartState {
-  productList: CartItemMinimal[];
+  price?: number;
+  name?: string;
+  metadata?: Record<string, string>;
 }
 
 export type CartItem = CartItemMinimal & {
@@ -32,44 +43,100 @@ export type CartItem = CartItemMinimal & {
   price: number;
   discountPrice: number | null;
   imageURL: string;
-}
+};
 
 export interface Cart {
   productList: CartItemMinimal[];
   totalPrice: number;
 }
 
+// -------------------- Contexts --------------------
 export const CartContext = createContext<{
   state: Cart;
   dispatch: ({ type, payload }: InteractionAction) => void;
 }>({ state: initialValue, dispatch: () => {} });
 
 export const APIResult = createContext({
-  allProducts: [] as Database["public"]["Tables"]["products"]["Row"][] | undefined,
+  allProducts: [] as
+    | Database["public"]["Tables"]["products"]["Row"][]
+    | undefined,
   loading: false,
   error: false,
-  fetchProducts: () => {}
+  searchQuery: "",
+  setSearchQuery: (_query: string) => {},
+  fetchProducts: (
+    _page?: number,
+    _showAvailable?: boolean,
+    _searchQuery?: string
+  ) => {},
+  currentPage: 1,
+  totalPages: 1,
+  itemsPerPage: 10,
+  setCurrentPage: (_page: number) => {},
 });
 
 export const ordersResult = createContext({
   allOrders: [] as Database["public"]["Tables"]["orders"]["Row"][] | undefined,
   loading: false,
   error: false,
-  fetchOrders: (_sortBy?: string, _ascending?: boolean) => {}
+  searchQuery: "",
+  setSearchQuery: (_query: string) => {},
+  fetchOrders: (
+    _page?: number,
+    _sortBy?: string,
+    _ascending?: boolean,
+    _searchQuery?: string
+  ) => {},
+  currentPage: 1,
+  totalPages: 1,
+  itemsPerPage: 10,
+  setCurrentPage: (_page: number) => {},
 });
 
+// -------------------- Layouts --------------------
 function Layout() {
-  const { productList, isLoading, isError, fetchProducts } = useProductList();
-  const localStoreCart = localStorage.getItem("cart");
+  const [productSearchQuery, setProductSearchQuery] = useState("");
+  const {
+    productList,
+    isLoading,
+    isError,
+    fetchProducts,
+    currentPage,
+    totalPages,
+    itemsPerPage,
+    setCurrentPage,
+  } = useProductList();
 
+  const [searchQuery, _setSearchQuery] = useState("");
+
+  const localStoreCart = localStorage.getItem("cart");
   const [state, dispatch] = useReducer(
     cartInteractions,
-    localStoreCart !== null ? { productList: JSON.parse(localStoreCart), totalPrice: 0 } : initialValue
+    localStoreCart !== null
+      ? { productList: JSON.parse(localStoreCart), totalPrice: 0 }
+      : initialValue
   );
+
+  useEffect(() => {
+    fetchProducts(currentPage, true, searchQuery);
+  }, [currentPage, searchQuery]);
 
   return (
     <CartContext.Provider value={{ state, dispatch }}>
-      <APIResult.Provider value={{ allProducts: productList, loading: isLoading, error: isError, fetchProducts }}>
+      <APIResult.Provider
+        value={{
+          allProducts: productList,
+          loading: isLoading,
+          error: isError,
+          searchQuery: productSearchQuery,
+          setSearchQuery: setProductSearchQuery,
+          fetchProducts,
+          currentPage,
+          totalPages,
+          itemsPerPage,
+          setCurrentPage,
+        }}
+      >
         <Navbar />
         <Outlet />
         <Footer />
@@ -79,18 +146,77 @@ function Layout() {
 }
 
 function AdminLayout() {
-  const { productList, isLoading, isError, fetchProducts } = useProductList();
-  const { orderList, ordersLoading, ordersError, fetchOrders } = useGetOrders();
+  const {
+    productList,
+    isLoading,
+    isError,
+    fetchProducts,
+    currentPage,
+    totalPages,
+    itemsPerPage,
+    setCurrentPage,
+  } = useProductList();
+
+  const {
+    orderList,
+    ordersLoading,
+    ordersError,
+    fetchOrders,
+    currentPage: ordersPage,
+    totalPages: ordersTotalPages,
+    itemsPerPage: ordersPerPage,
+    setCurrentPage: setOrdersPage,
+  } = useGetOrders();
+
+  const [productSearchQuery, setProductSearchQuery] = useState("");
+  const [orderSearchQuery, setOrderSearchQuery] = useState("");
+
+  useEffect(() => {
+    fetchProducts(currentPage, false, productSearchQuery); // All products for admin
+  }, [currentPage, productSearchQuery]);
+
+  useEffect(() => {
+    fetchOrders(ordersPage, undefined, true, orderSearchQuery);
+  }, [ordersPage, orderSearchQuery]);
 
   return (
-    <APIResult.Provider value={{ allProducts: productList, loading: isLoading, error: isError, fetchProducts }}>
-      <ordersResult.Provider value={{ allOrders: orderList, loading: ordersLoading, error: ordersError, fetchOrders}}>
+    <APIResult.Provider
+      value={{
+        allProducts: productList,
+        loading: isLoading,
+        error: isError,
+        searchQuery: productSearchQuery,
+        setSearchQuery: setProductSearchQuery,
+        fetchProducts: (page?: number) =>
+          fetchProducts(page ?? 1, false, productSearchQuery),
+        currentPage,
+        totalPages,
+        itemsPerPage,
+        setCurrentPage,
+      }}
+    >
+      <ordersResult.Provider
+        value={{
+          allOrders: orderList,
+          loading: ordersLoading,
+          error: ordersError,
+          searchQuery: orderSearchQuery,
+          setSearchQuery: setOrderSearchQuery,
+          fetchOrders: (page?: number) =>
+            fetchOrders(page ?? 1, undefined, true, orderSearchQuery),
+          currentPage: ordersPage,
+          totalPages: ordersTotalPages,
+          itemsPerPage: ordersPerPage,
+          setCurrentPage: setOrdersPage,
+        }}
+      >
         <Outlet />
       </ordersResult.Provider>
     </APIResult.Provider>
   );
 }
 
+// -------------------- App Component --------------------
 function App() {
   return (
     <Suspense fallback={<div>Laster...</div>}>
@@ -102,7 +228,8 @@ function App() {
           <Route path="cart" element={<CartPage />} />
           <Route path="about" element={<AboutPage />} />
           <Route path="contact" element={<ContactPage />} />
-          <Route path="success" element={<PurchaseSuccess/>} />
+          <Route path="lag-din-egen" element={<MakeYourOwnPage />} />
+          <Route path="success" element={<PurchaseSuccess />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>

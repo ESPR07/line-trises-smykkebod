@@ -8,11 +8,45 @@ import UpdateBox from "../UpdateBox/UpdateBox";
 
 interface ProductCardProps {
   data: FetchResult;
+  canEdit?: boolean
 }
 
-function AdminProductColumn({ data }: ProductCardProps) {
+function AdminProductColumn({ data, canEdit = true }: ProductCardProps) {
   const [deleteBox, setDeleteBox] = useState<boolean>(false);
   const [updateBox, setUpdateBox] = useState<boolean>(false);
+
+  if(canEdit === false) {
+    return (
+    <>
+      <div className={style.productColumnContainer}>
+        <div className={style.imageWrapper}>
+          <img src={data.image_url} alt={data.name} />
+        </div>
+        
+        <div className={style.productName}>
+          <h3>{data.name}</h3>
+        </div>
+        
+        <div className={style.productPrice}>
+          {data.discount ? (
+            <>
+              <span className={style.discountPrice}>
+                {data.discount_amount?.toLocaleString('nb-NO')} kr
+              </span>
+              <span className={style.originalPrice}>
+                {data.price.toLocaleString('nb-NO')} kr
+              </span>
+            </>
+          ) : (
+            <span className={style.regularPrice}>
+              {data.price.toLocaleString('nb-NO')} kr
+            </span>
+          )}
+        </div>
+      </div>
+    </>
+  );
+  }
   
   return (
     <>
