@@ -6,7 +6,7 @@
 }
 
 .banner {
-  width: 98%;
+  width: 100%;
   height: 60vh;
   background-image: url("/src/assets/images/workshop.jpg");
   background-position: center;
@@ -16,10 +16,9 @@
 
 .archContainer {
   width: 100%;
-  transform: translateY(3vw);
   background-color: transparent;
   position: fixed;
-  margin-top: 48vh;
+  margin-top: 53vh;
 
   svg {
     height: 100%;
@@ -81,10 +80,10 @@
 }
 
 .productGrid {
-  display: grid;
-  justify-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   align-items: center;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 20px;
   padding: 10px;
   margin-bottom: 50px;

@@ -82,10 +82,25 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
 
   useEffect(() => {
     if (isSuccess) {
-      fetchProducts();
       setTimeout(() => toggleModal(false), 1200);
+      setTimeout(() => fetchProducts(), 1400);
     }
   }, [isSuccess, fetchProducts, toggleModal]);
+
+  useEffect(() => { //Prevents scroll on elements behind modal
+  if (showModal) {
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      window.scrollTo(0, scrollY);
+    };
+  }
+}, [showModal]);
+
 
   if (!showModal) return null;
 
@@ -96,9 +111,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
           className={style.closeButton}
           type="button"
           onClick={() => toggleModal(!showModal)}
-        >
-          X
-        </button>
+        />
         <h3>Legg til nytt produkt</h3>
 
         <label>

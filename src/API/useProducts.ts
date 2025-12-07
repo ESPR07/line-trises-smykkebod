@@ -16,7 +16,8 @@ export function useProductList() {
 
       const { data, error } = await supabaseClient
         .from("products")
-        .select("*");
+        .select("*")
+        .eq('active_status', true);
 
       if (error) {
         console.error("Error fetching products:", error.message);

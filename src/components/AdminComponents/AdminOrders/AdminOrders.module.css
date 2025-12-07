@@ -60,6 +60,11 @@
   flex: 2;
 }
 
+.noOrders {
+  width: 100%;
+  text-align: center;
+}
+
 .adminOrdersListContainer {
   display: flex;
   flex-direction: column;

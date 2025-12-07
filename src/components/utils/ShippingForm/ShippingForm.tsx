@@ -145,7 +145,7 @@ function ShippingForm({
             {...register("place", {
               required: "Sted mangler",
               pattern: {
-                value: /^[A-Za-z]+$/i,
+                value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i,
                 message: "Kun bokstaver",
               },
             })}

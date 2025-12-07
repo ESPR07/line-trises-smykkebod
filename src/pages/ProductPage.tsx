@@ -72,15 +72,12 @@ function SingleProduct() {
       <meta name="description" content={product.short_description || product.long_description || `Kjøp ${product.name}`} />
       
       <main className={style.productPageContainer}>
-        {/* Back Button */}
         <Link to="/browse" className={style.backLink}>
           <div className={style.backArrow}></div>
           <span>Tilbake til produkter</span>
         </Link>
 
-        {/* Product Container */}
         <section className={style.productContainer}>
-          {/* Image Section */}
           <article className={style.imageSection}>
             {product.discount && savingsPercent > 0 && (
               <div className={style.discountBadge}>
@@ -96,16 +93,11 @@ function SingleProduct() {
             </div>
           </article>
 
-          {/* Info Section */}
           <article className={style.infoSection}>
             <div className={style.productHeader}>
               <h1 className={style.productName}>{product.name}</h1>
-              {product.short_description && (
-                <p className={style.shortDescription}>{product.short_description}</p>
-              )}
             </div>
 
-            {/* Price Section */}
             <div className={style.priceSection}>
               <div className={style.priceContainer}>
                 {product.discount ? (
@@ -126,7 +118,6 @@ function SingleProduct() {
               <p className={style.descriptionText}>{product.long_description}</p>
             </div>
 
-            {/* Quantity Selector */}
             <div className={style.quantitySection}>
               <label className={style.quantityLabel}>Antall:</label>
               <div className={style.quantityControls}>
@@ -148,7 +139,6 @@ function SingleProduct() {
               </div>
             </div>
 
-            {/* Add to Cart Button */}
             <button 
               className={`${style.addToCartButton} ${addedToCart ? style.added : ''}`}
               onClick={handleAddToCart}
@@ -163,7 +153,6 @@ function SingleProduct() {
               </div>
             )}
 
-            {/* Features/Benefits */}
             <div className={style.featuresSection}>
               <h2 className={style.featuresTitle}>Viktig Informasjon</h2>
               <p>✨ Alle varer er håndlaget og kan derfor variere litt i størrelse og form</p>

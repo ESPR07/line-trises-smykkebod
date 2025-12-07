@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 
 interface TrashIconProps {
-  removeValue: boolean;
-  removeItem: Dispatch<SetStateAction<boolean>>;
+  removeValue?: boolean;
+  removeItem?: (Dispatch<SetStateAction<boolean>>);
 }
 
 function TrashIcon({ removeValue, removeItem }: TrashIconProps) {
@@ -13,7 +13,7 @@ function TrashIcon({ removeValue, removeItem }: TrashIconProps) {
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
       fill="#000000"
-      onClick={() => removeItem(!removeValue)}
+      onClick={() => removeItem?.(!removeValue)}
     >
       <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
       <g

@@ -41,7 +41,16 @@ function BrowsePage() {
       <title>Håndlagde smykker | Line Trises Smykkebod</title>
       <meta name="description" content="Se hele utvalget av håndlagde smykker. Finn ringer, armbånd, halskjeder og personlige gaver laget i høy kvalitet."/>
       <main className={style.browseMain}>
-        <div className={style.banner}></div>
+        <div className={style.banner}>
+          <div className={style.archContainer}>
+          <svg viewBox="0 0 1440 150" className={style.arch}>
+            <path
+              fill="#bddaec"
+              d="M0,0 C360,150 1080,150 1440,0 L1440,150 L0,150 Z"
+            ></path>
+          </svg>
+        </div>
+        </div>
         <section className={style.browseContainer}>
           <h1 className={style.browseHeader}>Alle Produkter</h1>
           <article className={style.filterMenu}>
@@ -70,14 +79,6 @@ function BrowsePage() {
             })}
           </article>
         </section>
-        <div className={style.archContainer}>
-          <svg viewBox="0 0 1440 150" className={style.arch}>
-            <path
-              fill="#bddaec"
-              d="M0,0 C360,150 1080,150 1440,0 L1440,150 L0,150 Z"
-            ></path>
-          </svg>
-        </div>
       </main>
     </>
   );

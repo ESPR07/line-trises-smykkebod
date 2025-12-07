@@ -123,6 +123,20 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
     };
   }, [isSuccess]);
 
+  useEffect(() => { //Prevents scroll on elements behind modal
+  if (updateBoxValue) {
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      window.scrollTo(0, scrollY);
+    };
+  }
+}, [updateBoxValue]);
+
   return (
     <div className={style.updateModal}>
       <div className={style.updateBox}>
@@ -130,9 +144,7 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
           className={style.closeButton}
           type="button"
           onClick={() => toggleUpdateBox(!updateBoxValue)}
-        >
-          X
-        </button>
+        />
 
         <h3>Endre {product.name}</h3>
 

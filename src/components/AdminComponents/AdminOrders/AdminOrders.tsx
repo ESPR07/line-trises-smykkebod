@@ -5,13 +5,10 @@ import { ordersResult } from "../../../App";
 
 function AdminOrders() {
   const { allOrders, loading, error, fetchOrders } = useContext(ordersResult);
-
-  // Track current sort column and order
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [ascending, setAscending] = useState<boolean>(true);
 
   function handleSort(column: string) {
-    // If clicking the same column, toggle ascending/descending
     if (sortColumn === column) {
       setAscending(!ascending);
       fetchOrders(column, !ascending);
@@ -22,23 +19,6 @@ function AdminOrders() {
     }
   }
 
-  if (loading) {
-    return (
-      <article className={style.adminOrdersContainer}>
-        <h2>Laster...</h2>
-      </article>
-    )
-  }
-
-  if (error) {
-    return (
-      <article className={style.adminOrdersContainer}>
-        <h2>Noe gikk galt</h2>
-      </article>
-    )
-  }
-
-  // Helper to show arrow
   const renderArrow = (field: string): JSX.Element => {
   if (sortColumn !== field) {
     return (
@@ -63,6 +43,53 @@ function AdminOrders() {
     </svg>
   );
 };
+
+  if (loading) {
+    return (
+      <article className={style.adminOrdersContainer}>
+        <h2>Laster...</h2>
+      </article>
+    )
+  }
+
+  if (error) {
+    return (
+      <article className={style.adminOrdersContainer}>
+        <h2>Noe gikk galt</h2>
+      </article>
+    )
+  }
+
+  if(allOrders?.length === 0) {
+    return (
+      <article className={style.adminOrdersContainer}>
+      <h2>Bestillinger</h2>
+
+      <div className={style.adminOrdersHeader}>
+        <span onClick={() => handleSort("order_id")} className={style.orderId}>
+          Ordre ID{renderArrow("order_id")}
+        </span>
+        <span onClick={() => handleSort("meta->created_at")} className={style.date}>
+          Dato{renderArrow("meta->created_at")}
+        </span>
+        <span onClick={() => handleSort("customer_firstName")} className={style.customerName}>
+          Kundenavn{renderArrow("customer_firstName")}
+        </span>
+        <span onClick={() => handleSort("customer_adress")} className={style.adress}>
+          Adresse{renderArrow("customer_adress")}
+        </span>
+        <span className={style.amount}>
+          Sum
+        </span>
+        <span onClick={() => handleSort("status")} className={style.status}>
+          Status{renderArrow("status")}
+        </span>
+      </div>
+
+      <h3 className={style.noOrders}>Ingen bestillinger akkurat nå</h3>
+    </article>
+    )
+  }
 
   return (
     <article className={style.adminOrdersContainer}>
