@@ -87,7 +87,7 @@ function AdminProducts(canEdit?: AdminProductsProps) {
         <EventButton
           text="Nytt Produkt"
           event={() => setNewBox(true)}
-          buttonWidth={20}
+          buttonWidth={30}
           checkBox={false}
         />
       </div>

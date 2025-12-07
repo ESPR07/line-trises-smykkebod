@@ -6,6 +6,8 @@
 
 .adminContentContainer {
   flex: 3;
-  margin-inline: 50px;
+  margin-inline: 0px;
   margin-bottom: 50px;
+  width: 100%;
+
 }
