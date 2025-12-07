@@ -138,16 +138,13 @@
     overflow-x: auto;
   }
   .adminOrdersHeader {
-    min-width: 700px;
-    gap: 8px;
-    padding: 8px 0;
+    display: none;
   }
   .adminOrdersHeader span {
     padding: 6px 8px;
     font-size: 0.85em;
   }
   .adminOrdersListContainer {
-    min-width: 700px;
     gap: 12px;
   }
   

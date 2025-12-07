@@ -115,3 +115,14 @@
   background: var(--highlight);
   transform: scale(1.1);
 }
+
+@media screen and (max-width: 900px) {
+  .date, .adress, .customerName {
+    display: none;
+  }
+
+  .orderId, .amount, .status span {
+    display: flex;
+    justify-content: center;
+  }
+}
