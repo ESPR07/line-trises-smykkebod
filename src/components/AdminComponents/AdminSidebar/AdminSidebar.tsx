@@ -44,7 +44,7 @@ function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarP
     <>
       {/* Mobile toggle button */}
       <button 
-        className={style.mobileToggle} 
+        className={`${style.mobileToggle} ${isOpen ? style.burgerHide : style.burgerShow}`} 
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Toggle menu"
       >

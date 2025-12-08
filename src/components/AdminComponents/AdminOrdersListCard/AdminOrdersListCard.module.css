@@ -125,4 +125,8 @@
     display: flex;
     justify-content: center;
   }
+
+  .status {
+    justify-content: flex-end;
+  }
 }

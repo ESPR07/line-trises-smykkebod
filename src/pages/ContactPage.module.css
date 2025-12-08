@@ -132,6 +132,7 @@
 
 .contactForm {
   width: 100%;
+  margin-bottom: 50px;
 
   button {
     height: 50px;

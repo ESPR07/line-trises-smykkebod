@@ -86,4 +86,12 @@
   .carouselContainer {
     margin-top: 50px;
   }
+
+  .sideSwipeLeft {
+    margin-left: 5px;
+  }
+
+  .sideSwipeRight {
+    margin-right: 5px;
+  }
 }

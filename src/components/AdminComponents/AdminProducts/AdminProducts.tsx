@@ -85,9 +85,9 @@ function AdminProducts(canEdit?: AdminProductsProps) {
       <div className={style.topSection}>
         <h2>Produkter</h2>
         <EventButton
-          text="Nytt Produkt"
+          text="+"
           event={() => setNewBox(true)}
-          buttonWidth={30}
+          buttonWidth={20}
           checkBox={false}
         />
       </div>

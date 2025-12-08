@@ -16,7 +16,7 @@
   width: 100%;
   background-color: transparent;
   position: fixed;
-  margin-top: 53vh;
+  margin-top: 56vh;
   svg {
     height: 100%;
     width: 100%;
@@ -136,7 +136,7 @@
     top: -50px;
   }
   .browseContainer {
-    width: calc(100% - 20px);
+    width: calc(90% - 20px);
   }
   
   .pagination {

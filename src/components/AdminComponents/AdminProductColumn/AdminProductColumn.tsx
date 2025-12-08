@@ -50,7 +50,7 @@ function AdminProductColumn({ data, canEdit = true }: ProductCardProps) {
   
   return (
     <>
-      <div className={style.productColumnContainer}>
+      <div className={`${style.productColumnContainer} ${data.active_status ? style.mobileStatusActive : style.mobileStatusInactive}`}>
         <div className={style.imageWrapper}>
           <img src={data.image_url} alt={data.name} />
         </div>

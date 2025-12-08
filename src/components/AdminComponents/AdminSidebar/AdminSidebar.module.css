@@ -129,6 +129,8 @@
 @media screen and (max-width: 900px) {
   .mobileToggle {
     display: flex;
+    top: 10px;
+    left: 10px;
   }
 
   .overlay {
@@ -167,9 +169,20 @@
   .adminSidebarContent h1 {
     font-size: 1.6rem;
     padding: 0 10px;
+    text-align: right;
   }
 
   .adminSidebarInteractions button {
     font-size: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .burgerHide {
+    display: none;
+  }
+
+  .burgerShow {
+    display: flex;
   }
 }

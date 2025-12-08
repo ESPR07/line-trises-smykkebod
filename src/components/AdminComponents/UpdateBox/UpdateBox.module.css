@@ -405,7 +405,7 @@
   }
 
   .updateBox {
-    width: 95%;
+    width: 80vw;
     padding: 28px 24px;
     gap: 16px;
   }
@@ -470,9 +470,10 @@
   }
 
   .updateBox {
-    width: 98%;
+    width: 80vw;
     padding: 24px 20px;
     gap: 14px;
+    margin-inline: 5px;
   }
 
   .updateBox h3 {

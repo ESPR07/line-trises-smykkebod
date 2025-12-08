@@ -125,6 +125,10 @@
     transform: translateX(0);
     width: calc(90vw - 20px);
     border-radius: 0 0 10px 10px;
+
+    &:hover {
+      transform: translateX(0);
+    }
   }
 
   .customWrapper {
