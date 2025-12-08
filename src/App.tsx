@@ -20,6 +20,7 @@ import { Database } from "./@types/Database";
 import PurchaseSuccess from "./pages/PurchaseSucessPage";
 import MakeYourOwnPage from "./pages/MakeYourOwnPage";
 
+
 // Lazy-loaded pages
 const Homepage = lazy(() => import("./pages/Homepage"));
 const BrowsePage = lazy(() => import("./pages/BrowsePage"));
