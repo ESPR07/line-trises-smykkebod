@@ -3,3 +3,8 @@
 
 [dev]
   functionsPort = 9999
+
+[[redirects]]
+from = "/*"
+to = "/index.html"
+status = 200
