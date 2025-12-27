@@ -1,74 +1,100 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState, useEffect } from "react";
+import { useSwipeable } from "react-swipeable";
 import ProductCard from "../ProductCard/ProductCard";
-import style from "./NewProductCarousel.module.css"
+import style from "./NewProductCarousel.module.css";
 import { FetchResult } from "../../@types/Database";
 import { APIResult } from "../../App";
 
 function NewProductCarousel() {
   const scrollRef = useRef<HTMLUListElement>(null);
-  const {allProducts, loading, error} = useContext(APIResult);
+  const { allProducts, loading, error } = useContext(APIResult);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  function getCardWidthWithGap() {
+    const firstCard = scrollRef.current?.querySelector("li");
+    if (!firstCard) return 280 + 30;
+    return firstCard.clientWidth + 30;
+  }
 
   function scrollRight() {
-    if(scrollRef.current) {
-      const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
-      scrollRef.current.scrollTo({
-        left: Math.min(scrollRef.current.scrollLeft + 332, maxScroll),
-        behavior: "smooth",
-      })
-    }
+    if (!scrollRef.current) return;
+    const scrollAmount = isMobile ? getCardWidthWithGap() : scrollRef.current.clientWidth;
+    scrollRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
   }
 
   function scrollLeft() {
-    if(scrollRef.current) {
-      const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
-      scrollRef.current.scrollTo({
-        left: Math.min(scrollRef.current.scrollLeft - 332, maxScroll),
-        behavior: "smooth",
-      })
-    }
+    if (!scrollRef.current) return;
+    const scrollAmount = isMobile ? getCardWidthWithGap() : scrollRef.current.clientWidth;
+    scrollRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
   }
 
-  if(loading) {
-    return(
-      <section className={style.carouselContainer}>
+  // super simple swipe -> call your functions
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: scrollRight,
+    onSwipedRight: scrollLeft,
+    trackMouse: true
+  });
+
+  if (loading || error) {
+    return (
+      <section className={style.carouselContainer} {...swipeHandlers}>
         <article className={style.newProductsHeader}>Nye produkter</article>
         <button className={style.sideSwipeLeft} onClick={scrollLeft}></button>
+
         <ul className={style.newProductList} ref={scrollRef}>
-          <p className={style.loader}>Loading...</p>
+          {loading ? (
+            <p className={style.loader}>Loading...</p>
+          ) : (
+            <p className={style.error}>Noe gikk galt!</p>
+          )}
         </ul>
+
         <button className={style.sideSwipeRight} onClick={scrollRight}></button>
       </section>
-    )
+    );
   }
 
-  if(error) {
-    return(
-      <section className={style.carouselContainer}>
-        <article className={style.newProductsHeader}>Nye produkter</article>
-        <button className={style.sideSwipeLeft} onClick={scrollLeft}></button>
-        <ul className={style.newProductList} ref={scrollRef}>
-          <p className={style.error}>Something went wrong!</p>
-        </ul>
-        <button className={style.sideSwipeRight} onClick={scrollRight}></button>
-      </section>
-    )
-  }
-
-  return(
-    <section className={style.carouselContainer}>
+  return (
+    <section className={style.carouselContainer} {...swipeHandlers}>
       <article className={style.newProductsHeader}>Nye produkter</article>
-      <button className={style.sideSwipeLeft} onClick={scrollLeft}></button>
+      <button
+        aria-label="Left Scroll"
+        className={style.sideSwipeLeft}
+        onClick={scrollLeft}
+      ></button>
+
       <ul className={style.newProductList} ref={scrollRef}>
-        {allProducts?.length === 0 ? <h2 className={style.emptyList}>Ingen produkter til salg</h2> : ""}
-        {allProducts?.map((product : FetchResult) => {
-          return(
-            <ProductCard key={product.id} imageURL={product.image_url || ""} name={product.name} price={product.price} discount={product.discount} discountPrice={product.discount_amount} id={product.id}/>
-          )
-        })}
+        {allProducts?.length === 0 && (
+          <h2 className={style.emptyList}>Ingen produkter til salg</h2>
+        )}
+
+        {allProducts?.map((product: FetchResult) => (
+          <li key={product.id}>
+            <ProductCard
+              imageURL={product.image_url || ""}
+              name={product.name}
+              price={product.price}
+              discount={product.discount}
+              discountPrice={product.discount_amount}
+              id={product.id}
+            />
+          </li>
+        ))}
       </ul>
-      <button className={style.sideSwipeRight} onClick={scrollRight}></button>
+
+      <button
+        aria-label="Right Scroll"
+        className={style.sideSwipeRight}
+        onClick={scrollRight}
+      ></button>
     </section>
-  )
+  );
 }
 
 export default NewProductCarousel;

@@ -38,6 +38,20 @@ function DeleteBox({ id, imageUrl, deleteBoxValue, toggleDeleteBox }: DeleteBoxP
     }
   }, [result]);
 
+  useEffect(() => { //Prevents scroll on elements behind modal
+  if (deleteBoxValue) {
+    const scrollY = window.scrollY;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    return () => {
+      document.body.style.position = "";
+      document.body.style.top = "";
+      window.scrollTo(0, scrollY);
+    };
+  }
+}, [deleteBoxValue]);
+
   return (
     <div className={style.deleteModal}>
       <div className={style.deleteBox}>
@@ -45,9 +59,7 @@ function DeleteBox({ id, imageUrl, deleteBoxValue, toggleDeleteBox }: DeleteBoxP
           className={style.closeButton}
           type="button"
           onClick={() => toggleDeleteBox(!deleteBoxValue)}
-        >
-          X
-        </button>
+        />
 
         {result?.tableDeleted ? (
           <p>Produktet er slettet!</p>

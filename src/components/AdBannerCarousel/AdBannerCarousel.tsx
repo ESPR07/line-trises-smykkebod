@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useSwipeable } from "react-swipeable";
 import style from "./AdBannerCarousel.module.css";
 import NavigationButton from "../utils/Button/NavigationButton";
 
@@ -39,28 +40,49 @@ function AdBannerCarousel() {
       "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
   }
 
+  // SIMPLE SWIPE → changes scrollValue
+  const swipeHandlers = useSwipeable({
+    onSwipedLeft: () => {
+      if (scrollValue < images.length - 1) setScrollValue(scrollValue + 1);
+    },
+    onSwipedRight: () => {
+      if (scrollValue > 0) setScrollValue(scrollValue - 1);
+    },
+    trackMouse: true
+  });
+
   return (
     <>
-      <section className={style.AdBannerContainer} ref={activeImage}>
-        <article className={style.imageWrapper}>
-          {images.map((image, index) => {
-            return (
-              <img
-                key={index}
-                id={`image-${index}`}
-                src={image.imageurl}
-                alt={image.imagealt}
-                onError={fallbackImage}
-              />
-            );
-          })}
-        </article>
-        <article className={style.welcomeBox}>
-          <h1>Velkommen</h1>
-          <img src="/src/assets/logo_green.svg" />
-          <NavigationButton text="Oppdag" path="browse" buttonWidth={100} />
-        </article>
-      </section>
+      {/* WRAPPER GETS SWIPE — NO REF CONFLICT */}
+      <div {...swipeHandlers}>
+        <section className={style.AdBannerContainer} ref={activeImage}>
+          <article className={style.imageWrapper}>
+            {images.map((image, index) => {
+              return (
+                <img
+                  fetchPriority="high"
+                  key={index}
+                  id={`image-${index}`}
+                  src={image.imageurl}
+                  alt={image.imagealt}
+                  onError={fallbackImage}
+                />
+              );
+            })}
+          </article>
+
+          <article className={style.welcomeBox}>
+            <h1>Velkommen</h1>
+            <img src="/src/assets/logo_green.svg" alt="Logo" />
+            <NavigationButton
+              text="Oppdag"
+              path="browse"
+              buttonWidth={100}
+            />
+          </article>
+        </section>
+      </div>
+
       <ul className={style.carouselDotList}>
         {images.map((_, index) => {
           return (

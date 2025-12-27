@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router";
 import style from "./Navbar.module.css";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { Cart, CartContext } from "../../App";
 import { initialValue } from "../../Reducers/cartInteractions";
 
@@ -8,33 +8,45 @@ function Navbar() {
   const [burgerToggle, setBurgerToggle] = useState<boolean>(false);
   const [currentCart, setCurrentCart] = useState<Cart>(initialValue);
   const { state } = useContext(CartContext);
+  const navRef = useRef<HTMLUListElement>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setCurrentCart(state);
   }, [state]);
 
   const numberOfItems =
-    currentCart.productList !== undefined
-      ? currentCart.productList
-          .map((product) => product.quantity)
-          .reduce((a, b) => a + b, 0)
-      : 0;
+    currentCart.productList?.reduce((sum, product) => sum + product.quantity, 0) ?? 0;
 
-  const navigate = useNavigate();
+  const navigateCart = () => navigate("/cart");
 
-  function navigateCart() {
-    navigate("/cart");
-  }
+  // Close navbar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        burgerToggle && 
+        navRef.current &&
+        !navRef.current.contains(event.target as Node) &&
+        !(event.target as HTMLElement).classList.contains(style.burgerIcon)
+      ) {
+        setBurgerToggle(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [burgerToggle]);
+
+  // Close navbar when navigating via link
+  const handleLinkClick = () => setBurgerToggle(false);
 
   return (
     <header>
       <nav>
-        <Link className={style.navLogo} to={"/"} />
+        <Link className={style.navLogo} to={"/"} aria-label="Home Link" onClick={handleLinkClick} />
         <div
           className={style.burgerIcon}
-          onClick={() => {
-            setBurgerToggle(!burgerToggle);
-          }}
+          onClick={() => setBurgerToggle(!burgerToggle)}
         ></div>
         <ul className={style.navInteractions}>
           <li className={style.cartContainer} onClick={navigateCart}>
@@ -42,23 +54,23 @@ function Navbar() {
           </li>
         </ul>
       </nav>
+
       <ul
-        className={`${style.navList} ${
-          burgerToggle ? style.open : style.close
-        }`}
+        ref={navRef}
+        className={`${style.navList} ${burgerToggle ? style.open : style.close}`}
       >
         <li>
-          <Link to={"browse"} className={style.link}>
+          <Link to={"browse"} className={style.link} onClick={handleLinkClick}>
             Produkter
           </Link>
         </li>
         <li>
-          <Link to={"about"} className={style.link}>
+          <Link to={"about"} className={style.link} onClick={handleLinkClick}>
             Om Meg
           </Link>
         </li>
         <li>
-          <Link to={"contact"} className={style.link}>
+          <Link to={"contact"} className={style.link} onClick={handleLinkClick}>
             Kontakt
           </Link>
         </li>

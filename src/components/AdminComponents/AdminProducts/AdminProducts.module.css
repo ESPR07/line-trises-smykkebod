@@ -3,6 +3,7 @@
   border-radius: 10px;
   min-height: 80px;
   margin-top: 30px;
+  width: calc(100% - 40px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,19 +12,16 @@
   padding: 20px;
   background: var(--background);
 }
-
 .adminProductsContainer h2 {
   width: 100%;
   margin: 0;
 }
-
 .topSection {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-
 .adminProductsHeader {
   display: flex;
   justify-content: space-between;
@@ -34,7 +32,6 @@
   border-bottom: 2px solid #e5e7eb;
   gap: 16px;
 }
-
 .adminProductsHeader span {
   text-align: left;
   font-size: 0.9em;
@@ -42,29 +39,84 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-
 /* Match column widths with the product rows */
 .adminProductsHeader span:nth-child(1) {
   width: 60px;
   flex-shrink: 0;
 }
-
 .adminProductsHeader span:nth-child(2) {
   flex: 2;
 }
-
 .adminProductsHeader span:nth-child(3) {
   flex: 1;
 }
-
 .adminProductsHeader span:nth-child(4) {
   flex: 1;
 }
-
 .adminProductsHeader span:nth-child(5) {
   flex-shrink: 0;
   text-align: center;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #e5e7eb;
+  width: 100%;
+}
+
+.paginationButton {
+  padding: 10px 20px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #357abd;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.paginationButton:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.paginationButton:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.pageInfo {
+  padding: 8px 16px;
+  color: #374151;
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-width: 80px;
+  text-align: center;
+  background-color: #f9fafb;
+  border-radius: 6px;
+}
+
+@media screen and (max-width: 900px) {
+  .adminProductsHeader {
+    display: none;
+  }
 }

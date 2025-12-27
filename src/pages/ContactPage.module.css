@@ -1,5 +1,5 @@
 .contactMain {
-  margin-inline: 25vw;
+  margin-inline: 20vw;
 }
 
 .contactStatic {
@@ -16,7 +16,7 @@
   width: 100%;
 
   p {
-    font-size: 2rem;
+    font-size: clamp(1.7rem, 2vw, 2rem);
     padding: 20px;
     border-radius: 10px;
     position: relative; /* needed for tail positioning */
@@ -132,6 +132,7 @@
 
 .contactForm {
   width: 100%;
+  margin-bottom: 50px;
 
   button {
     height: 50px;
@@ -173,7 +174,7 @@
 
   .contactBox1 p,
   .contactBox2 p {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     max-width: 80%;
   }
 

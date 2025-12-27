@@ -60,6 +60,7 @@
   overflow-x: hidden;
   padding-left: 0;
   margin-inline: 2vw;
+  list-style: none;
 }
 
 .emptyList {
@@ -84,5 +85,13 @@
 @media screen and (max-width: 900px) {
   .carouselContainer {
     margin-top: 50px;
+  }
+
+  .sideSwipeLeft {
+    margin-left: 5px;
+  }
+
+  .sideSwipeRight {
+    margin-right: 5px;
   }
 }

@@ -3,10 +3,13 @@
 }
 
 .aboutBanner {
-  height: 600px;
+  height: 100%;
   display: flex;
   justify-content: space-between;
-  margin-inline: 3vw;
+}
+
+.aboutBanner:first-of-type {
+  margin-top: 100px;
 }
 
 .aboutBannerTextContainer {
@@ -15,7 +18,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding-right: 50px;
+  margin-right: 50px;
+  gap: 20px;
 
   h2 {
     font-size: clamp(2rem, 4vw, 3rem);
@@ -25,18 +29,19 @@
   }
 
   p {
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-size: clamp(1.5rem, 2.5vw, 1.7rem);
     color: var(--highlight);
   }
 }
 
 .aboutBannerImage {
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
+  max-width: 600px;
 }
 
 .aboutBannerRight {
-  height: 600px;
+  height: 100%;
   display: flex;
   justify-content: space-between;
   margin-inline: 3vw;
@@ -49,6 +54,7 @@
   justify-content: center;
   align-items: center;
   padding-left: 50px;
+  gap: 20px;
 
   h2 {
     font-size: clamp(2rem, 4vw, 3rem);
@@ -58,28 +64,35 @@
   }
 
   p {
-    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-size: clamp(1.5rem, 2.5vw, 1.7rem);
     color: var(--highlight);
   }
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 1200px) {
   .aboutMain {
     margin-top: 50px;
   }
 
 
   .aboutBanner {
+    height: auto;
     flex-direction: column;
     margin-bottom: 70px;
+  }
+
+  .aboutBanner:first-of-type {
+    margin-top: 0;
   }
 
   .aboutBannerTextContainer {
     padding-right: 0;
     text-align: center;
+    margin-right: 0;
   }
 
   .aboutBannerRight {
+    height: auto;
     flex-direction: column-reverse;
   }
 

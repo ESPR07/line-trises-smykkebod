@@ -166,13 +166,29 @@
     gap: 12px;
     padding: 12px 16px;
   }
-  
+
+  .mobileStatusActive {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+  }
+
+  .mobileStatusInactive {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+  }
+
   .imageWrapper {
     width: 50px;
     height: 50px;
   }
-  
+
   .productName h3 {
     font-size: 0.9em;
+  }
+
+  .productStatus {
+    display: none;
   }
 }

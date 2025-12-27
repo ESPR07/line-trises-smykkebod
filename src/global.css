@@ -24,7 +24,7 @@
 }
 
 :root {
-  --background: rgba(224, 228, 231, 1);
+  --background: rgb(238, 243, 245);
   --boxColor: rgba(189, 218, 236, 1);
   --boxColorFade: rgba(189, 218, 236, .6);
   --compContainer: rgba(235, 188, 168, 1);

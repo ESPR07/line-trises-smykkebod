@@ -1,0 +1,436 @@
+.successPageContainer {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.successCard {
+  background-color: var(--background);
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  position: relative;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.successCard.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Success Icon Animation */
+.iconContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.checkmarkCircle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10b981);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+.checkmark {
+  width: 30px;
+  height: 50px;
+  border-right: 5px solid white;
+  border-bottom: 5px solid white;
+  transform: rotate(45deg) translateY(-5px) translateX(-5px);
+  animation: checkmarkDraw 0.4s ease 0.5s both;
+  opacity: 0;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes checkmarkDraw {
+  from {
+    height: 0;
+    opacity: 0;
+  }
+  to {
+    height: 50px;
+    opacity: 1;
+  }
+}
+
+/* Typography */
+.successTitle {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+  animation: fadeSlideUp 0.6s ease 0.3s both;
+}
+
+.successSubtitle {
+  font-size: 1.2rem;
+  color: #6b7280;
+  margin: 0 0 32px 0;
+  line-height: 1.6;
+  animation: fadeSlideUp 0.6s ease 0.4s both;
+}
+
+@keyframes fadeSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Order Details */
+.orderDetails {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.04) 100%);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  animation: fadeSlideUp 0.6s ease 0.5s both;
+}
+
+.orderInfoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.orderInfoRow:first-child {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+}
+
+.label {
+  font-size: 1rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.value {
+  font-size: 1.1rem;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.statusBadge {
+  display: inline-flex;
+  padding: 6px 14px;
+  background: linear-gradient(135deg, #10b981);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+/* Info Box */
+.infoBox {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 32px;
+  text-align: left;
+  animation: fadeSlideUp 0.6s ease 0.6s both;
+}
+
+.infoIcon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.infoText {
+  color: #1e40af;
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Next Steps */
+.nextSteps {
+  margin-bottom: 32px;
+  animation: fadeSlideUp 0.6s ease 0.7s both;
+}
+
+.nextStepsTitle {
+  font-size: 1.5rem;
+  color: #1f2937;
+  margin: 0 0 20px 0;
+  font-weight: 600;
+}
+
+.stepsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.stepNumber {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--highlight, #3b82f6) 0%, color-mix(in srgb, var(--highlight, #3b82f6) 85%, black) 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.stepContent h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.stepContent p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #6b7280;
+  line-height: 1.5;
+}
+
+/* Buttons */
+.buttonGroup {
+  display: flex;
+  gap: 16px;
+  animation: fadeSlideUp 0.6s ease 0.8s both;
+}
+
+.primaryButton,
+.secondaryButton {
+  flex: 1;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  text-align: center;
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, var(--highlight, #3b82f6) 0%, color-mix(in srgb, var(--highlight, #3b82f6) 85%, black) 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.primaryButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.primaryButton:active {
+  transform: translateY(0);
+}
+
+.secondaryButton {
+  background-color: white;
+  color: var(--highlight, #3b82f6);
+  border: 2px solid var(--highlight, #3b82f6);
+}
+
+.secondaryButton:hover {
+  background-color: #f0f9ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.secondaryButton:active {
+  transform: translateY(0);
+}
+
+/* Confetti Animation */
+.confetti {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confettiPiece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: var(--compContainer, #10b981);
+  top: -10%;
+  opacity: 0;
+  animation: confettiFall linear infinite;
+}
+
+.confettiPiece:nth-child(2n) {
+  background-color: var(--highlight, #3b82f6);
+}
+
+.confettiPiece:nth-child(3n) {
+  background-color: #fbbf24;
+  width: 8px;
+  height: 8px;
+}
+
+.confettiPiece:nth-child(4n) {
+  background-color: #ec4899;
+  border-radius: 50%;
+}
+
+@keyframes confettiFall {
+  0% {
+    top: -10%;
+    opacity: 1;
+    transform: translateX(0) rotate(0deg);
+  }
+  100% {
+    top: 110%;
+    opacity: 0.3;
+    transform: translateX(100px) rotate(360deg);
+  }
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .successPageContainer {
+    padding: 30px 16px;
+  }
+
+  .successCard {
+    padding: 36px 24px;
+    margin-top: 80px;
+  }
+
+  .checkmarkCircle {
+    width: 80px;
+    height: 80px;
+  }
+
+  .checkmark {
+    width: 25px;
+    height: 40px;
+    border-width: 4px;
+  }
+
+  .successTitle {
+    font-size: 2rem;
+  }
+
+  .successSubtitle {
+    font-size: 1.1rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .nextStepsTitle {
+    font-size: 1.3rem;
+  }
+
+  .stepContent h3 {
+    font-size: 1rem;
+  }
+
+  .stepContent p {
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .successCard {
+    padding: 28px 20px;
+  }
+
+  .checkmarkCircle {
+    width: 70px;
+    height: 70px;
+  }
+
+  .checkmark {
+    width: 20px;
+    height: 35px;
+    border-width: 3px;
+  }
+
+  .successTitle {
+    font-size: 1.7rem;
+  }
+
+  .successSubtitle {
+    font-size: 1rem;
+  }
+
+  .orderDetails {
+    padding: 16px;
+  }
+
+  .label,
+  .value {
+    font-size: 0.95rem;
+  }
+
+  .infoBox {
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .infoText {
+    font-size: 0.9rem;
+  }
+
+  .stepNumber {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+}

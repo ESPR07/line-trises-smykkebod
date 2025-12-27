@@ -17,7 +17,7 @@
 
 .cartItemList {
   border-top: 2px solid var(--highlight);
-  flex: 3;
+  flex: 2;
 }
 
 .cartPaymentInfo {
