@@ -35,7 +35,7 @@ function BrowsePage() {
   if (loading) {
     return (
       <>
-        <title>Laster... | Line Trises Smykkebod</title>
+        <title>Laster... | Line Trises Kunstsmykker</title>
         <meta name="description" content="Laster alle produkter" />
         <main className={style.browseMain}>
           <h1 className={style.browseHeader}>Alle Produkter</h1>
@@ -50,7 +50,7 @@ function BrowsePage() {
   if (error) {
     return (
       <>
-        <title>Fant ikke side | Line Trises Smykkebod</title>
+        <title>Fant ikke side | Line Trises Kunstsmykker</title>
         <meta name="description" content="Kunne ikke finne siden du ser etter." />
         <main className={style.browseMain}>
           <h1 className={style.browseHeader}>Alle Produkter</h1>
@@ -64,7 +64,7 @@ function BrowsePage() {
 
   return (
     <>
-      <title>Håndlagde smykker | Line Trises Smykkebod</title>
+      <title>Håndlagde smykker | Line Trises Kunstsmykker</title>
       <meta
         name="description"
         content="Se hele utvalget av håndlagde smykker. Finn ringer, armbånd, halskjeder og personlige gaver laget i høy kvalitet."

@@ -58,7 +58,7 @@ function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarP
 
       <section className={`${style.adminSidebarContainer} ${isOpen ? style.open : ''}`}>
         <article className={style.adminSidebarContent}>
-          <h1>Line Trise's Smykkebod</h1>
+          <h1>Line Trise's Kunstsmykker</h1>
           <ul>
             {/* Highlight box */}
             <div
