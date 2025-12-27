@@ -227,14 +227,23 @@ function App() {
     return <div>Laster...</div>;
   }
 
-  if (!session) {
-    return <UnderConstruction />;
-  }
-
   return (
     <Suspense fallback={<div>Laster...</div>}>
       <Routes>
-        <Route path="/" element={<Layout />}>
+
+        {/* ADMIN ROUTES (always mounted) */}
+        <Route
+          path="/admin"
+          element={session ? <AdminLayout /> : <UnderConstruction />}
+        >
+          <Route index element={<AdminPage />} />
+        </Route>
+
+        {/* PUBLIC / LOCKED SITE */}
+        <Route
+          path="/"
+          element={session ? <Layout /> : <UnderConstruction />}
+        >
           <Route index element={<Homepage />} />
           <Route path="browse" element={<BrowsePage />} />
           <Route path="produkt/:id" element={<ProductPage />} />
@@ -245,9 +254,6 @@ function App() {
           <Route path="success" element={<PurchaseSuccess />} />
         </Route>
 
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminPage />} />
-        </Route>
       </Routes>
     </Suspense>
   );
