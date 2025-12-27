@@ -17,8 +17,8 @@ import cartInteractions, {
 import { useProductList } from "./API/useProducts";
 import { useGetOrders } from "./API/useGetOrders";
 import { Database } from "./@types/Database";
-import PurchaseSuccess from "./pages/PurchaseSucessPage";
-import MakeYourOwnPage from "./pages/MakeYourOwnPage";
+import UnderConstruction from "./pages/UnderConstruction";
+import { useAuthStatus } from "./API/useAuthStatus";
 
 
 // Lazy-loaded pages
@@ -29,6 +29,8 @@ const CartPage = lazy(() => import("./pages/CartPage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const AdminPage = lazy(() => import("./pages/AdminPage"));
+const PurchaseSuccess = lazy(() => import("./pages/PurchaseSucessPage"));
+const MakeYourOwnPage = lazy(() => import("./pages/MakeYourOwnPage"));
 
 // -------------------- Types --------------------
 export interface CartItemMinimal {
@@ -219,6 +221,16 @@ function AdminLayout() {
 
 // -------------------- App Component --------------------
 function App() {
+  const { session, loading } = useAuthStatus();
+
+  if (loading) {
+    return <div>Laster...</div>;
+  }
+
+  if (!session) {
+    return <UnderConstruction />;
+  }
+
   return (
     <Suspense fallback={<div>Laster...</div>}>
       <Routes>

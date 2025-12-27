@@ -4,14 +4,16 @@ import { supabaseClient } from "../components/utils/supabaseClient";
 
 export function useAuthStatus() {
   const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabaseClient.auth.getSession().then(({ data: { session }, error }) => {
+    supabaseClient.auth.getSession().then(({ data, error }) => {
       if (error) {
         console.error("Failed to get session:", error.message);
       } else {
-        setSession(session);
+        setSession(data.session);
       }
+      setLoading(false);
     });
 
     const { data: authListener } = supabaseClient.auth.onAuthStateChange(
@@ -25,5 +27,5 @@ export function useAuthStatus() {
     };
   }, []);
 
-  return { session };
+  return { session, loading };
 }
