@@ -6,11 +6,11 @@ import NavigationButton from "../utils/Button/NavigationButton";
 // This will be replaced by real data later
 const images = [
   {
-    imageurl: "/src/assets/images/pexels-gdtography-277628-6563393.jpg",
+    imageurl: "/images/pexels-gdtography-277628-6563393.jpg",
     imagealt: "this is a image!",
   },
   {
-    imageurl: "/src/assets/images/pexels-gdtography-277628-6563393.jpg",
+    imageurl: "/images/pexels-gdtography-277628-6563393.jpg",
     imagealt: "this is a image!",
   },
 ];
@@ -73,7 +73,7 @@ function AdBannerCarousel() {
 
           <article className={style.welcomeBox}>
             <h1>Velkommen</h1>
-            <img src="/src/assets/logo_green.svg" alt="Logo" />
+            <img src="/logo_green.svg" alt="Logo" />
             <NavigationButton
               text="Oppdag"
               path="browse"

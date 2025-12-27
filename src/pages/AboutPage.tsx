@@ -29,14 +29,14 @@ const AboutPage: React.FC = () => {
             </p>
           </article>
           <img
-            src="/src/assets/images/aboutSplashMe.webp"
+            src="/images/aboutSplashMe.webp"
             alt="Bilde av en smykkelager i arbeid"
             className={style.aboutBannerImage}
           />
         </section>
         <section className={style.aboutBannerRight}>
           <img
-            src="/src/assets/images/aboutSplashMe2.webp"
+            src="/images/aboutSplashMe2.webp"
             alt="Bilde av en smykkelager i arbeid"
             className={style.aboutBannerImage}
           />
@@ -76,7 +76,7 @@ const AboutPage: React.FC = () => {
             </p>
           </article>
           <img
-            src="/src/assets/images/aboutSplashMe3.webp"
+            src="/images/aboutSplashMe3.webp"
             alt="Bilde av en smykkelager i arbeid"
             className={style.aboutBannerImage}
           />

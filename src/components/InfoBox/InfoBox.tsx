@@ -7,7 +7,7 @@ function InfoBox() {
       <h3 className={style.infoHeader}>Om Smykkene Mine</h3>
       <span className={style.infoDivider}></span>
       <article className={style.infoContentContainer}>
-        <img src="/src/assets/images/aboutMain.webp" alt="Info Image" className={style.infoImage}/>
+        <img src="/images/aboutMain.webp" alt="Info Image" className={style.infoImage}/>
         <div className={style.infoTextContainer}>
           <p className={style.infoText}>Mine produkter er laget av resirkulert glass til noe kult og unikt. Mine produkter er laget av resirkulert glass til noe kult og unikt.</p>
           <NavigationButton text="Oppdag" path="browse" buttonWidth={50}/>
