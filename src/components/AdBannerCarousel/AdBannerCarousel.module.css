@@ -148,6 +148,7 @@
 
   .imageWrapper img {
     max-height: 300px;
+    height: 100%;
   }
 
   .welcomeBox {

@@ -24,7 +24,7 @@
 }
 
 :root {
-  --background: rgba(224, 228, 231, 1);
+  --background: rgb(238, 243, 245);
   --boxColor: rgba(189, 218, 236, 1);
   --boxColorFade: rgba(189, 218, 236, .6);
   --compContainer: rgba(235, 188, 168, 1);
@@ -58,9 +58,16 @@ a {
   transition: 0.4s;
 }
 
-input {
+input, textarea {
   font-family: 'montserrat', 'Courier New', Courier, monospace;
   font-size: 1.3rem;
   text-align: center;
+  color: var(--background);
+  border: none;
+}
+
+.svg_style {
+  height: 40px;
+  width: 40px;
   color: var(--background);
 }

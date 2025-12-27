@@ -1,38 +1,26 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import style from "./CartProductCard.module.css";
-import { Cart } from "../../App";
+import { CartItem } from "../../App";
+import TrashIcon from "../../assets/svg_components/TrashIcon";
 
 type Props = {
-  product: Cart["productList"][number];
-  onUpdate: (product: Cart["productList"][number], quantity: number) => void;
-  onRemove: (product: Cart["productList"][number]) => void;
+  product: CartItem;
+  onUpdate: (product: CartItem, quantity: number) => void;
+  onRemove: (product: CartItem) => void;
 };
 
 const CartProductCard = ({ product, onUpdate, onRemove }: Props) => {
-  const [quantity, setQuantity] = useState(product.quantity);
+  const [quantity, setQuantity] = useState<number>(product.quantity);
 
   useEffect(() => {
     setQuantity(product.quantity);
   }, [product.quantity]);
 
-  const increase = () => {
-    const newQty = quantity + 1;
-    setQuantity(newQty);
-    onUpdate(product, newQty);
-  };
-
-  const decrease = () => {
-    if (quantity <= 1) return;
-    const newQty = quantity - 1;
-    setQuantity(newQty);
-    onUpdate(product, newQty);
-  };
-
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = parseInt(e.target.value);
-    if (!isNaN(val) && val >= 1) {
-      setQuantity(val);
-      onUpdate(product, val);
+  const handleQunatityChange = (change: number) => {
+    const newQuantity = quantity + change;
+    if (newQuantity >= 1 && newQuantity <= 10) {
+      setQuantity(newQuantity);
+      onUpdate(product, newQuantity);
     }
   };
 
@@ -43,19 +31,44 @@ const CartProductCard = ({ product, onUpdate, onRemove }: Props) => {
         <div className={style.cartItemText}>
           <span className={style.titleDeleteContainer}>
             <h2>{product.name}</h2>
-            <div
-              className={style.deleteIcon}
+            <button
+              className={style.deleteButton}
               onClick={() => onRemove(product)}
-            ></div>
+              aria-label="Slett produkt"
+            >
+              <TrashIcon />
+            </button>
           </span>
-          {product.discountPrice ? <p className={style.discount}>kr {product.price}</p> : <p>kr {product.price}</p>}
-          {product.discountPrice ? <p>kr {product.discountPrice.toFixed(2)}</p> : ""}
+          {product.discountPrice ? (
+            <p className={style.discount}>kr {product.price}</p>
+          ) : (
+            <p>kr {product.price}</p>
+          )}
+          {product.discountPrice ? (
+            <p>kr {product.discountPrice.toFixed(2)}</p>
+          ) : (
+            ""
+          )}
         </div>
         <div className={style.cartItemInteraction}>
-          <div className={style.amountSelection}>
-            <p onClick={decrease}>−</p>
-            <input type="number" value={quantity} min={1} onChange={onChange} />
-            <p onClick={increase}>+</p>
+          <div className={style.quantitySection}>
+            <div className={style.quantityControls}>
+              <button
+                className={style.quantityButton}
+                onClick={() => handleQunatityChange(-1)}
+                disabled={quantity <= 1}
+              >
+                −
+              </button>
+              <span className={style.quantityDisplay}>{quantity}</span>
+              <button
+                className={style.quantityButton}
+                onClick={() => handleQunatityChange(1)}
+                disabled={quantity >= 10}
+              >
+                +
+              </button>
+            </div>
           </div>
         </div>
       </div>

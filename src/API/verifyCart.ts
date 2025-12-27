@@ -1,32 +1,46 @@
-import { createClient } from "@supabase/supabase-js";
+import { supabaseClient } from "../components/utils/supabaseClient";
 import { CartItem } from "../App";
-import { Database } from "../types/Database";
+import { Database } from "../@types/Database";
 
-const supabaseURL = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAPIKey = import.meta.env.VITE_SUPABASE_KEY;
-
-const supabaseClient = createClient<Database>(supabaseURL, supabaseAPIKey);
+type ProductPriceInfo = Pick<
+  Database["public"]["Tables"]["products"]["Row"],
+  "id" | "price" | "discount_amount"
+>;
 
 export async function verifyCart(cartItems: CartItem[]) {
-  // Fetch authoritative prices from Supabase
+  if (cartItems.length === 0) {
+    return { verifiedCart: [], total: 0 };
+  }
+
   const { data, error } = await supabaseClient
     .from("products")
-    .select("id, price")
-    .in("id", cartItems.map(item => item.id));
+    .select("id, price, discount_amount")
+    .in(
+      "id",
+      cartItems.map((item) => item.id)
+    );
 
   if (error) throw error;
 
-  // Overwrite local prices with official prices
-  const verifiedCart = cartItems.map(item => {
-    const product = data.find(p => p.id === item.id);
+  const products = data as ProductPriceInfo[];
+
+  const verifiedCart = cartItems.map((item) => {
+    const product = products.find((p) => p.id === item.id);
+    const price = product?.price ?? 0;
+    const discountPrice = product?.discount_amount ?? null;
+
     return {
       ...item,
-      price: product?.price ?? 0, // overwrite price
+      price,
+      discountPrice,
     };
   });
 
-  // Compute total based on authoritative prices
-  const total = verifiedCart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = verifiedCart.reduce((sum, item) => {
+    const effectivePrice = item.discountPrice != null && item.discountPrice > 0 ? item.discountPrice : item.price;
+    return sum + effectivePrice * item.quantity;
+  }, 0);
 
   return { verifiedCart, total };
 }
+

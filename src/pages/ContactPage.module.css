@@ -1,0 +1,188 @@
+.contactMain {
+  margin-inline: 20vw;
+}
+
+.contactStatic {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  margin-top: 150px;
+}
+
+.contactBox1,
+.contactBox2 {
+  display: flex;
+  width: 100%;
+
+  p {
+    font-size: clamp(1.7rem, 2vw, 2rem);
+    padding: 20px;
+    border-radius: 10px;
+    position: relative; /* needed for tail positioning */
+  }
+}
+
+.contactBox1 {
+  p {
+    color: var(--background);
+    background: var(--highlight);
+    position: relative; /* needed for pseudo-elements */
+    max-width: 50%;
+  }
+
+  /* The visible highlight part of the tail */
+  p::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    bottom: -5px;
+    right: -14px; /* moves tail further right */
+    height: 32px; /* bigger height */
+    width: 32px; /* bigger width */
+    background: var(--highlight);
+    border-bottom-left-radius: 20px;
+  }
+
+  /* The cutout shape that blends into the page background */
+  p::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    bottom: -5px;
+    right: -18px; /* aligns logically after resize */
+    width: 18px; /* bigger width */
+    height: 32px; /* bigger height */
+    background: var(--background);
+    border-bottom-left-radius: 20px;
+  }
+}
+
+.contactBox2 {
+  justify-content: flex-end; /* ensure left alignment if needed */
+
+  p {
+    color: black;
+    background: var(--boxColor);
+    position: relative;
+    max-width: 50%;
+
+    a {
+      color: black;
+      text-decoration: underline;
+
+      &:hover {
+        color: var(--highlight);
+      }
+    }
+  }
+
+  /* visible part of the tail */
+  p::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    bottom: -5px;
+    left: -14px; /* mirror placement */
+    height: 32px;
+    width: 32px;
+    background: var(--boxColor);
+    border-bottom-right-radius: 20px; /* mirror curve */
+  }
+
+  /* background cutout */
+  p::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    bottom: -5px;
+    left: -18px; /* mirror placement */
+    width: 18px;
+    height: 32px;
+    background: var(--background);
+    border-bottom-right-radius: 20px; /* mirror curve */
+  }
+}
+
+.dividerContainer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+
+  .dividerLineBox {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .dividerLine {
+    width: 100%;
+    height: 1px;
+    border-bottom: 4px dotted var(--highlight);
+  }
+
+  p {
+    margin: 0 15px;
+    font-size: 2.5rem;
+    color: var(--highlight);
+    white-space: nowrap;
+  }
+}
+
+.contactForm {
+  width: 100%;
+  margin-bottom: 50px;
+
+  button {
+    height: 50px;
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+
+  label {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+    color: black;
+  }
+
+  input,
+  textarea {
+    font-family: "montserrat", "Courier New", Courier, monospace;
+    font-size: 1.3rem;
+    padding: 10px;
+    color: var(--highlight);
+    text-align: start;
+    border: 4px solid var(--boxColor);
+    border-radius: 10px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .contactMain {
+    margin-inline: 5vw;
+    margin-bottom: 50px;
+  }
+
+  .contactStatic {
+    margin-top: 50px;
+  }
+
+  .contactBox1 p,
+  .contactBox2 p {
+    font-size: 1.3rem;
+    max-width: 80%;
+  }
+
+  .dividerContainer {
+    margin-bottom: 20px;
+  }
+
+  .dividerContainer p {
+    font-size: 2rem;
+  }
+}

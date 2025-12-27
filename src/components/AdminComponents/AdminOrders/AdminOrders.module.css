@@ -1,0 +1,201 @@
+.adminOrdersContainer {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.05), 0 6px 20px 0 rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  min-height: 80px;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px;
+}
+.adminOrdersContainer h2 {
+  width: 100%;
+}
+.adminOrdersHeader {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: bold;
+  padding: 10px 0;
+  border-bottom: 2px solid #e5e7eb;
+  gap: 10px;
+}
+.adminOrdersHeader span {
+  text-align: left;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  user-select: none;
+}
+.adminOrdersHeader span:hover {
+  background-color: #f3f4f6;
+  cursor: pointer;
+  color: #2563eb;
+}
+.adminOrdersHeader .amount:hover {
+  background-color: transparent;
+  cursor: default;
+  color: inherit;
+}
+.adminOrdersHeader span.activeSort {
+  color: #2563eb;
+  background-color: #eff6ff;
+}
+.orderId, .amount, .status {
+  flex: 1;
+}
+.customerName, .date, .adress {
+  flex: 2;
+}
+.noOrders {
+  width: 100%;
+  text-align: center;
+}
+.adminOrdersListContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.adminOrdersHeader span svg,
+.adminOrdersHeader span .arrow {
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+  font-size: 0.75em;
+  margin-left: 4px;
+}
+.adminOrdersHeader span:hover svg,
+.adminOrdersHeader span:hover .arrow {
+  opacity: 1;
+}
+.adminOrdersHeader span.activeSort svg,
+.adminOrdersHeader span.activeSort .arrow {
+  opacity: 1;
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #e5e7eb;
+  width: 100%;
+}
+
+.paginationButton {
+  padding: 10px 20px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: #357abd;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.paginationButton:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.paginationButton:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+}
+
+.pageInfo {
+  padding: 8px 16px;
+  color: #374151;
+  font-size: 0.95rem;
+  font-weight: 600;
+  min-width: 80px;
+  text-align: center;
+  background-color: #f9fafb;
+  border-radius: 6px;
+}
+
+/* Mobile responsive styles */
+@media screen and (max-width: 900px) {
+  .adminOrdersContainer {
+    padding: 16px;
+    margin-top: 20px;
+    overflow-x: auto;
+  }
+  .adminOrdersHeader {
+    display: none;
+  }
+  .adminOrdersHeader span {
+    padding: 6px 8px;
+    font-size: 0.85em;
+  }
+  .adminOrdersListContainer {
+    gap: 12px;
+  }
+  
+  .pagination {
+    gap: 10px;
+    padding-top: 15px;
+  }
+  
+  .paginationButton {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+  
+  .pageInfo {
+    font-size: 0.9rem;
+    min-width: 70px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .adminOrdersContainer {
+    padding: 12px;
+    border-radius: 8px;
+  }
+  .adminOrdersContainer h2 {
+    font-size: 1.3rem;
+  }
+  .adminOrdersHeader {
+    min-width: 650px;
+    gap: 6px;
+  }
+  .adminOrdersHeader span {
+    padding: 4px 6px;
+    font-size: 0.75em;
+  }
+  .adminOrdersHeader span svg,
+  .adminOrdersHeader span .arrow {
+    font-size: 0.7em;
+  }
+  
+  .pagination {
+    gap: 8px;
+  }
+  
+  .paginationButton {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .pageInfo {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
+}

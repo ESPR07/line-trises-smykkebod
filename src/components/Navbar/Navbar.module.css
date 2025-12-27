@@ -82,7 +82,7 @@ nav {
   gap: 40px;
   font-size: 1.2rem;
   padding: 0;
-  z-index: 110;
+  z-index: 100;
   color: var(--background);
 }
 
@@ -94,7 +94,7 @@ nav {
   content: "";
   position: absolute;
   width: 0;
-  height: 4px;
+  height: 2px;
   bottom: 0;
   left: 50%;
   background-color: var(--CTA);
