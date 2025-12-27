@@ -37,7 +37,7 @@ describe("useProductList hook", () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
-    const mod = await import("../components/utils/supabaseClient");
+    const mod = (await import("../components/utils/supabaseClient")) as any;
     mocks = mod.__mocks__;
   });
 
