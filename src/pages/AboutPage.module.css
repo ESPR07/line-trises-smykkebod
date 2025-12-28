@@ -1,11 +1,13 @@
 .aboutMain {
   margin-inline: 10vw;
+  margin-bottom: 50px;
 }
 
 .aboutBanner {
   height: 100%;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 50px;
 }
 
 .aboutBanner:first-of-type {
@@ -45,6 +47,7 @@
   display: flex;
   justify-content: space-between;
   margin-inline: 3vw;
+  margin-bottom: 50px;
 }
 
 .aboutBannerTextContainerRight {

@@ -15,7 +15,7 @@ function PurchaseSuccess() {
 
   return (
     <>
-      <title>Takk for ditt kjøp! | Line Trises Smykkebod</title>
+      <title>Takk for ditt kjøp! | Line Trises Kunstsmykker</title>
       <meta name="description" content="Din bestilling er mottatt og bekreftet." />
       
       <main className={style.successPageContainer}>

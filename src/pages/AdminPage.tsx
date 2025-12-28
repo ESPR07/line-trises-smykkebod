@@ -28,7 +28,7 @@ function AdminPage() {
 
   return (
     <>
-      <title>Adminpanel - Line Trises Smykkebod</title>
+      <title>Adminpanel - Line Trises Kunstsmykker</title>
       <meta name="description" content="Intern administrasjon av produkter og ordre."/>
       <meta name="robots" content="noindex, nofollow" />
       <main className={style.adminPageContainer}>

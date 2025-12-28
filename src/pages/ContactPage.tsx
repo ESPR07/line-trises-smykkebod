@@ -8,8 +8,8 @@ function sendMail() {
 function ContactPage() {
   return (
     <>
-      <title>Kontakt meg - Line Trises Smykkebod</title>
-      <meta name="description" content="Ta kontakt med Line Trises Smykkebod for spørsmål om bestillinger, spesialdesign eller samarbeid."/>
+      <title>Kontakt meg - Line Trises Kunstsmykker</title>
+      <meta name="description" content="Ta kontakt med Line Trises Kunstsmykker for spørsmål om bestillinger, spesialdesign eller samarbeid."/>
       <main className={style.contactMain}>
         <section className={style.contactStatic}>
           <article className={style.contactBox1}>
@@ -18,7 +18,7 @@ function ContactPage() {
           <article className={style.contactBox2}>
             <p>
               Du kan nå meg på{" "}
-              <a href="mailto:linetrise@smykkebod.no">linetrise@smykkebod.no</a>
+              <a href="mailto:linetrise@ltkunstsmykker.no">linetrise@ltkunstsmykker.no</a>
             </p>
           </article>
         </section>
