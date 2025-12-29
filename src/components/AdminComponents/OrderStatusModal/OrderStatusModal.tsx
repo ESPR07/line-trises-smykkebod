@@ -55,7 +55,6 @@ export default function OrderStatusModal({
         <h3>Bestilling</h3>
 
         {/* Order Details */}
-        {/* Order Details */}
         <div className={style.orderDetails}>
           <p><strong>Ordre ID:</strong> {order.order_id}</p>
           <p><strong>Kunde:</strong> {order.customer_firstName} {order.customer_lastName}</p>

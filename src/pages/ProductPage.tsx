@@ -33,7 +33,7 @@ function SingleProduct() {
   if (isLoading) {
     return (
       <>
-        <title>Laster... | Line Trises Smykkebod</title>
+        <title>Laster... | Line Trises Kunstsmykker</title>
         <main className={style.productPageContainer}>
           <div className={style.loadingContainer}>
             <div className={style.spinner}></div>
@@ -47,7 +47,7 @@ function SingleProduct() {
   if (isError || !product) {
     return (
       <>
-        <title>Fant ikke produkt | Line Trises Smykkebod</title>
+        <title>Fant ikke produkt | Line Trises Kunstsmykker</title>
         <main className={style.productPageContainer}>
           <div className={style.errorContainer}>
             <div className={style.errorIcon}>⚠️</div>
@@ -68,7 +68,7 @@ function SingleProduct() {
 
   return (
     <>
-      <title>{`${product.name} | Line Trises Smykkebod`}</title>
+      <title>{`${product.name} | Line Trises Kunstsmykker`}</title>
       <meta name="description" content={product.short_description || product.long_description || `Kjøp ${product.name}`} />
       
       <main className={style.productPageContainer}>

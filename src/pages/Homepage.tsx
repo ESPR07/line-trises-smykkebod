@@ -6,10 +6,10 @@ import NewProductCarousel from "../components/NewProductCarousel/NewProductCarou
 function Homepage() {
   return (
     <main>
-      <title>Line Trises Smykkebod - Unike håndlagde smykker</title>
+      <title>Line Trises Kunstsmykker - Unike håndlagde smykker</title>
       <meta
         name="description"
-        content="Velkommen til Line Trises Smykkebod. Oppdag nøye håndlagde smykker i sølv og edelstener - laget med omtanke, kvalitet og kreativitet."
+        content="Velkommen til Line Trises Kunstsmykker. Oppdag nøye håndlagde smykker i sølv og edelstener - laget med omtanke, kvalitet og kreativitet."
       />
       <AdBannerCarousel />
       <NewProductCarousel />

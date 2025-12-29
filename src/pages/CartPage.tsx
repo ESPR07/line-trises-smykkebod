@@ -41,7 +41,7 @@ function CartPage() {
         name: cartItem.name ?? "Custom product",
         price: cartItem.price ?? 0,
         discountPrice: null,
-        imageURL: "/src/assets/images/image_placeholder.webp", // Optionally provide a placeholder or preview image
+        imageURL: "/images/image_placeholder.webp", // Optionally provide a placeholder or preview image
         quantity: cartItem.quantity,
         metadata: cartItem.metadata, // Keep selections for display
         isCustom: true, // Flag for the CartProductCard if needed
@@ -102,7 +102,7 @@ function CartPage() {
   if (enrichedCart.length === 0) {
     return (
       <>
-        <title>Tom Handlekurv | Line Trises Smykkebod</title>
+        <title>Tom Handlekurv | Line Trises Kunstsmykker</title>
         <meta name="description" content="Handlekurven din er visst tom"/>
         <main className={style.cartPageContainer}>
           <h1 className={style.cartHeader}>Handlekurv</h1>
@@ -127,8 +127,8 @@ function CartPage() {
 
   return (
     <>
-      <title>Handlekurv | Line Trises Smykkebod</title>
-      <meta name="description" content="Se varene dine og fullfør kjøpet av håndlagde smykker hos Line Trises Smykkebod."/>
+      <title>Handlekurv | Line Trises Kunstsmykker</title>
+      <meta name="description" content="Se varene dine og fullfør kjøpet av håndlagde smykker hos Line Trises Kunstsmykker."/>
       <main className={style.cartPageContainer}>
         <h1 className={style.cartHeader}>Handlekurv</h1>
         <section className={style.contentContainer}>

@@ -3,6 +3,7 @@ import style from "../UpdateBox/UpdateBox.module.css";
 import { useCreateProduct } from "../../../API/useCreateProduct";
 import { APIResult } from "../../../App";
 import { uploadImage } from "../../../API/uploadImage";
+import imageCompression from "browser-image-compression";
 
 // Hash utility for files
 async function hashFile(file: File): Promise<string> {
@@ -28,27 +29,45 @@ interface AddProductModalProps {
 function NewBox({ showModal, toggleModal }: AddProductModalProps) {
   const { fetchProducts } = useContext(APIResult);
 
-  const [name, setName] = useState<string>("");
-  const [price, setPrice] = useState<string>("");
-  const [discountAmount, setDiscountAmount] = useState<string>("0.00");
-  const [shortDesc, setShortDesc] = useState<string>("");
-  const [longDesc, setLongDesc] = useState<string>("");
-  const [imageUrl, setImageUrl] = useState<string>("");
-  const [previewError, setPreviewError] = useState<boolean>(false);
-  const [uploading, setUploading] = useState<boolean>(false);
+  const [name, setName] = useState("");
+  const [price, setPrice] = useState("");
+  const [discountAmount, setDiscountAmount] = useState("0.00");
+  const [shortDesc, setShortDesc] = useState("");
+  const [longDesc, setLongDesc] = useState("");
+
+  // Store image in memory only
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
+  const [previewError, setPreviewError] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const { createProduct, isLoading, isSuccess, isError } = useCreateProduct();
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setUploading(true);
-    const uploadedUrl = await uploadImageWithHash(file);
-    if (uploadedUrl) {
-      setImageUrl(`${uploadedUrl}?cacheBust=${Date.now()}`);
+
+    try {
+      const options = {
+        maxSizeMB: 2,            // Ensure final file <= 2MB
+        maxWidthOrHeight: 1200,  // Downscale large images
+        useWebWorker: true,
+        fileType: "image/webp",
+        initialQuality: 0.8,
+      };
+
+      const compressedFile = await imageCompression(file, options);
+
+      setImageFile(compressedFile);
+
+      // Generate preview in memory
+      const previewURL = URL.createObjectURL(compressedFile);
+      setImagePreview(previewURL);
       setPreviewError(false);
+    } catch (err) {
+      console.error("Image processing failed:", err);
+      setPreviewError(true);
     }
-    setUploading(false);
   };
 
   const handleNumericInput = (value: string, setter: (val: string) => void) => {
@@ -56,10 +75,13 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
       setter("");
       return;
     }
+
     let sanitized = value.replace(/[^0-9.]/g, "");
     const parts = sanitized.split(".");
     if (parts.length > 2) sanitized = parts[0] + "." + parts[1];
-    if (parts[1]?.length > 2) sanitized = parts[0] + "." + parts[1].slice(0, 2);
+    if (parts[1]?.length > 2)
+      sanitized = parts[0] + "." + parts[1].slice(0, 2);
+
     sanitized = sanitized.replace(/^0+(\d)/, "$1");
     setter(sanitized);
   };
@@ -67,17 +89,35 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
   const handleCreate = async () => {
     const numericPrice = Number(price) || 0;
     const numericDiscount = Number(discountAmount) || 0;
-    const hasDiscount = numericDiscount > 0;
 
-    await createProduct({
-      name,
-      price: numericPrice,
-      discount: hasDiscount,
-      discount_amount: numericDiscount,
-      short_description: shortDesc || undefined,
-      long_description: longDesc || undefined,
-      image_url: imageUrl || undefined,
-    });
+    setUploading(true);
+
+    try {
+      let uploadedUrl: string | undefined;
+
+      // Upload the image if one was selected
+      if (imageFile) {
+        const url = await uploadImageWithHash(imageFile);
+        if (url) uploadedUrl = `${url}?cacheBust=${Date.now()}`;
+      }
+
+      // Create product with uploaded image URL
+      await createProduct({
+        name,
+        price: numericPrice,
+        discount: numericDiscount > 0,
+        discount_amount: numericDiscount,
+        short_description: shortDesc || undefined,
+        long_description: longDesc || undefined,
+        image_url: uploadedUrl,
+      });
+
+    } catch (err) {
+      console.error("Failed to create product:", err);
+      setPreviewError(true);
+    } finally {
+      setUploading(false);
+    }
   };
 
   useEffect(() => {
@@ -87,20 +127,21 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
     }
   }, [isSuccess, fetchProducts, toggleModal]);
 
-  useEffect(() => { //Prevents scroll on elements behind modal
-  if (showModal) {
-    const scrollY = window.scrollY;
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = "100%";
-    return () => {
-      document.body.style.position = "";
-      document.body.style.top = "";
-      window.scrollTo(0, scrollY);
-    };
-  }
-}, [showModal]);
+  // Prevent scroll behind modal
+  useEffect(() => {
+    if (showModal) {
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
 
+      return () => {
+        document.body.style.position = "";
+        document.body.style.top = "";
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [showModal]);
 
   if (!showModal) return null;
 
@@ -110,8 +151,9 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
         <button
           className={style.closeButton}
           type="button"
-          onClick={() => toggleModal(!showModal)}
+          onClick={() => toggleModal(false)}
         />
+
         <h3>Legg til nytt produkt</h3>
 
         <label>
@@ -170,10 +212,10 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
 
         {uploading && <p>Laster opp bilde...</p>}
 
-        {imageUrl && !previewError && (
+        {imagePreview && !previewError && (
           <img
             className={style.previewImage}
-            src={imageUrl}
+            src={imagePreview}
             alt="Produktbilde forhåndsvisning"
             onError={() => setPreviewError(true)}
           />
@@ -182,8 +224,14 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
         {previewError && (
           <p className={style.previewError}>Kunne ikke laste bildet</p>
         )}
-        {isError && <p className={style.error}>Noe gikk galt, prøv igjen.</p>}
-        {isSuccess && <p className={style.success}>Produktet ble lagt til!</p>}
+
+        {isError && (
+          <p className={style.error}>Noe gikk galt, prøv igjen.</p>
+        )}
+
+        {isSuccess && (
+          <p className={style.success}>Produktet ble lagt til!</p>
+        )}
 
         <button
           className={style.updateButton}
@@ -191,7 +239,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
           disabled={isLoading || uploading || !name || !price}
           onClick={handleCreate}
         >
-          {isLoading ? "Laster..." : "Legg til produkt"}
+          {isLoading || uploading ? "Laster..." : "Legg til produkt"}
         </button>
       </div>
     </div>
