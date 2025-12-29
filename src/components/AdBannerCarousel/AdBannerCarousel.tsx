@@ -6,7 +6,7 @@ import NavigationButton from "../utils/Button/NavigationButton";
 // This will be replaced by real data later
 const images = [
   {
-    imageurl: "/images/pexels-gdtography-277628-6563393.jpg",
+    imageurl: "/images/welcomeBanner.webp",
     imagealt: "Welcome banner image",
   },
   {
