@@ -41,7 +41,7 @@ function CartPage() {
         name: cartItem.name ?? "Custom product",
         price: cartItem.price ?? 0,
         discountPrice: null,
-        imageURL: "/src/assets/images/image_placeholder.webp", // Optionally provide a placeholder or preview image
+        imageURL: "/images/image_placeholder.webp", // Optionally provide a placeholder or preview image
         quantity: cartItem.quantity,
         metadata: cartItem.metadata, // Keep selections for display
         isCustom: true, // Flag for the CartProductCard if needed

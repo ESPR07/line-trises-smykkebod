@@ -32,7 +32,6 @@ const AdminPage = lazy(() => import("./pages/AdminPage"));
 const PurchaseSuccess = lazy(() => import("./pages/PurchaseSucessPage"));
 const MakeYourOwnPage = lazy(() => import("./pages/MakeYourOwnPage"));
 
-// -------------------- Types --------------------
 export interface CartItemMinimal {
   id: string;
   quantity: number;
@@ -53,7 +52,6 @@ export interface Cart {
   totalPrice: number;
 }
 
-// -------------------- Contexts --------------------
 export const CartContext = createContext<{
   state: Cart;
   dispatch: ({ type, payload }: InteractionAction) => void;
@@ -96,7 +94,6 @@ export const ordersResult = createContext({
   setCurrentPage: (_page: number) => {},
 });
 
-// -------------------- Layouts --------------------
 function Layout() {
   const [productSearchQuery, setProductSearchQuery] = useState("");
   const {
@@ -219,7 +216,6 @@ function AdminLayout() {
   );
 }
 
-// -------------------- App Component --------------------
 function App() {
   const { session, loading } = useAuthStatus();
 
