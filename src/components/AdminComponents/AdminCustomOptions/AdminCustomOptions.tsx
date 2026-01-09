@@ -198,7 +198,7 @@ function AdminCustomOptions() {
   if (isLoading) {
     return (
       <article className={style.adminCustomOptionsContainer}>
-        <h2>Lag din egen Instillinger</h2>
+        <h2>Lag din egen</h2>
         <div className={style.loadingState}>
           <div className={style.spinner}></div>
           <p>Laster alternativer...</p>
@@ -210,7 +210,7 @@ function AdminCustomOptions() {
   if (isError) {
     return (
       <article className={style.adminCustomOptionsContainer}>
-        <h2>Lag din egen Instillinger</h2>
+        <h2>Lag din egen</h2>
         <div className={style.errorState}>
           <div className={style.errorIcon}>⚠️</div>
           <h3>Kunne ikke laste alternativer</h3>
@@ -229,7 +229,7 @@ function AdminCustomOptions() {
   if (!options) {
     return (
       <article className={style.adminCustomOptionsContainer}>
-        <h2>Lag din egen Instillinger</h2>
+        <h2>Lag din egen</h2>
         <div className={style.errorState}>
           <div className={style.errorIcon}>❌</div>
           <h3>Ingen data tilgjengelig</h3>
@@ -247,7 +247,7 @@ function AdminCustomOptions() {
 
   return (
     <article className={style.adminCustomOptionsContainer}>
-      <h2>Lag din egen Instillinger</h2>
+      <h2>Lag din egen</h2>
 
       {/* Add new product type */}
       <div className={style.addCategorySection}>
@@ -319,7 +319,7 @@ function AdminCustomOptions() {
         disabled={saving}
         onClick={handleSave}
       >
-        {saving ? "Lagrer..." : "Lagre alle alternativer"}
+        {saving ? "Lagrer..." : "Lagre endringer"}
       </button>
     </article>
   );
