@@ -1,9 +1,9 @@
 import { SetStateAction } from "react";
 import { Database, NewOrderData } from "../@types/Database";
 import { CartItem } from "../App";
-import { verifyCart } from "./verifyCart";
 import { InteractionAction } from "../Reducers/cartInteractions";
 import { useNavigate } from "react-router";
+import { supabaseClient } from "../components/utils/supabaseClient";
 
 export interface CheckoutDependencies {
   enrichedCart: CartItem[];
@@ -34,16 +34,70 @@ export async function handleCheckout({
   setIsProcessing,
   navigate,
 }: CheckoutDependencies) {
-  
   if (enrichedCart.length === 0) return;
-
   setIsProcessing?.(true);
 
   try {
-    const result = await verifyCart(enrichedCart);
-    console.log(result);
-    const verifiedItems = result.verifiedCart;
-    const verifiedTotal = result.total;
+    let verifiedTotal = 0;
+    const finalCart: {
+      id: string;
+      name: string;
+      quantity: number;
+      unitPrice: number;
+      lineTotal: number;
+      metadata?: Record<string, any>;
+    }[] = [];
+
+    for (const item of enrichedCart) {
+      if (item.metadata) {
+        const { data: customData, error } = await supabaseClient
+          .from("custom_products")
+          .select("*")
+          .eq("id", item.id)
+          .single();
+
+        if (error || !customData) {
+          alert(
+            `Tilpasset produkt "${item.name}" er utløpt eller mangler. Vennligst fjern det fra handlekurven.`
+          );
+          dispatch({ type: "updateProduct", payload: { id: item.id, quantity: 0 } });
+          continue;
+        }
+
+        const unitPrice = customData.calculated_price;
+        finalCart.push({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          unitPrice,
+          lineTotal: unitPrice * item.quantity,
+          metadata: customData.configuration,
+        });
+
+        verifiedTotal += unitPrice * item.quantity;
+      } else {
+        const unitPrice =
+          item.discountPrice && item.discountPrice > 0
+            ? item.discountPrice
+            : item.price;
+
+        finalCart.push({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          unitPrice,
+          lineTotal: unitPrice * item.quantity,
+        });
+
+        verifiedTotal += unitPrice * item.quantity;
+      }
+    }
+
+    if (finalCart.length === 0) {
+      alert("Handlekurven er tom etter prisverifisering.");
+      setIsProcessing?.(false);
+      return;
+    }
 
     setVerifiedTotal?.(verifiedTotal);
 
@@ -55,31 +109,11 @@ export async function handleCheckout({
       customer_adress: shippingData.adress ?? "",
       customer_place: shippingData.place ?? "",
       customer_postNr: shippingData.postNr ?? "",
-
-      cart: verifiedItems.map((item) => {
-        const unitPrice =
-          item.discountPrice && item.discountPrice > 0
-            ? item.discountPrice
-            : item.price;
-
-        return {
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          unitPrice,
-          lineTotal: unitPrice * item.quantity,
-          metadata: item.metadata ?? {},
-        };
-      }),
-
+      cart: finalCart,
       totals: {
         verifiedTotal,
-        itemCount: verifiedItems.reduce(
-          (sum, item) => sum + item.quantity,
-          0
-        ),
+        itemCount: finalCart.reduce((sum, i) => sum + i.quantity, 0),
       },
-
       meta: {
         createdAt: new Date().toISOString(),
         clientPlatform: navigator.userAgent,
@@ -89,16 +123,17 @@ export async function handleCheckout({
     const insertedOrder = await createOrder(checkoutPayload);
 
     if (insertedOrder) {
-      console.log("Order successfully created:", insertedOrder);
       localStorage.removeItem("cart");
-      setEnrichedCart([])
+      setEnrichedCart([]);
       dispatch({ type: "clearCart", payload: { id: "", quantity: 0 } });
-      navigate(`/success?order=${insertedOrder.order_id}&name=${insertedOrder.customer_firstName}`)
+      navigate(
+        `/success?order=${insertedOrder.order_id}&name=${insertedOrder.customer_firstName}`
+      );
     } else {
-      console.error("Failed to create order");
+      console.error("Kunne ikke opprette ordre");
     }
   } catch (err) {
-    console.error("Checkout failed:", err);
+    console.error("Checkout feilet:", err);
     localStorage.removeItem("cart");
   } finally {
     setIsProcessing?.(false);
