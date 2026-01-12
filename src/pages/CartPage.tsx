@@ -151,7 +151,7 @@ function CartPage() {
                 <p className={style.emptyMessage}>Her var det visst tomt!</p>
                 <NavigationButton
                   text="Utforsk"
-                  path="/browse"
+                  path="/produkter"
                   buttonWidth={100}
                 />
               </article>

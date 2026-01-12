@@ -219,10 +219,6 @@ function AdminLayout() {
 function App() {
   const { session, loading } = useAuthStatus();
 
-  if (loading) {
-    return <div>Laster...</div>;
-  }
-
   if (!session) {
     return <UnderConstruction />;
   }
@@ -232,13 +228,13 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Homepage />} />
-          <Route path="browse" element={<BrowsePage />} />
+          <Route path="produkter" element={<BrowsePage />} />
           <Route path="produkt/:id" element={<ProductPage />} />
-          <Route path="cart" element={<CartPage />} />
-          <Route path="about" element={<AboutPage />} />
-          <Route path="contact" element={<ContactPage />} />
+          <Route path="handlekurv" element={<CartPage />} />
+          <Route path="om-meg" element={<AboutPage />} />
+          <Route path="kontakt" element={<ContactPage />} />
           <Route path="lag-din-egen" element={<MakeYourOwnPage />} />
-          <Route path="success" element={<PurchaseSuccess />} />
+          <Route path="velykket" element={<PurchaseSuccess />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
