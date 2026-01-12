@@ -57,12 +57,12 @@ export default function OrderStatusModal({
         {/* Order Details */}
         <div className={style.orderDetails}>
           <p><strong>Ordre ID:</strong> {order.order_id}</p>
-          <p><strong>Kunde:</strong> {order.customer_firstName} {order.customer_lastName}</p>
-          <p><strong>Adresse:</strong> {order.customer_adress}</p>
-          <p><strong>Sted:</strong> {order.customer_place}</p>
-          <p><strong>Post Nummer:</strong> {order.customer_postNr}</p>
-          <p><strong>E-post:</strong> {order.customer_email}</p>
-          <p><strong>Mobilnummer:</strong> {order.customer_phone}</p>
+          <p><strong>Kunde:</strong> {order.customer_info.customer_firstName} {order.customer_info.customer_lastName}</p>
+          <p><strong>Adresse:</strong> {order.customer_info.customer_adress}</p>
+          <p><strong>Sted:</strong> {order.customer_info.customer_place}</p>
+          <p><strong>Post Nummer:</strong> {order.customer_info.customer_postNr}</p>
+          <p><strong>E-post:</strong> {order.customer_info.customer_email}</p>
+          <p><strong>Mobilnummer:</strong> {order.customer_info.customer_phone}</p>
           <p><strong>Sum:</strong> {order.totals.verifiedTotal.toLocaleString("nb-NO")} NOK</p>
           <p><strong>Status:</strong> {order.status === "pending" ? "Venter" : "Fullført"}</p>
           <p><strong>Opprettet:</strong> {dateFormatting(order.meta.createdAt)}</p>

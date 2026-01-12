@@ -46,13 +46,15 @@ export type Database = {
         Row: {
           id: string;
           order_id: string;
-          customer_email: string;
-          customer_phone: string;
-          customer_firstName: string;
-          customer_lastName: string;
-          customer_adress: string;
-          customer_place: string;
-          customer_postNr: string;
+          customer_info: {
+            customer_email: string;
+            customer_phone: string;
+            customer_firstName: string;
+            customer_lastName: string;
+            customer_adress: string;
+            customer_place: string;
+            customer_postNr: string;
+          };
           status: string;
           cart: {
             id: string;
@@ -205,12 +207,15 @@ export type shippingData = {
 
 export interface NewOrderData {
   customer_email: string;
-  customer_phone: string;
-  customer_firstName: string;
-  customer_lastName: string;
-  customer_adress: string;
-  customer_place: string;
-  customer_postNr: string;
+  customer_info: {
+    customer_email: string;
+    customer_phone: string;
+    customer_firstName: string;
+    customer_lastName: string;
+    customer_adress: string;
+    customer_place: string;
+    customer_postNr: string;
+  };
 
   cart: {
     id: string;
@@ -234,13 +239,15 @@ export interface NewOrderData {
 export type OrderItem = {
   id: string;
   order_id: string;
-  customer_email: string;
-  customer_phone: string;
-  customer_firstName: string;
-  customer_lastName: string;
-  customer_adress: string;
-  customer_place: string;
-  customer_postNr: string;
+  customer_info: {
+    customer_email: string;
+    customer_phone: string;
+    customer_firstName: string;
+    customer_lastName: string;
+    customer_adress: string;
+    customer_place: string;
+    customer_postNr: string;
+  };
   status: string;
   cart: {
     id: string;

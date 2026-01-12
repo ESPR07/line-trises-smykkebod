@@ -2,38 +2,48 @@ import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import style from "./ShippingForm.module.css";
 import { shippingData } from "../../../@types/Database";
-import VippsButton from "../../VippsButton/VippsButton";
+import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+
+interface ShippingFormProps {
+  handleCheckout: (stripe: ReturnType<typeof useStripe>, elements: ReturnType<typeof useElements>) => Promise<void>;
+  setShippingInfo: React.Dispatch<React.SetStateAction<Partial<shippingData>>>;
+  disabled: boolean;
+}
 
 function ShippingForm({
   handleCheckout,
   setShippingInfo,
   disabled,
-}: {
-  handleCheckout: () => Promise<void>;
-  setShippingInfo: React.Dispatch<React.SetStateAction<Partial<shippingData>>>;
-  disabled: boolean;
-}) {
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<shippingData>({
+}: ShippingFormProps) {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const { register, control, handleSubmit, formState: { errors } } = useForm<shippingData>({
     mode: "onBlur",
     defaultValues: {},
   });
 
-  // Only re-renders when fields change, NOT when parent re-renders
   const formValues = useWatch({ control });
 
+  // Update parent state whenever form values change
   useEffect(() => {
     setShippingInfo(formValues);
   }, [formValues, setShippingInfo]);
 
+  const onSubmit = async () => {
+    if (!stripe || !elements) {
+      alert("Stripe har ikke lastet. Prøv igjen om et øyeblikk.");
+      return;
+    }
+
+    await handleCheckout(stripe, elements);
+  };
+
   return (
-    <form className={style.shippingForm} onSubmit={handleSubmit(handleCheckout)}>
+    <form className={style.shippingForm} onSubmit={handleSubmit(onSubmit)}>
       <h3>Leveranse Detaljer</h3>
 
+      {/* Email */}
       <label htmlFor="Email">E-post</label>
       <input
         className={errors.email ? style.inputError : ""}
@@ -50,6 +60,7 @@ function ShippingForm({
       />
       {errors.email && <p className={style.error}>{errors.email.message}</p>}
 
+      {/* Phone */}
       <label htmlFor="phone">Mobilnummer</label>
       <input
         className={errors.phone ? style.inputError : ""}
@@ -66,6 +77,7 @@ function ShippingForm({
       />
       {errors.phone && <p className={style.error}>{errors.phone.message}</p>}
 
+      {/* Name */}
       <div className={style.nameInputs}>
         <label htmlFor="firstName">
           Fornavn
@@ -78,17 +90,12 @@ function ShippingForm({
                 value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i,
                 message: "Kun bokstaver",
               },
-              minLength: {
-                value: 2,
-                message: "Minst 2 bokstaver",
-              },
+              minLength: { value: 2, message: "Minst 2 bokstaver" },
             })}
             id="firstName"
             placeholder="f.eks Ola"
           />
-          {errors.firstName && (
-            <p className={style.error}>{errors.firstName.message}</p>
-          )}
+          {errors.firstName && <p className={style.error}>{errors.firstName.message}</p>}
         </label>
 
         <label htmlFor="lastName">
@@ -102,20 +109,16 @@ function ShippingForm({
                 value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i,
                 message: "Kun bokstaver",
               },
-              minLength: {
-                value: 2,
-                message: "Minst 2 bokstaver",
-              },
+              minLength: { value: 2, message: "Minst 2 bokstaver" },
             })}
             id="lastName"
             placeholder="f.eks Nordmann"
           />
-          {errors.lastName && (
-            <p className={style.error}>{errors.lastName.message}</p>
-          )}
+          {errors.lastName && <p className={style.error}>{errors.lastName.message}</p>}
         </label>
       </div>
 
+      {/* Address */}
       <label htmlFor="adress">
         Adresse
         <input
@@ -124,16 +127,14 @@ function ShippingForm({
           {...register("adress", {
             required: "Adresse mangler",
             pattern: {
-              value: /^[A-Za-zÆØÅæøå .-]{2,}\s+[0-9]+[A-Za-z]?$/ ,
+              value: /^[A-Za-zÆØÅæøå .-]{2,}\s+[0-9]+[A-Za-z]?$/,
               message: "Ugyldig format",
             },
           })}
           id="adress"
           placeholder="f.eks Nordmannsveg 26C"
         />
-        {errors.adress && (
-          <p className={style.error}>{errors.adress.message}</p>
-        )}
+        {errors.adress && <p className={style.error}>{errors.adress.message}</p>}
       </label>
 
       <div className={style.adressInputs}>
@@ -161,27 +162,22 @@ function ShippingForm({
             type="text"
             {...register("postNr", {
               required: "PostNr mangler",
-              pattern: {
-                value: /^\d{4}$/,
-                message: "4 tall",
-              },
+              pattern: { value: /^\d{4}$/, message: "4 tall" },
             })}
             id="postNr"
             placeholder="f.eks 1234"
           />
-          {errors.postNr && (
-            <p className={style.error}>{errors.postNr.message}</p>
-          )}
+          {errors.postNr && <p className={style.error}>{errors.postNr.message}</p>}
         </label>
       </div>
-      <VippsButton />
-      <button
-        className={style.kortBetaling}
-        type="submit"
-        disabled={disabled}
-      >
-        Kortbetaling
-        <span className={style.cardIcons}/>
+
+      {/* Stripe Payment */}
+      <div style={{ margin: "1rem 0" }}>
+        <PaymentElement />
+      </div>
+
+      <button type="submit" className={style.kortBetaling} disabled={disabled}>
+        Betal
       </button>
     </form>
   );
