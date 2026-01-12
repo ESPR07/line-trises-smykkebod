@@ -6,6 +6,7 @@ export type Database = {
         Insert: { title: string; is_complete?: boolean };
         Update: { title?: string; is_complete?: boolean };
       };
+
       products: {
         Row: {
           id: string;
@@ -40,6 +41,7 @@ export type Database = {
           active_status?: boolean;
         };
       };
+
       orders: {
         Row: {
           id: string;
@@ -122,8 +124,60 @@ export type Database = {
           };
         };
       };
+      custom_options: {
+        Row: {
+          id: number;
+          type: string;
+          type_options: CustomOptionGroup[];
+        };
+        Insert: {
+          id?: number;
+          type: string;
+          type_options: CustomOptionGroup[];
+        };
+        Update: {
+          type?: string;
+          type_options?: CustomOptionGroup[];
+        };
+      };
+      custom_products: {
+        Row: {
+          id: string;
+          configuration: Record<string, any>;
+          calculated_price: number;
+          expires_at: string | null;
+          is_purchased: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          configuration: Record<string, any>;
+          calculated_price: number;
+          expires_at?: string | null;
+          is_purchased?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          configuration?: Record<string, any>;
+          calculated_price?: number;
+          expires_at?: string | null;
+          is_purchased?: boolean;
+          created_at?: string;
+        };
+      };
     };
   };
+};
+
+export type CustomOptionItem = {
+  id: string;
+  name: string;
+  price: number;
+};
+
+export type CustomOptionGroup = {
+  key: string;
+  options: CustomOptionItem[];
 };
 
 export type FetchResult = {

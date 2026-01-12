@@ -84,7 +84,7 @@ function PurchaseSuccess() {
 
           {/* Action Buttons */}
           <div className={style.buttonGroup}>
-            <Link to="/browse" className={style.primaryButton}>
+            <Link to="/produkter" className={style.primaryButton}>
               Fortsett å handle
             </Link>
             <Link to="/" className={style.secondaryButton}>

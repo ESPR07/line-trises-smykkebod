@@ -8,6 +8,7 @@ import ShippingForm from "../components/utils/ShippingForm/ShippingForm";
 import { shippingData } from "../@types/Database";
 import { useCreateOrder } from "../API/usePlaceOrder";
 import { useNavigate } from "react-router";
+import { useCustomProducts } from "../API/useCustomProducts";
 
 function CartPage() {
   const { state: cartState, dispatch } = useContext(CartContext);
@@ -22,49 +23,76 @@ function CartPage() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [shippingData, setShippingData] = useState<Partial<shippingData>>({});
 
+  const {
+    customProducts,
+    isLoading: isLoadingCustoms,
+    fetchCustomProducts,
+  } = useCustomProducts();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Enrich minimal cart and calculate pricing
+  useEffect(() => {
+    const customIds = cartState.productList
+      .filter((item) => !allProducts?.some((p) => p.id === item.id))
+      .map((item) => item.id);
+
+    if (customIds.length > 0) {
+      fetchCustomProducts(customIds);
+    }
+  }, [cartState.productList, allProducts, customProducts, fetchCustomProducts]);
+
   useEffect(() => {
     if (!allProducts) return;
+    if (customProducts === undefined) return;
 
     const enriched = cartState.productList.map((cartItem: CartItemMinimal) => {
-  const product = allProducts.find((product) => product.id === cartItem.id);
+      const product = allProducts.find((product) => product.id === cartItem.id);
 
-  if (!product) {
-    // If it’s a custom product, return it directly
-    if (cartItem.metadata) {
-      return {
-        id: cartItem.id,
-        name: cartItem.name ?? "Custom product",
-        price: cartItem.price ?? 0,
-        discountPrice: null,
-        imageURL: "/images/image_placeholder.webp", // Optionally provide a placeholder or preview image
-        quantity: cartItem.quantity,
-        metadata: cartItem.metadata, // Keep selections for display
-        isCustom: true, // Flag for the CartProductCard if needed
-      } as CartItem;
-    }
+      if (product) {
+        const expectedPrice = Number(product.price);
+        if (cartItem.price && cartItem.price !== expectedPrice) {
+          console.warn(`Prisavvik for produkt ${product.id}, korrigerer.`);
+        }
 
-    console.warn("Product missing from API:", cartItem.id);
-    return null;
-  }
+        return {
+          id: product.id,
+          name: product.name,
+          price: expectedPrice,
+          discountPrice:
+            product.discount_amount !== null
+              ? Number(product.discount_amount)
+              : null,
+          imageURL: product.image_url,
+          quantity: cartItem.quantity,
+        } as CartItem;
+      }
 
-  return {
-    id: product.id,
-    name: product.name,
-    price: Number(product.price),
-    discountPrice:
-      product.discount_amount !== null
-        ? Number(product.discount_amount)
-        : null,
-    imageURL: product.image_url,
-    quantity: cartItem.quantity,
-  } as CartItem;
-});
+      if (customProducts) {
+        const custom = customProducts.find(
+          (customProduct) => customProduct.id === cartItem.id
+        );
 
+        if (!custom) {
+          return null;
+        }
+
+        return {
+          id: custom.id,
+          name: "Lag Din Egen",
+          price: custom.calculated_price,
+          discountPrice: null,
+          imageURL: "/images/image_placeholder.webp",
+          quantity: cartItem.quantity,
+          metadata: custom.configuration,
+          expires_at: custom.expires_at,
+        } as CartItem;
+      }
+
+      console.warn("Produkt mangler fra API:", cartItem.id);
+      return null;
+    });
 
     const validItems = enriched.filter(
       (product): product is CartItem => product !== null
@@ -85,25 +113,34 @@ function CartPage() {
     setEnrichedCart(validItems);
     setTotalPrice(calculatedAfterDiscount);
     setTotalDiscount(calculatedDiscount);
-  }, [cartState, allProducts]);
+  }, [cartState, allProducts, customProducts, dispatch]);
 
-  const handleCheckoutWrapper = () =>
-  checkout({
-    enrichedCart,
-    setEnrichedCart,
-    dispatch,
-    shippingData,
-    createOrder,
-    setVerifiedTotal,
-    setIsProcessing,
-    navigate,
-  });
+  const handleCheckoutWrapper = async () => {
+    await checkout({
+      enrichedCart,
+      setEnrichedCart,
+      dispatch,
+      shippingData,
+      createOrder,
+      setVerifiedTotal,
+      setIsProcessing,
+      navigate,
+    });
+  };
+
+  if (isLoadingCustoms) {
+    return (
+      <main className={style.cartPageContainer}>
+        <h1 className={style.cartHeader}>Laster handlekurv...</h1>
+      </main>
+    );
+  }
 
   if (enrichedCart.length === 0) {
     return (
       <>
         <title>Tom Handlekurv | Line Trises Kunstsmykker</title>
-        <meta name="description" content="Handlekurven din er visst tom"/>
+        <meta name="description" content="Handlekurven din er visst tom" />
         <main className={style.cartPageContainer}>
           <h1 className={style.cartHeader}>Handlekurv</h1>
           <section className={style.contentContainer}>
@@ -114,7 +151,7 @@ function CartPage() {
                 <p className={style.emptyMessage}>Her var det visst tomt!</p>
                 <NavigationButton
                   text="Utforsk"
-                  path="/browse"
+                  path="/produkter"
                   buttonWidth={100}
                 />
               </article>
@@ -128,7 +165,10 @@ function CartPage() {
   return (
     <>
       <title>Handlekurv | Line Trises Kunstsmykker</title>
-      <meta name="description" content="Se varene dine og fullfør kjøpet av håndlagde smykker hos Line Trises Kunstsmykker."/>
+      <meta
+        name="description"
+        content="Se varene dine og fullfør kjøpet av håndlagde smykker hos Line Trises Kunstsmykker."
+      />
       <main className={style.cartPageContainer}>
         <h1 className={style.cartHeader}>Handlekurv</h1>
         <section className={style.contentContainer}>

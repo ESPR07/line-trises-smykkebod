@@ -53,7 +53,7 @@ function SingleProduct() {
             <div className={style.errorIcon}>⚠️</div>
             <h1>Produktet ble ikke funnet</h1>
             <p>Beklager, vi kunne ikke finne produktet du leter etter.</p>
-            <Link to="/browse" className={style.backButton}>
+            <Link to="/produkter" className={style.backButton}>
               Tilbake til produkter
             </Link>
           </div>
@@ -72,7 +72,7 @@ function SingleProduct() {
       <meta name="description" content={product.short_description || product.long_description || `Kjøp ${product.name}`} />
       
       <main className={style.productPageContainer}>
-        <Link to="/browse" className={style.backLink}>
+        <Link to="/produkter" className={style.backLink}>
           <div className={style.backArrow}></div>
           <span>Tilbake til produkter</span>
         </Link>

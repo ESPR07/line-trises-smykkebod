@@ -20,7 +20,7 @@ function AdminProductColumn({ data, canEdit = true }: ProductCardProps) {
     <>
       <div className={style.productColumnContainer}>
         <div className={style.imageWrapper}>
-          <img src={data.image_url} alt={data.name} />
+          <img src={data.image_url?? "/images/image_placeholder.webp"} alt={data.name} />
         </div>
         
         <div className={style.productName}>
