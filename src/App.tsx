@@ -217,7 +217,7 @@ function AdminLayout() {
 }
 
 function App() {
-  const { session, loading } = useAuthStatus();
+  const { session } = useAuthStatus();
 
   if (!session) {
     return <UnderConstruction />;
