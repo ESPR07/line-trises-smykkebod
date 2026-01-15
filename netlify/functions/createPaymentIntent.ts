@@ -12,7 +12,7 @@ interface CreatePaymentIntentBody {
   adress: string;
   place: string;
   postNr: string;
-  cart: { id: string; quantity: number }[];
+  cart: { id: string; quantity: number, price: number, discountPrice: number }[];
   clientPlatform?: string;
 }
 

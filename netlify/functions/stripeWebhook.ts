@@ -37,7 +37,7 @@ export const handler: Handler = async (event) => {
   const metadata = paymentIntent.metadata;
 
   // Parse cart snapshot
-  let cartItems: { id: string; quantity: number }[] = [];
+  let cartItems: { id: string; quantity: number, price: number, discountPrice: number }[] = [];
   if (metadata.cart_snapshot) {
     try {
       cartItems = JSON.parse(metadata.cart_snapshot);
@@ -117,7 +117,7 @@ export const handler: Handler = async (event) => {
     }
 
     const unitPrice = product.discount_amount ?? product.price;
-    const lineTotal = unitPrice * item.quantity;
+    const lineTotal = (item.discountPrice ?? item.price ?? 0) * item.quantity;
     verifiedTotal += lineTotal;
 
     verifiedCart.push({
@@ -133,6 +133,9 @@ export const handler: Handler = async (event) => {
     console.error("No valid items to create order for PaymentIntent:", paymentIntent.id);
     return { statusCode: 400, body: "Cart empty" };
   }
+
+  console.log(`Verified total for PaymentIntent ${paymentIntent.id}:`, verifiedTotal);
+  console.log("Verified cart:", verifiedCart);
 
   // Build order object exactly matching OrderItem type
   const orderInsert: Omit<OrderItem, "order_id"> = {

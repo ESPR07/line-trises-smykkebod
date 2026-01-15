@@ -66,6 +66,8 @@ export async function handleCheckout({
         cart: enrichedCart.map((item) => ({
           id: item.id,
           quantity: item.quantity,
+          price: item.price,
+          discountPrice: item.discountPrice,
         })),
         clientPlatform: "web",
         firstName: shippingData.firstName ?? "",
