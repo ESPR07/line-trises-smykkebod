@@ -2,22 +2,14 @@ import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import style from "./ShippingForm.module.css";
 import { shippingData } from "../../../@types/Database";
-import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 
 interface ShippingFormProps {
-  handleCheckout: (stripe: ReturnType<typeof useStripe>, elements: ReturnType<typeof useElements>) => Promise<void>;
   setShippingInfo: React.Dispatch<React.SetStateAction<Partial<shippingData>>>;
+  onShippingSubmit: () => Promise<void>; // called when shipping form is submitted
   disabled: boolean;
 }
 
-function ShippingForm({
-  handleCheckout,
-  setShippingInfo,
-  disabled,
-}: ShippingFormProps) {
-  const stripe = useStripe();
-  const elements = useElements();
-
+function ShippingForm({ setShippingInfo, onShippingSubmit, disabled }: ShippingFormProps) {
   const { register, control, handleSubmit, formState: { errors } } = useForm<shippingData>({
     mode: "onBlur",
     defaultValues: {},
@@ -25,18 +17,14 @@ function ShippingForm({
 
   const formValues = useWatch({ control });
 
-  // Update parent state whenever form values change
+  // Update parent state whenever form changes
   useEffect(() => {
     setShippingInfo(formValues);
   }, [formValues, setShippingInfo]);
 
   const onSubmit = async () => {
-    if (!stripe || !elements) {
-      alert("Stripe har ikke lastet. Prøv igjen om et øyeblikk.");
-      return;
-    }
-
-    await handleCheckout(stripe, elements);
+    // call the parent function to create PaymentIntent
+    await onShippingSubmit();
   };
 
   return (
@@ -50,10 +38,7 @@ function ShippingForm({
         type="text"
         {...register("email", {
           required: "E-post mangler",
-          pattern: {
-            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            message: "Ugyldig E-post format",
-          },
+          pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Ugyldig E-post format" },
         })}
         id="Email"
         placeholder="f.eks ola@eksempel.no"
@@ -67,10 +52,7 @@ function ShippingForm({
         type="text"
         {...register("phone", {
           required: "Mobilnummer mangler",
-          pattern: {
-            value: /^((0047)?|(\+47)?|(47)?)\d{8}$/,
-            message: "Kun norsk mobilnummer",
-          },
+          pattern: { value: /^((0047)?|(\+47)?|(47)?)\d{8}$/, message: "Kun norsk mobilnummer" },
         })}
         id="phone"
         placeholder="f.eks 123 45 678"
@@ -86,10 +68,7 @@ function ShippingForm({
             type="text"
             {...register("firstName", {
               required: "Fornavn mangler",
-              pattern: {
-                value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i,
-                message: "Kun bokstaver",
-              },
+              pattern: { value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i, message: "Kun bokstaver" },
               minLength: { value: 2, message: "Minst 2 bokstaver" },
             })}
             id="firstName"
@@ -105,10 +84,7 @@ function ShippingForm({
             type="text"
             {...register("lastName", {
               required: "Etternavn mangler",
-              pattern: {
-                value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i,
-                message: "Kun bokstaver",
-              },
+              pattern: { value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i, message: "Kun bokstaver" },
               minLength: { value: 2, message: "Minst 2 bokstaver" },
             })}
             id="lastName"
@@ -126,10 +102,7 @@ function ShippingForm({
           type="text"
           {...register("adress", {
             required: "Adresse mangler",
-            pattern: {
-              value: /^[A-Za-zÆØÅæøå .-]{2,}\s+[0-9]+[A-Za-z]?$/,
-              message: "Ugyldig format",
-            },
+            pattern: { value: /^[A-Za-zÆØÅæøå .-]{2,}\s+[0-9]+[A-Za-z]?$/, message: "Ugyldig format" },
           })}
           id="adress"
           placeholder="f.eks Nordmannsveg 26C"
@@ -145,10 +118,7 @@ function ShippingForm({
             type="text"
             {...register("place", {
               required: "Sted mangler",
-              pattern: {
-                value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i,
-                message: "Kun bokstaver",
-              },
+              pattern: { value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i, message: "Kun bokstaver" },
             })}
             id="sted"
             placeholder="f.eks Oslo"
@@ -171,13 +141,8 @@ function ShippingForm({
         </label>
       </div>
 
-      {/* Stripe Payment */}
-      <div style={{ margin: "1rem 0" }}>
-        <PaymentElement />
-      </div>
-
-      <button type="submit" className={style.kortBetaling} disabled={disabled}>
-        Betal
+      <button type="submit" className={style.tilBetaling} disabled={disabled}>
+        Fortsett til betaling
       </button>
     </form>
   );

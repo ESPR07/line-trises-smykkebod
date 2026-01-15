@@ -5,19 +5,18 @@ import CartProductCard from "../components/CartProductCard/CartProductCard";
 import NavigationButton from "../components/utils/Button/NavigationButton";
 import ShippingForm from "../components/utils/ShippingForm/ShippingForm";
 import { shippingData } from "../@types/Database";
-import { useCreateOrder } from "../API/usePlaceOrder";
 import { useNavigate } from "react-router";
 import { useCustomProducts } from "../API/useCustomProducts";
 import { handleCheckout as handleCheckoutFn } from "../API/checkout";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import PaymentForm from "../PaymentForm/PaymentForm";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
 
 function CartPage() {
   const { state: cartState, dispatch } = useContext(CartContext);
   const { allProducts } = useContext(APIResult);
-  const { createOrder } = useCreateOrder();
   const navigate = useNavigate();
 
   const [enrichedCart, setEnrichedCart] = useState<CartItem[]>([]);
@@ -107,34 +106,45 @@ function CartPage() {
     setVerifiedTotal(afterDiscount);
   }, [cartState, allProducts, customProducts]);
 
-  // Create PaymentIntent whenever verifiedTotal changes
-  useEffect(() => {
-    if (typeof verifiedTotal !== "number" || verifiedTotal <= 0) return;
+  // Function to create PaymentIntent when shipping data is submitted
+  const createPaymentIntent = async (shipping: Partial<shippingData>) => {
+    if (enrichedCart.length === 0) return;
 
-    const amountToCharge: number = verifiedTotal;
+    const totalOere = Math.round(
+      enrichedCart.reduce((sum, item) => {
+        const price = item.discountPrice ?? item.price;
+        return sum + price * item.quantity;
+      }, 0) * 100
+    );
 
-    async function createPaymentIntent() {
-      try {
-        const res = await fetch("/.netlify/functions/createPaymentIntent", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: Math.round(amountToCharge * 100) }),
-        });
+    try {
+      const res = await fetch("/.netlify/functions/createPaymentIntent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: totalOere,
+          cart: enrichedCart.map((item) => ({
+            id: item.id,
+            quantity: item.quantity,
+          })),
+          clientPlatform: "web",
+          firstName: shipping.firstName ?? "",
+          lastName: shipping.lastName ?? "",
+          email: shipping.email ?? "",
+          phone: shipping.phone ?? "",
+          adress: shipping.adress ?? "",
+          place: shipping.place ?? "",
+          postNr: shipping.postNr ?? "",
+        }),
+      });
 
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(`HTTP ${res.status}: ${text}`);
-        }
-
-        const data = await res.json();
-        setClientSecret(data.clientSecret);
-      } catch (err) {
-        console.error("Failed to create PaymentIntent:", err);
-      }
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      setClientSecret(data.clientSecret);
+    } catch (err) {
+      console.error("Failed to create PaymentIntent:", err);
     }
-
-    createPaymentIntent();
-  }, [verifiedTotal]);
+  };
 
   // Checkout wrapper for ShippingForm
   const handleCheckout = async (stripe: any, elements: any) => {
@@ -143,8 +153,6 @@ function CartPage() {
       setEnrichedCart,
       dispatch,
       shippingData,
-      createOrder,
-      setVerifiedTotal,
       setIsProcessing,
       navigate,
       stripe,
@@ -228,16 +236,22 @@ function CartPage() {
             </div>
           </article>
 
-          {clientSecret ? (
+          {!clientSecret ? (
+            <ShippingForm
+              onShippingSubmit={() => createPaymentIntent(shippingData)}
+              setShippingInfo={setShippingData}
+              disabled={isProcessing}
+            />
+          ) : (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
-              <ShippingForm
+              <PaymentForm
+                enrichedCart={enrichedCart}
+                shippingData={shippingData}
                 handleCheckout={handleCheckout}
-                setShippingInfo={setShippingData}
                 disabled={isProcessing}
+                clientSecret={clientSecret}
               />
             </Elements>
-          ) : (
-            <p>Laster betaling...</p>
           )}
         </div>
       </section>

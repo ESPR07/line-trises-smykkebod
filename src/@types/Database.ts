@@ -207,6 +207,7 @@ export type shippingData = {
 
 export interface NewOrderData {
   customer_email: string;
+  stripe_payment_id: string;
   customer_info: {
     customer_email: string;
     customer_phone: string;
@@ -237,8 +238,9 @@ export interface NewOrderData {
 }
 
 export type OrderItem = {
-  id: string;
+  id?: string;
   order_id: string;
+  stripe_payment_id: string;
   customer_info: {
     customer_email: string;
     customer_phone: string;

@@ -19,6 +19,7 @@ import { useGetOrders } from "./API/useGetOrders";
 import { Database } from "./@types/Database";
 import UnderConstruction from "./pages/UnderConstruction";
 import { useAuthStatus } from "./API/useAuthStatus";
+import OrderProcessingPage from "./pages/OrderProccessingPage";
 
 
 // Lazy-loaded pages
@@ -235,6 +236,7 @@ function App() {
           <Route path="kontakt" element={<ContactPage />} />
           <Route path="lag-din-egen" element={<MakeYourOwnPage />} />
           <Route path="velykket" element={<PurchaseSuccess />} />
+          <Route path="order-processing" element={<OrderProcessingPage />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
