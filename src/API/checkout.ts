@@ -49,14 +49,6 @@ export async function handleCheckout({
       return;
     }
 
-    console.log("SUBMIT shippingData:", shippingData);
-
-    console.log("Creating PI with data:", {
-      amount: totalAmountOere,
-      shippingData,
-      cart: enrichedCart,
-    });
-
     // Create PaymentIntent on the fly with shipping info
     const res = await fetch("/.netlify/functions/createPaymentIntent", {
       method: "POST",
@@ -88,8 +80,6 @@ export async function handleCheckout({
     const { clientSecret } = await res.json();
     if (!clientSecret) throw new Error("Kunne ikke opprette betaling.");
 
-    console.log("Confirming PaymentIntent:", clientSecret);
-
     // Confirm payment with Stripe Elements
     const result = await stripe.confirmPayment({
       clientSecret,
@@ -111,8 +101,6 @@ export async function handleCheckout({
       alert("Noe gikk galt med betalingen.");
       return;
     }
-
-    console.log("PaymentIntent confirmed:", paymentIntentId);
 
     // Clear cart frontend
     localStorage.removeItem("cart");

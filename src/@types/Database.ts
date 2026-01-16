@@ -145,6 +145,7 @@ export type Database = {
       custom_products: {
         Row: {
           id: string;
+          type: string;
           configuration: Record<string, any>;
           calculated_price: number;
           expires_at: string | null;
@@ -153,6 +154,7 @@ export type Database = {
         };
         Insert: {
           id?: string;
+          type: string;
           configuration: Record<string, any>;
           calculated_price: number;
           expires_at?: string | null;
@@ -160,6 +162,7 @@ export type Database = {
           created_at?: string;
         };
         Update: {
+          type: string;
           configuration?: Record<string, any>;
           calculated_price?: number;
           expires_at?: string | null;

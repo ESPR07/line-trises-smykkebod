@@ -29,6 +29,7 @@ export const handler: Handler = async (event) => {
       .from("custom_products")
       .insert([
         {
+          type: body.type,
           configuration: body.configuration,
           calculated_price: body.calculated_price,
           expires_at: body.expires_at || null,
