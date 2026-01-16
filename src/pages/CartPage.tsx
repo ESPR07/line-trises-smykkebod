@@ -3,7 +3,7 @@ import style from "./CartPage.module.css";
 import { CartContext, CartItem, CartItemMinimal, APIResult } from "../App";
 import CartProductCard from "../components/CartProductCard/CartProductCard";
 import NavigationButton from "../components/utils/Button/NavigationButton";
-import ShippingForm from "../components/utils/ShippingForm/ShippingForm";
+import ShippingForm from "../components/ShippingForm/ShippingForm";
 import { shippingData } from "../@types/Database";
 import { useNavigate } from "react-router";
 import { useCustomProducts } from "../API/useCustomProducts";
@@ -241,6 +241,7 @@ function CartPage() {
               onShippingSubmit={() => createPaymentIntent(shippingData)}
               setShippingInfo={setShippingData}
               disabled={isProcessing}
+              initialData={shippingData}
             />
           ) : (
             <Elements stripe={stripePromise} options={{ clientSecret }}>
@@ -250,6 +251,7 @@ function CartPage() {
                 handleCheckout={handleCheckout}
                 disabled={isProcessing}
                 clientSecret={clientSecret}
+                onEditShipping={() => setClientSecret(null)}
               />
             </Elements>
           )}

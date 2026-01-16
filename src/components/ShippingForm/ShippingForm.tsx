@@ -1,23 +1,23 @@
 import { useEffect } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import style from "./ShippingForm.module.css";
-import { shippingData } from "../../../@types/Database";
+import { shippingData } from "../../@types/Database";
 
 interface ShippingFormProps {
   setShippingInfo: React.Dispatch<React.SetStateAction<Partial<shippingData>>>;
   onShippingSubmit: () => Promise<void>; // called when shipping form is submitted
   disabled: boolean;
+  initialData?: Partial<shippingData>;
 }
 
-function ShippingForm({ setShippingInfo, onShippingSubmit, disabled }: ShippingFormProps) {
+function ShippingForm({ setShippingInfo, onShippingSubmit, disabled, initialData = {} }: ShippingFormProps) {
   const { register, control, handleSubmit, formState: { errors } } = useForm<shippingData>({
     mode: "onBlur",
-    defaultValues: {},
+    defaultValues: initialData,
   });
 
   const formValues = useWatch({ control });
 
-  // Update parent state whenever form changes
   useEffect(() => {
     setShippingInfo(formValues);
   }, [formValues, setShippingInfo]);
