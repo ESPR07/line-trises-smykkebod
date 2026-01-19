@@ -30,7 +30,8 @@ export default function AdminOrdersListCard({ orderItem }: AdminOrdersListCardPr
           {orderItem.totals.verifiedTotal.toLocaleString("nb-NO")} kr
         </span>
         <div className={style.status}>
-          {orderItem.status === "pending" && <span className={style.pending}>Venter</span>}
+          {orderItem.status === "paid" && <span className={style.pending}>Venter</span>}
+          {orderItem.status === "refunded" && <span className={style.refunded}>Refundert</span>}
           {orderItem.status === "complete" && <span className={style.complete}>Fullført</span>}
         </div>
       </div>

@@ -46,6 +46,7 @@ export type Database = {
         Row: {
           id: string;
           order_id: string;
+          stripe_payment_id: string;
           customer_info: {
             customer_email: string;
             customer_phone: string;

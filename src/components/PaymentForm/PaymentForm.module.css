@@ -49,7 +49,7 @@
 }
 
 .shippingSummary {
-  background-color: var(--background);
+  background-color: white;
   border: 1px solid var(--boxColor);
   border-radius: 5px;
   padding: 12px;

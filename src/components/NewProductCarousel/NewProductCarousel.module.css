@@ -57,6 +57,7 @@
   display: flex;
   gap: 30px;
   width: 85%;
+  padding-block: 10px;
   overflow-x: hidden;
   padding-left: 0;
   margin-inline: 2vw;

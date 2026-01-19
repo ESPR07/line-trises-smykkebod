@@ -10,8 +10,18 @@ interface ShippingFormProps {
   initialData?: Partial<shippingData>;
 }
 
-function ShippingForm({ setShippingInfo, onShippingSubmit, disabled, initialData = {} }: ShippingFormProps) {
-  const { register, control, handleSubmit, formState: { errors } } = useForm<shippingData>({
+function ShippingForm({
+  setShippingInfo,
+  onShippingSubmit,
+  disabled,
+  initialData = {},
+}: ShippingFormProps) {
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<shippingData>({
     mode: "onBlur",
     defaultValues: initialData,
   });
@@ -21,6 +31,14 @@ function ShippingForm({ setShippingInfo, onShippingSubmit, disabled, initialData
   useEffect(() => {
     setShippingInfo(formValues);
   }, [formValues, setShippingInfo]);
+
+  const capitalizeWords = (str: string) => {
+    if (!str) return "";
+    return str
+      .split(/[\s'-]+/) // split on space, hyphen, or apostrophe
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join(" ");
+  };
 
   const onSubmit = async () => {
     // call the parent function to create PaymentIntent
@@ -38,7 +56,10 @@ function ShippingForm({ setShippingInfo, onShippingSubmit, disabled, initialData
         type="text"
         {...register("email", {
           required: "E-post mangler",
-          pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Ugyldig E-post format" },
+          pattern: {
+            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            message: "Ugyldig E-post format",
+          },
         })}
         id="Email"
         placeholder="f.eks ola@eksempel.no"
@@ -52,7 +73,10 @@ function ShippingForm({ setShippingInfo, onShippingSubmit, disabled, initialData
         type="text"
         {...register("phone", {
           required: "Mobilnummer mangler",
-          pattern: { value: /^((0047)?|(\+47)?|(47)?)\d{8}$/, message: "Kun norsk mobilnummer" },
+          pattern: {
+            value: /^((0047)?|(\+47)?|(47)?)\d{8}$/,
+            message: "Kun norsk mobilnummer",
+          },
         })}
         id="phone"
         placeholder="f.eks 123 45 678"
@@ -68,13 +92,21 @@ function ShippingForm({ setShippingInfo, onShippingSubmit, disabled, initialData
             type="text"
             {...register("firstName", {
               required: "Fornavn mangler",
-              pattern: { value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i, message: "Kun bokstaver" },
+              pattern: {
+                value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i,
+                message: "Kun bokstaver",
+              },
               minLength: { value: 2, message: "Minst 2 bokstaver" },
+              onChange: (e) => {
+                e.target.value = capitalizeWords(e.target.value);
+              },
             })}
             id="firstName"
             placeholder="f.eks Ola"
           />
-          {errors.firstName && <p className={style.error}>{errors.firstName.message}</p>}
+          {errors.firstName && (
+            <p className={style.error}>{errors.firstName.message}</p>
+          )}
         </label>
 
         <label htmlFor="lastName">
@@ -84,13 +116,21 @@ function ShippingForm({ setShippingInfo, onShippingSubmit, disabled, initialData
             type="text"
             {...register("lastName", {
               required: "Etternavn mangler",
-              pattern: { value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i, message: "Kun bokstaver" },
+              pattern: {
+                value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i,
+                message: "Kun bokstaver",
+              },
               minLength: { value: 2, message: "Minst 2 bokstaver" },
+              onChange: (e) => {
+                e.target.value = capitalizeWords(e.target.value);
+              },
             })}
             id="lastName"
             placeholder="f.eks Nordmann"
           />
-          {errors.lastName && <p className={style.error}>{errors.lastName.message}</p>}
+          {errors.lastName && (
+            <p className={style.error}>{errors.lastName.message}</p>
+          )}
         </label>
       </div>
 
@@ -102,12 +142,20 @@ function ShippingForm({ setShippingInfo, onShippingSubmit, disabled, initialData
           type="text"
           {...register("adress", {
             required: "Adresse mangler",
-            pattern: { value: /^[A-Za-zÆØÅæøå .-]{2,}\s+[0-9]+[A-Za-z]?$/, message: "Ugyldig format" },
+            pattern: {
+              value: /^[A-Za-zÆØÅæøå .-]{2,}\s+[0-9]+[A-Za-z]?$/,
+              message: "Ugyldig format",
+            },
+            onChange: (e) => {
+              e.target.value = capitalizeWords(e.target.value);
+            },
           })}
           id="adress"
           placeholder="f.eks Nordmannsveg 26C"
         />
-        {errors.adress && <p className={style.error}>{errors.adress.message}</p>}
+        {errors.adress && (
+          <p className={style.error}>{errors.adress.message}</p>
+        )}
       </label>
 
       <div className={style.adressInputs}>
@@ -118,12 +166,20 @@ function ShippingForm({ setShippingInfo, onShippingSubmit, disabled, initialData
             type="text"
             {...register("place", {
               required: "Sted mangler",
-              pattern: { value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i, message: "Kun bokstaver" },
+              pattern: {
+                value: /^[A-Za-zÆØÅæøå]+(?:[ '-][A-Za-zÆØÅæøå]+)*$/i,
+                message: "Kun bokstaver",
+              },
+              onChange: (e) => {
+                e.target.value = capitalizeWords(e.target.value);
+              },
             })}
             id="sted"
             placeholder="f.eks Oslo"
           />
-          {errors.place && <p className={style.error}>{errors.place.message}</p>}
+          {errors.place && (
+            <p className={style.error}>{errors.place.message}</p>
+          )}
         </label>
         <label htmlFor="postNr">
           Postnr
@@ -133,11 +189,16 @@ function ShippingForm({ setShippingInfo, onShippingSubmit, disabled, initialData
             {...register("postNr", {
               required: "PostNr mangler",
               pattern: { value: /^\d{4}$/, message: "4 tall" },
+              onChange: (e) => {
+                e.target.value = capitalizeWords(e.target.value);
+              },
             })}
             id="postNr"
             placeholder="f.eks 1234"
           />
-          {errors.postNr && <p className={style.error}>{errors.postNr.message}</p>}
+          {errors.postNr && (
+            <p className={style.error}>{errors.postNr.message}</p>
+          )}
         </label>
       </div>
 

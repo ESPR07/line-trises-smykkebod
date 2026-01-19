@@ -1,7 +1,7 @@
 import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import style from "./PaymentForm.module.css";
-import { CartItem } from "../App";
-import { shippingData } from "../@types/Database";
+import { CartItem } from "../../App";
+import { shippingData } from "../../@types/Database";
 import { Stripe, StripeElements } from "@stripe/stripe-js";
 
 interface PaymentFormProps {
