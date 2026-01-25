@@ -6,6 +6,7 @@
   background-color: var(--boxColor);
   border-radius: 5px;
   gap: 5px;
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
   input {
     font-family: "montserrat", "Courier New", Courier, monospace;
@@ -49,7 +50,7 @@ label {
   flex: 1;
 }
 
-.kortBetaling {
+.tilBetaling {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -87,4 +88,15 @@ label {
   color: rgb(212, 79, 79);
   font-size: 1rem;
   transform: translateY(-5px);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }

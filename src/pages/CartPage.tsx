@@ -3,17 +3,20 @@ import style from "./CartPage.module.css";
 import { CartContext, CartItem, CartItemMinimal, APIResult } from "../App";
 import CartProductCard from "../components/CartProductCard/CartProductCard";
 import NavigationButton from "../components/utils/Button/NavigationButton";
-import { handleCheckout as checkout } from "../API/checkout";
-import ShippingForm from "../components/utils/ShippingForm/ShippingForm";
+import ShippingForm from "../components/ShippingForm/ShippingForm";
 import { shippingData } from "../@types/Database";
-import { useCreateOrder } from "../API/usePlaceOrder";
 import { useNavigate } from "react-router";
 import { useCustomProducts } from "../API/useCustomProducts";
+import { handleCheckout as handleCheckoutFn } from "../API/checkout";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import PaymentForm from "../components/PaymentForm/PaymentForm";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
 
 function CartPage() {
   const { state: cartState, dispatch } = useContext(CartContext);
   const { allProducts } = useContext(APIResult);
-  const { createOrder } = useCreateOrder();
   const navigate = useNavigate();
 
   const [enrichedCart, setEnrichedCart] = useState<CartItem[]>([]);
@@ -22,6 +25,7 @@ function CartPage() {
   const [verifiedTotal, setVerifiedTotal] = useState<number | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [shippingData, setShippingData] = useState<Partial<shippingData>>({});
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
 
   const {
     customProducts,
@@ -29,54 +33,41 @@ function CartPage() {
     fetchCustomProducts,
   } = useCustomProducts();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  // Scroll to top on mount
+  useEffect(() => window.scrollTo(0, 0), []);
 
+  // Fetch custom products if any
   useEffect(() => {
     const customIds = cartState.productList
       .filter((item) => !allProducts?.some((p) => p.id === item.id))
       .map((item) => item.id);
 
-    if (customIds.length > 0) {
-      fetchCustomProducts(customIds);
-    }
+    if (customIds.length > 0) fetchCustomProducts(customIds);
   }, [cartState.productList, allProducts, customProducts, fetchCustomProducts]);
 
+  // Enrich cart with product info and calculate totals
   useEffect(() => {
-    if (!allProducts) return;
-    if (customProducts === undefined) return;
+    if (!allProducts || customProducts === undefined) return;
 
     const enriched = cartState.productList.map((cartItem: CartItemMinimal) => {
-      const product = allProducts.find((product) => product.id === cartItem.id);
-
+      const product = allProducts.find((p) => p.id === cartItem.id);
       if (product) {
-        const expectedPrice = Number(product.price);
-        if (cartItem.price && cartItem.price !== expectedPrice) {
-          console.warn(`Prisavvik for produkt ${product.id}, korrigerer.`);
-        }
-
+        const price = Number(product.price);
         return {
           id: product.id,
           name: product.name,
-          price: expectedPrice,
-          discountPrice:
-            product.discount_amount !== null
-              ? Number(product.discount_amount)
-              : null,
+          price,
+          discountPrice: product.discount_amount
+            ? Number(product.discount_amount)
+            : null,
           imageURL: product.image_url,
           quantity: cartItem.quantity,
         } as CartItem;
       }
 
       if (customProducts) {
-        const custom = customProducts.find(
-          (customProduct) => customProduct.id === cartItem.id
-        );
-
-        if (!custom) {
-          return null;
-        }
+        const custom = customProducts.find((p) => p.id === cartItem.id);
+        if (!custom) return null;
 
         return {
           id: custom.id,
@@ -90,20 +81,19 @@ function CartPage() {
         } as CartItem;
       }
 
-      console.warn("Produkt mangler fra API:", cartItem.id);
       return null;
     });
 
     const validItems = enriched.filter(
-      (product): product is CartItem => product !== null
+      (item): item is CartItem => item !== null
     );
 
-    const calculatedAfterDiscount = validItems.reduce((sum, item) => {
+    const afterDiscount = validItems.reduce((sum, item) => {
       const discount = item.discountPrice ?? 0;
       return sum + (discount === 0 ? item.price : discount) * item.quantity;
     }, 0);
 
-    const calculatedDiscount = validItems.reduce((sum, item) => {
+    const discountSum = validItems.reduce((sum, item) => {
       const discount = item.discountPrice ?? 0;
       return (
         sum + (discount !== 0 ? (item.price - discount) * item.quantity : 0)
@@ -111,27 +101,69 @@ function CartPage() {
     }, 0);
 
     setEnrichedCart(validItems);
-    setTotalPrice(calculatedAfterDiscount);
-    setTotalDiscount(calculatedDiscount);
-  }, [cartState, allProducts, customProducts, dispatch]);
+    setTotalPrice(afterDiscount);
+    setTotalDiscount(discountSum);
+    setVerifiedTotal(afterDiscount);
+  }, [cartState, allProducts, customProducts]);
 
-  const handleCheckoutWrapper = async () => {
-    await checkout({
+  // Function to create PaymentIntent when shipping data is submitted
+  const createPaymentIntent = async (shipping: Partial<shippingData>) => {
+    if (enrichedCart.length === 0) return;
+
+    const totalOere = Math.round(
+      enrichedCart.reduce((sum, item) => {
+        const price = item.discountPrice ?? item.price;
+        return sum + price * item.quantity;
+      }, 0) * 100
+    );
+
+    try {
+      const res = await fetch("/.netlify/functions/createPaymentIntent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: totalOere,
+          cart: enrichedCart.map((item) => ({
+            id: item.id,
+            quantity: item.quantity,
+          })),
+          clientPlatform: "web",
+          firstName: shipping.firstName ?? "",
+          lastName: shipping.lastName ?? "",
+          email: shipping.email ?? "",
+          phone: shipping.phone ?? "",
+          adress: shipping.adress ?? "",
+          place: shipping.place ?? "",
+          postNr: shipping.postNr ?? "",
+        }),
+      });
+
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      setClientSecret(data.clientSecret);
+    } catch (err) {
+      console.error("Failed to create PaymentIntent:", err);
+    }
+  };
+
+  // Checkout wrapper for ShippingForm
+  const handleCheckout = async (stripe: any, elements: any) => {
+    await handleCheckoutFn({
       enrichedCart,
       setEnrichedCart,
       dispatch,
       shippingData,
-      createOrder,
-      setVerifiedTotal,
       setIsProcessing,
       navigate,
+      stripe,
+      elements,
     });
   };
 
   if (isLoadingCustoms) {
     return (
       <main className={style.cartPageContainer}>
-        <h1 className={style.cartHeader}>Laster handlekurv...</h1>
+        <h1>Laster handlekurv...</h1>
       </main>
     );
   }
@@ -163,61 +195,69 @@ function CartPage() {
   }
 
   return (
-    <>
-      <title>Handlekurv | Line Trises Kunstsmykker</title>
-      <meta
-        name="description"
-        content="Se varene dine og fullfør kjøpet av håndlagde smykker hos Line Trises Kunstsmykker."
-      />
-      <main className={style.cartPageContainer}>
-        <h1 className={style.cartHeader}>Handlekurv</h1>
-        <section className={style.contentContainer}>
-          <article className={style.cartItemList}>
-            {enrichedCart.map((product) => (
-              <CartProductCard
-                key={product.id}
-                product={product}
-                onUpdate={(p, quantity) =>
-                  dispatch({
-                    type: "updateProduct",
-                    payload: { id: p.id, quantity },
-                  })
-                }
-                onRemove={(p) =>
-                  dispatch({
-                    type: "updateProduct",
-                    payload: { id: p.id, quantity: 0 },
-                  })
-                }
-              />
-            ))}
-          </article>
-          <div className={style.cartPaymentInfo}>
-            <article className={style.cartInfo}>
-              <h2>Oppsummering</h2>
-              <div className={style.cartInfoRow}>
-                <p>Rabatter:</p>
-                <p>kr {totalDiscount.toFixed(2)}</p>
-              </div>
-              <div className={style.cartInfoRow}>
-                <p>Totalt:</p>
-                <p>
-                  kr{" "}
-                  {verifiedTotal !== null
-                    ? verifiedTotal.toFixed(2)
-                    : totalPrice.toFixed(2)}
-                </p>
-              </div>
-            </article>
-            <ShippingForm
-              handleCheckout={handleCheckoutWrapper}
-              disabled={isProcessing}
-              setShippingInfo={setShippingData}
+    <main className={style.cartPageContainer}>
+      <h1 className={style.cartHeader}>Handlekurv</h1>
+      <section className={style.contentContainer}>
+        <article className={style.cartItemList}>
+          {enrichedCart.map((product) => (
+            <CartProductCard
+              key={product.id}
+              product={product}
+              onUpdate={(p, quantity) =>
+                dispatch({
+                  type: "updateProduct",
+                  payload: { id: p.id, quantity },
+                })
+              }
+              onRemove={(p) =>
+                dispatch({
+                  type: "updateProduct",
+                  payload: { id: p.id, quantity: 0 },
+                })
+              }
             />
-          </div>
-        </section>
-      </main>
-    </>
+          ))}
+        </article>
+
+        <div className={style.cartPaymentInfo}>
+          <article className={style.cartInfo}>
+            <h2>Oppsummering</h2>
+            <div className={style.cartInfoRow}>
+              <p>Rabatter:</p>
+              <p>kr {totalDiscount.toFixed(2)}</p>
+            </div>
+            <div className={style.cartInfoRow}>
+              <p>Totalt:</p>
+              <p>
+                {verifiedTotal !== null
+                  ? verifiedTotal.toFixed(2)
+                  : totalPrice.toFixed(2)}
+              </p>
+            </div>
+          </article>
+
+          {!clientSecret ? (
+            <ShippingForm
+              onShippingSubmit={() => createPaymentIntent(shippingData)}
+              setShippingInfo={setShippingData}
+              disabled={isProcessing}
+              initialData={shippingData}
+            />
+          ) : (
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <PaymentForm
+                enrichedCart={enrichedCart}
+                shippingData={shippingData}
+                handleCheckout={handleCheckout}
+                disabled={isProcessing}
+                clientSecret={clientSecret}
+                onEditShipping={() => setClientSecret(null)}
+              />
+            </Elements>
+          )}
+        </div>
+      </section>
+    </main>
   );
 }
 

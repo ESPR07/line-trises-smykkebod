@@ -1,0 +1,133 @@
+.paymentForm {
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 20px);
+  padding: 10px;
+  background-color: var(--boxColor);
+  border-radius: 5px;
+  gap: 5px;
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  input {
+    font-family: "montserrat", "Courier New", Courier, monospace;
+    font-size: 1.2rem;
+    padding: 5px;
+    color: var(--highlight);
+    text-align: start;
+    border-radius: 5px;
+    width: calc(100% - 10px);
+    margin-bottom: 10px;
+  }
+
+  h3 {
+    color: var(--highlight);
+    margin: 0;
+    font-size: 1.5rem;
+    border-bottom: 1px solid var(--highlight);
+    margin-bottom: 15px;
+  }
+}
+
+.kortBetaling {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  height: 2.75rem;
+  border: none;
+  border-radius: 0.3rem;
+  background-color: var(--highlight);
+  color: var(--background);
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  margin-top: 10px;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.1s ease-in
+  }
+}
+
+.shippingSummary {
+  background-color: white;
+  border: 1px solid var(--boxColor);
+  border-radius: 5px;
+  padding: 12px;
+  margin-bottom: 15px;
+  animation: fadeIn 0.3s ease-out 0.2s both;
+}
+
+.summaryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.summaryLabel {
+  color: var(--highlight);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 600;
+  opacity: 0.8;
+}
+
+.editButton {
+  background: none;
+  border: none;
+  color: var(--highlight);
+  font-size: 0.9rem;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 2px 6px;
+  opacity: 0.9;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.summaryContent {
+  color: var(--highlight);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  
+  strong {
+    display: block;
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+}
+
+.summaryAddress {
+  opacity: 0.9;
+  margin: 2px 0;
+}
+
+.summaryContact {
+  font-size: 0.85rem;
+  opacity: 0.75;
+  margin-top: 6px;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

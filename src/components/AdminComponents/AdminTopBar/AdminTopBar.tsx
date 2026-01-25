@@ -44,10 +44,10 @@ function AdminTopBar() {
     p.name.toLowerCase().includes(combinedQuery.toLowerCase())
   );
 
-  const filteredOrders = allOrders?.filter(o =>
-    o.customer_firstName.toLowerCase().includes(combinedQuery.toLowerCase()) ||
-    o.customer_lastName.toLowerCase().includes(combinedQuery.toLowerCase()) ||
-    o.order_id.toLowerCase().includes(combinedQuery.toLowerCase())
+  const filteredOrders = allOrders?.filter(order =>
+    order.customer_info.customer_firstName.toLowerCase().includes(combinedQuery.toLowerCase()) ||
+    order.customer_info.customer_lastName.toLowerCase().includes(combinedQuery.toLowerCase()) ||
+    order.order_id.toLowerCase().includes(combinedQuery.toLowerCase())
   );
 
   const handleSelectProduct = (product: Product) => {
@@ -76,22 +76,22 @@ function AdminTopBar() {
         />
         {dropdownVisible && combinedQuery && (
           <div className={style.searchDropdown}>
-            {filteredProducts?.slice(0, 5).map(p => (
+            {filteredProducts?.slice(0, 5).map(product => (
               <div
-                key={p.id}
+                key={product.id}
                 className={style.dropdownItem}
-                onClick={() => handleSelectProduct(p)}
+                onClick={() => handleSelectProduct(product)}
               >
-                Produkt: {p.name}
+                Produkt: {product.name}
               </div>
             ))}
-            {filteredOrders?.slice(0, 5).map(o => (
+            {filteredOrders?.slice(0, 5).map(order => (
               <div
-                key={o.id}
+                key={order.id}
                 className={style.dropdownItem}
-                onClick={() => handleSelectOrder(o)}
+                onClick={() => handleSelectOrder(order)}
               >
-                Bestilling: {o.order_id} – {o.customer_firstName} {o.customer_lastName}
+                Bestilling: {order.order_id} – {order.customer_info.customer_firstName} {order.customer_info.customer_lastName}
               </div>
             ))}
             {filteredProducts?.length === 0 && filteredOrders?.length === 0 && (

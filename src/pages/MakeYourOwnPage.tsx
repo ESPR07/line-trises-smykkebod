@@ -13,6 +13,7 @@ const MakeYourOwn: React.FC = () => {
   const [basePrice] = useState(599);
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
+  console.log(selectedType);
 
   useEffect(() => {
     fetchCustomOptions();
@@ -69,10 +70,12 @@ const MakeYourOwn: React.FC = () => {
       });
 
       const payload = {
+        type: selectedType,
         configuration,
         calculated_price: calculateTotal(),
         expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 1 day expiry
       };
+      console.log("Payload for custom product:", payload);
 
       // Call Netlify function
       const res = await fetch("/.netlify/functions/createCustomProduct", {
@@ -90,6 +93,7 @@ const MakeYourOwn: React.FC = () => {
       }
 
       const savedProduct = await res.json();
+      console.log("Saved custom product:", savedProduct);
 
       // Add only ID and quantity to the cart
       dispatch({
