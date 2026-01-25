@@ -63,6 +63,7 @@ function ShippingForm({
         })}
         id="Email"
         placeholder="f.eks ola@eksempel.no"
+        autoComplete="email"
       />
       {errors.email && <p className={style.error}>{errors.email.message}</p>}
 
@@ -80,6 +81,7 @@ function ShippingForm({
         })}
         id="phone"
         placeholder="f.eks 123 45 678"
+        autoComplete="tel"
       />
       {errors.phone && <p className={style.error}>{errors.phone.message}</p>}
 
@@ -103,6 +105,7 @@ function ShippingForm({
             })}
             id="firstName"
             placeholder="f.eks Ola"
+            autoComplete="given-name"
           />
           {errors.firstName && (
             <p className={style.error}>{errors.firstName.message}</p>
@@ -127,6 +130,7 @@ function ShippingForm({
             })}
             id="lastName"
             placeholder="f.eks Nordmann"
+            autoComplete="family-name"
           />
           {errors.lastName && (
             <p className={style.error}>{errors.lastName.message}</p>
@@ -152,6 +156,7 @@ function ShippingForm({
           })}
           id="adress"
           placeholder="f.eks Nordmannsveg 26C"
+          autoComplete="address-line1"
         />
         {errors.adress && (
           <p className={style.error}>{errors.adress.message}</p>
@@ -176,6 +181,7 @@ function ShippingForm({
             })}
             id="sted"
             placeholder="f.eks Oslo"
+            autoComplete="address-level2"
           />
           {errors.place && (
             <p className={style.error}>{errors.place.message}</p>
@@ -195,6 +201,7 @@ function ShippingForm({
             })}
             id="postNr"
             placeholder="f.eks 1234"
+            autoComplete="postal-code"
           />
           {errors.postNr && (
             <p className={style.error}>{errors.postNr.message}</p>
