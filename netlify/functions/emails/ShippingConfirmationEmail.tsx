@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   Html,
   Body,
@@ -8,6 +9,8 @@ import {
   Img,
   Head,
 } from "@react-email/components";
+
+void React;
 
 type OrderItem = {
   name: string;
