@@ -1,4 +1,3 @@
-import React from "react";
 import { Handler } from "@netlify/functions";
 import { createClient } from "@supabase/supabase-js";
 import { render } from "@react-email/render";

@@ -1,4 +1,3 @@
-import React from "react";
 import { Handler } from "@netlify/functions";
 import { render } from "@react-email/render";
 import { OrderConfirmationEmail } from "./emails/OrderConfirmationEmail";
