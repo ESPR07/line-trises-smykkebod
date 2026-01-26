@@ -168,7 +168,7 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
 
   const orderPayload = {
   ...orderInsert,
-  order_id: insertedOrder.id,
+  order_id: insertedOrder.order_id,
 };
 
   try {
