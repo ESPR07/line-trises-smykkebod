@@ -1,27 +1,19 @@
 import { SetStateAction } from "react";
-import { Database, NewOrderData } from "../@types/Database";
 import { CartItem } from "../App";
-import { verifyCart } from "./verifyCart";
 import { InteractionAction } from "../Reducers/cartInteractions";
 import { useNavigate } from "react-router";
+import { Stripe, StripeElements } from "@stripe/stripe-js";
+import { shippingData } from "../@types/Database";
 
 export interface CheckoutDependencies {
   enrichedCart: CartItem[];
   setEnrichedCart: React.Dispatch<SetStateAction<CartItem[]>>;
   dispatch: (action: InteractionAction) => void;
-  shippingData: Partial<{
-    email: string;
-    phone: string;
-    firstName: string;
-    lastName: string;
-    adress: string;
-    place: string;
-    postNr: string;
-  }>;
-  createOrder: (data: NewOrderData) => Promise<Database["public"]["Tables"]["orders"]["Row"] | null>;
-  setVerifiedTotal?: (total: number) => void;
+  shippingData: Partial<shippingData>;
   setIsProcessing?: (processing: boolean) => void;
   navigate: ReturnType<typeof useNavigate>;
+  stripe: Stripe | null;
+  elements: StripeElements | null;
 }
 
 export async function handleCheckout({
@@ -29,77 +21,101 @@ export async function handleCheckout({
   setEnrichedCart,
   dispatch,
   shippingData,
-  createOrder,
-  setVerifiedTotal,
   setIsProcessing,
   navigate,
+  stripe,
+  elements,
 }: CheckoutDependencies) {
-  
   if (enrichedCart.length === 0) return;
+
+  if (!stripe || !elements) {
+    alert("Stripe er ikke klart. Prøv igjen.");
+    return;
+  }
 
   setIsProcessing?.(true);
 
   try {
-    const result = await verifyCart(enrichedCart);
-    console.log(result);
-    const verifiedItems = result.verifiedCart;
-    const verifiedTotal = result.total;
+    // Calculate total in øre
+    const totalAmountOere = Math.round(
+      enrichedCart.reduce((sum, item) => {
+        const price = item.discountPrice ?? item.price;
+        return sum + price * item.quantity;
+      }, 0) * 100,
+    );
 
-    setVerifiedTotal?.(verifiedTotal);
-
-    const checkoutPayload = {
-      customer_email: shippingData.email ?? "",
-      customer_phone: shippingData.phone ?? "",
-      customer_firstName: shippingData.firstName ?? "",
-      customer_lastName: shippingData.lastName ?? "",
-      customer_adress: shippingData.adress ?? "",
-      customer_place: shippingData.place ?? "",
-      customer_postNr: shippingData.postNr ?? "",
-
-      cart: verifiedItems.map((item) => {
-        const unitPrice =
-          item.discountPrice && item.discountPrice > 0
-            ? item.discountPrice
-            : item.price;
-
-        return {
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          unitPrice,
-          lineTotal: unitPrice * item.quantity,
-          metadata: item.metadata ?? {},
-        };
-      }),
-
-      totals: {
-        verifiedTotal,
-        itemCount: verifiedItems.reduce(
-          (sum, item) => sum + item.quantity,
-          0
-        ),
-      },
-
-      meta: {
-        createdAt: new Date().toISOString(),
-        clientPlatform: navigator.userAgent,
-      },
-    };
-
-    const insertedOrder = await createOrder(checkoutPayload);
-
-    if (insertedOrder) {
-      console.log("Order successfully created:", insertedOrder);
-      localStorage.removeItem("cart");
-      setEnrichedCart([])
-      dispatch({ type: "clearCart", payload: { id: "", quantity: 0 } });
-      navigate(`/success?order=${insertedOrder.order_id}&name=${insertedOrder.customer_firstName}`)
-    } else {
-      console.error("Failed to create order");
+    if (totalAmountOere <= 0) {
+      alert("Handlekurven er tom eller ugyldig.");
+      return;
     }
-  } catch (err) {
-    console.error("Checkout failed:", err);
+
+    // Create PaymentIntent on the fly with shipping info
+    const res = await fetch("/.netlify/functions/createPaymentIntent", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: totalAmountOere,
+        cart: enrichedCart.map((item) => ({
+          id: item.id,
+          quantity: item.quantity,
+          price: item.price,
+          discountPrice: item.discountPrice,
+        })),
+        clientPlatform: "web",
+        firstName: shippingData.firstName ?? "",
+        lastName: shippingData.lastName ?? "",
+        email: shippingData.email ?? "",
+        phone: shippingData.phone ?? "",
+        adress: shippingData.adress ?? "",
+        place: shippingData.place ?? "",
+        postNr: shippingData.postNr ?? "",
+      }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      throw new Error(`HTTP ${res.status}: ${text}`);
+    }
+
+    const { clientSecret } = await res.json();
+    if (!clientSecret) throw new Error("Kunne ikke opprette betaling.");
+
+    // Confirm payment with Stripe Elements
+    const result = await stripe.confirmPayment({
+      clientSecret,
+      elements,
+      confirmParams: {
+        receipt_email: shippingData.email,
+      },
+      redirect: "if_required",
+    });
+
+    if (result.error) {
+      console.error("Stripe payment error:", result.error);
+      alert(result.error.message ?? "Betalingen feilet.");
+      return;
+    }
+
+    const paymentIntentId = result.paymentIntent?.id;
+    if (!paymentIntentId) {
+      alert("Noe gikk galt med betalingen.");
+      return;
+    }
+
+    // Clear cart frontend
     localStorage.removeItem("cart");
+    setEnrichedCart([]);
+    dispatch({ type: "clearCart", payload: { id: "", quantity: 0 } });
+
+    // Navigate to order-processing page
+    navigate(`/order-processing?paymentIntentId=${paymentIntentId}`);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("Checkout failed:", err.message);
+    } else {
+      console.error("Checkout failed:", err);
+    }
+    alert("Noe gikk galt. Prøv igjen.");
   } finally {
     setIsProcessing?.(false);
   }

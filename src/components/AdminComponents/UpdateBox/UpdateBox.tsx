@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext, ChangeEvent, useRef } from "react";
 import style from "./UpdateBox.module.css";
 import { useUpdateProduct } from "../../../API/useUpdateProduct";
-import { APIResult } from "../../../App";
 import { uploadImage } from "../../../API/uploadImage";
 import { FetchResult } from "../../../@types/Database";
 import { supabaseClient } from "../../../components/utils/supabaseClient";
 import imageCompression from "browser-image-compression";
+import { APIResult } from "../../../context/siteContexts";
 
 // Hash utility for files
 async function hashFile(file: File): Promise<string> {
@@ -43,20 +43,34 @@ interface UpdateBoxProps {
   toggleUpdateBox: (val: boolean) => void;
 }
 
-export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: UpdateBoxProps) {
+export default function UpdateBox({
+  product,
+  updateBoxValue,
+  toggleUpdateBox,
+}: UpdateBoxProps) {
   const { fetchProducts } = useContext(APIResult);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [name, setName] = useState<string>(product.name);
-  const [shortDescription, setShortDescription] = useState<string>(product.short_description || "");
-  const [longDescription, setLongDescription] = useState<string>(product.long_description || "");
+  const [shortDescription, setShortDescription] = useState<string>(
+    product.short_description || "",
+  );
+  const [longDescription, setLongDescription] = useState<string>(
+    product.long_description || "",
+  );
   const [price, setPrice] = useState<string>(product.price.toString());
-  const [discountAmount, setDiscountAmount] = useState<string>((product.discount_amount || 0).toFixed(2));
-  const [activeStatus, setActiveStatus] = useState<boolean>(product.active_status ?? true);
+  const [discountAmount, setDiscountAmount] = useState<string>(
+    (product.discount_amount || 0).toFixed(2),
+  );
+  const [activeStatus, setActiveStatus] = useState<boolean>(
+    product.active_status ?? true,
+  );
 
   // Image states
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>(product.image_url || "");
+  const [imagePreview, setImagePreview] = useState<string>(
+    product.image_url || "",
+  );
   const [previewError, setPreviewError] = useState<boolean>(false);
   const [uploading, setUploading] = useState<boolean>(false);
 
@@ -138,8 +152,11 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
         const parsed = parseSupabaseFilePath(oldUrl);
         if (parsed) {
           const { bucket, filePath } = parsed;
-          const { error } = await supabaseClient.storage.from(bucket).remove([filePath]);
-          if (error) console.error("Failed to delete old image:", error.message);
+          const { error } = await supabaseClient.storage
+            .from(bucket)
+            .remove([filePath]);
+          if (error)
+            console.error("Failed to delete old image:", error.message);
         }
       }
     } catch (err) {
@@ -158,6 +175,7 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   useEffect(() => {
@@ -192,12 +210,18 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
 
         <label>
           Kort beskrivelse:
-          <input value={shortDescription} onChange={(e) => setShortDescription(e.target.value)} />
+          <input
+            value={shortDescription}
+            onChange={(e) => setShortDescription(e.target.value)}
+          />
         </label>
 
         <label>
           Lang beskrivelse:
-          <textarea value={longDescription} onChange={(e) => setLongDescription(e.target.value)} />
+          <textarea
+            value={longDescription}
+            onChange={(e) => setLongDescription(e.target.value)}
+          />
         </label>
 
         <label>
@@ -214,7 +238,9 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
           <input
             type="text"
             value={discountAmount}
-            onChange={(e) => handleNumericInput(e.target.value, setDiscountAmount)}
+            onChange={(e) =>
+              handleNumericInput(e.target.value, setDiscountAmount)
+            }
           />
         </label>
 
@@ -243,7 +269,9 @@ export default function UpdateBox({ product, updateBoxValue, toggleUpdateBox }: 
           />
         )}
 
-        {previewError && <p className={style.previewError}>Kunne ikke laste bildet</p>}
+        {previewError && (
+          <p className={style.previewError}>Kunne ikke laste bildet</p>
+        )}
 
         {isError && <p className={style.error}>Noe gikk galt, prøv igjen.</p>}
 

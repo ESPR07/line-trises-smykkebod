@@ -23,15 +23,16 @@ export default function AdminOrdersListCard({ orderItem }: AdminOrdersListCardPr
         <span className={style.orderId}>#{orderItem.order_id}</span>
         <span className={style.date}>{dateFormatting(orderItem.meta.createdAt)}</span>
         <span className={style.customerName}>
-          {orderItem.customer_firstName} {orderItem.customer_lastName}
+          {orderItem.customer_info.customer_firstName} {orderItem.customer_info.customer_lastName}
         </span>
-        <span className={style.adress}>{orderItem.customer_adress}</span>
+        <span className={style.adress}>{orderItem.customer_info.customer_adress}</span>
         <span className={style.amount}>
           {orderItem.totals.verifiedTotal.toLocaleString("nb-NO")} kr
         </span>
         <div className={style.status}>
-          {orderItem.status === "pending" && <span className={style.pending}>Venter</span>}
-          {orderItem.status === "complete" && <span className={style.complete}>Fullført</span>}
+          {orderItem.status === "paid" && <span className={style.pending}>Venter</span>}
+          {orderItem.status === "refunded" && <span className={style.refunded}>Refundert</span>}
+          {orderItem.status === "completed" && <span className={style.complete}>Fullført</span>}
         </div>
       </div>
 

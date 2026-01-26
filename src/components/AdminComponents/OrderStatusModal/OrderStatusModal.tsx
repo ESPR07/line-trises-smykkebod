@@ -1,9 +1,9 @@
-import { useContext, useEffect } from "react";
-import { APIResult } from "../../../App";
+import { useContext, useEffect, useState } from "react";
 import style from "../UpdateBox/UpdateBox.module.css";
 import AdminProductColumn from "../AdminProductColumn/AdminProductColumn";
 import { OrderItem, FetchResult } from "../../../@types/Database";
 import { dateFormatting } from "../../utils/dateFormatting";
+import { APIResult } from "../../../context/siteContexts";
 
 interface OrderStatusModalProps {
   order: OrderItem;
@@ -15,23 +15,24 @@ interface OrderStatusModalProps {
 export default function OrderStatusModal({
   order,
   toggleModal,
-  modalOpen
+  modalOpen,
 }: OrderStatusModalProps) {
   const { allProducts } = useContext(APIResult);
+  const [isRefunding, setIsRefunding] = useState(false);
 
   useEffect(() => {
-      if (modalOpen) {
-        const scrollY = window.scrollY;
-        document.body.style.position = "fixed";
-        document.body.style.top = `-${scrollY}px`;
-        document.body.style.width = "100%";
-        return () => {
-          document.body.style.position = "";
-          document.body.style.top = "";
-          window.scrollTo(0, scrollY);
-        };
-      }
-    }, [modalOpen]);
+    if (modalOpen) {
+      const scrollY = window.scrollY;
+      document.body.style.position = "fixed";
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.width = "100%";
+      return () => {
+        document.body.style.position = "";
+        document.body.style.top = "";
+        window.scrollTo(0, scrollY);
+      };
+    }
+  }, [modalOpen]);
 
   const cartItems: FetchResult[] = order.cart.map((item) => {
     const product = allProducts?.find((p) => p.id === item.id);
@@ -48,24 +49,122 @@ export default function OrderStatusModal({
     };
   });
 
+  const handleCompleteOrder = async () => {
+    if (!window.confirm("Markere bestillingen som fullført og sende e-post?")) {
+      return;
+    }
+
+    try {
+      const res = await fetch("/.netlify/functions/completeOrder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order.order_id }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text);
+      }
+
+      alert("Bestillingen er fullført og e-post sendt!");
+      toggleModal(false);
+    } catch (err) {
+      console.error(err);
+      alert("Kunne ikke fullføre bestillingen.");
+    }
+  };
+
+  // Refund handler
+  const handleRefund = async () => {
+    if (
+      !window.confirm("Er du sikker på at du vil refundere denne bestillingen?")
+    )
+      return;
+
+    setIsRefunding(true);
+
+    try {
+      const res = await fetch("/.netlify/functions/createRefundIntent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          paymentIntentId: order.stripe_payment_id,
+          amount: order.totals.verifiedTotal * 100, // full refund in cents
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert("Kunne ikke refundere bestillingen: " + data.error);
+      } else {
+        alert("Refundering initiert!");
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Refund error:", err);
+        alert("Noe gikk galt under refundering: " + err.message);
+      } else {
+        console.error("Refund error (unknown):", err);
+        alert("Noe gikk galt under refundering.");
+      }
+    } finally {
+      setIsRefunding(false);
+    }
+  };
+
   return (
     <div className={style.updateModal}>
       <div className={style.updateBox}>
-        <button className={style.closeButton} onClick={() => toggleModal(false)} />
+        <button
+          className={style.closeButton}
+          onClick={() => toggleModal(false)}
+        />
         <h3>Bestilling</h3>
 
         {/* Order Details */}
         <div className={style.orderDetails}>
-          <p><strong>Ordre ID:</strong> {order.order_id}</p>
-          <p><strong>Kunde:</strong> {order.customer_firstName} {order.customer_lastName}</p>
-          <p><strong>Adresse:</strong> {order.customer_adress}</p>
-          <p><strong>Sted:</strong> {order.customer_place}</p>
-          <p><strong>Post Nummer:</strong> {order.customer_postNr}</p>
-          <p><strong>E-post:</strong> {order.customer_email}</p>
-          <p><strong>Mobilnummer:</strong> {order.customer_phone}</p>
-          <p><strong>Sum:</strong> {order.totals.verifiedTotal.toLocaleString("nb-NO")} NOK</p>
-          <p><strong>Status:</strong> {order.status === "pending" ? "Venter" : "Fullført"}</p>
-          <p><strong>Opprettet:</strong> {dateFormatting(order.meta.createdAt)}</p>
+          <p>
+            <strong>Ordre ID:</strong> {order.order_id}
+          </p>
+          <p>
+            <strong>Kunde:</strong> {order.customer_info.customer_firstName}{" "}
+            {order.customer_info.customer_lastName}
+          </p>
+          <p>
+            <strong>Adresse:</strong> {order.customer_info.customer_adress}
+          </p>
+          <p>
+            <strong>Sted:</strong> {order.customer_info.customer_place}
+          </p>
+          <p>
+            <strong>Post Nummer:</strong> {order.customer_info.customer_postNr}
+          </p>
+          <p>
+            <strong>E-post:</strong> {order.customer_info.customer_email}
+          </p>
+          <p>
+            <strong>Mobilnummer:</strong> {order.customer_info.customer_phone}
+          </p>
+          <p>
+            <strong>Sum:</strong>{" "}
+            {order.totals.verifiedTotal.toLocaleString("nb-NO")} NOK
+          </p>
+          <p>
+            <strong>Status:</strong>{" "}
+            {order.status === "pending"
+              ? "Venter"
+              : order.status === "paid"
+                ? "Betalt"
+                : order.status === "completed"
+                  ? "Fullført"
+                  : order.status === "partially_refunded"
+                    ? "Delvis refundert"
+                    : "Refundert"}
+          </p>
+          <p>
+            <strong>Opprettet:</strong> {dateFormatting(order.meta.createdAt)}
+          </p>
         </div>
 
         {/* Order Products */}
@@ -77,14 +176,24 @@ export default function OrderStatusModal({
         </div>
 
         {/* Action Buttons */}
-        <div className={style.buttonContainer}>
-          <button className={style.updateButton}>
-           Godkjenn
-          </button>
-          <button className={style.updateButton}>
-            Kanseller
-          </button>
-        </div>
+        {order.status !== "refunded" && (
+          <div className={style.buttonContainer}>
+            <button
+              className={style.updateButton}
+              onClick={handleCompleteOrder}
+              disabled={order.status === "completed"}
+            >
+              Godkjenn
+            </button>
+            <button
+              className={style.updateButton}
+              onClick={handleRefund}
+              disabled={isRefunding || order.status === "refunded" || order.status === "completed"}
+            >
+              {isRefunding ? "Refunderer..." : "Refunder"}
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

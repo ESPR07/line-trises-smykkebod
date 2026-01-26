@@ -1,8 +1,9 @@
 import { Link, useNavigate } from "react-router";
 import style from "./Navbar.module.css";
 import { useContext, useEffect, useState, useRef } from "react";
-import { Cart, CartContext } from "../../App";
+import { Cart } from "../../App";
 import { initialValue } from "../../Reducers/cartInteractions";
+import { CartContext } from "../../context/siteContexts";
 
 function Navbar() {
   const [burgerToggle, setBurgerToggle] = useState<boolean>(false);
@@ -18,7 +19,7 @@ function Navbar() {
   const numberOfItems =
     currentCart.productList?.reduce((sum, product) => sum + product.quantity, 0) ?? 0;
 
-  const navigateCart = () => navigate("/cart");
+  const navigateCart = () => navigate("/handlekurv");
 
   // Close navbar when clicking outside
   useEffect(() => {
@@ -60,17 +61,17 @@ function Navbar() {
         className={`${style.navList} ${burgerToggle ? style.open : style.close}`}
       >
         <li>
-          <Link to={"browse"} className={style.link} onClick={handleLinkClick}>
+          <Link to={"produkter"} className={style.link} onClick={handleLinkClick}>
             Produkter
           </Link>
         </li>
         <li>
-          <Link to={"about"} className={style.link} onClick={handleLinkClick}>
+          <Link to={"om-meg"} className={style.link} onClick={handleLinkClick}>
             Om Meg
           </Link>
         </li>
         <li>
-          <Link to={"contact"} className={style.link} onClick={handleLinkClick}>
+          <Link to={"kontakt"} className={style.link} onClick={handleLinkClick}>
             Kontakt
           </Link>
         </li>

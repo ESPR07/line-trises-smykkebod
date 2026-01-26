@@ -1,7 +1,7 @@
 import { JSX, useContext, useState, useEffect } from "react";
 import AdminOrdersListCard from "../AdminOrdersListCard/AdminOrdersListCard";
 import style from "./AdminOrders.module.css";
-import { ordersResult } from "../../../App";
+import { ordersResult } from "../../../context/siteContexts";
 
 function AdminOrders() {
   const {

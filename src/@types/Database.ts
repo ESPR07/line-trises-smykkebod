@@ -6,6 +6,7 @@ export type Database = {
         Insert: { title: string; is_complete?: boolean };
         Update: { title?: string; is_complete?: boolean };
       };
+
       products: {
         Row: {
           id: string;
@@ -40,17 +41,21 @@ export type Database = {
           active_status?: boolean;
         };
       };
+
       orders: {
         Row: {
           id: string;
           order_id: string;
-          customer_email: string;
-          customer_phone: string;
-          customer_firstName: string;
-          customer_lastName: string;
-          customer_adress: string;
-          customer_place: string;
-          customer_postNr: string;
+          stripe_payment_id: string;
+          customer_info: {
+            customer_email: string;
+            customer_phone: string;
+            customer_firstName: string;
+            customer_lastName: string;
+            customer_adress: string;
+            customer_place: string;
+            customer_postNr: string;
+          };
           status: string;
           cart: {
             id: string;
@@ -122,8 +127,63 @@ export type Database = {
           };
         };
       };
+      custom_options: {
+        Row: {
+          id: number;
+          type: string;
+          type_options: CustomOptionGroup[];
+        };
+        Insert: {
+          id?: number;
+          type: string;
+          type_options: CustomOptionGroup[];
+        };
+        Update: {
+          type?: string;
+          type_options?: CustomOptionGroup[];
+        };
+      };
+      custom_products: {
+        Row: {
+          id: string;
+          type: string;
+          configuration: Record<string, string>;
+          calculated_price: number;
+          expires_at: string | null;
+          is_purchased: boolean;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          type: string;
+          configuration: Record<string, string>;
+          calculated_price: number;
+          expires_at?: string | null;
+          is_purchased?: boolean;
+          created_at?: string;
+        };
+        Update: {
+          type: string;
+          configuration?: Record<string, string>;
+          calculated_price?: number;
+          expires_at?: string | null;
+          is_purchased?: boolean;
+          created_at?: string;
+        };
+      };
     };
   };
+};
+
+export type CustomOptionItem = {
+  id: string;
+  name: string;
+  price: number;
+};
+
+export type CustomOptionGroup = {
+  key: string;
+  options: CustomOptionItem[];
 };
 
 export type FetchResult = {
@@ -151,12 +211,17 @@ export type shippingData = {
 
 export interface NewOrderData {
   customer_email: string;
-  customer_phone: string;
-  customer_firstName: string;
-  customer_lastName: string;
-  customer_adress: string;
-  customer_place: string;
-  customer_postNr: string;
+  stripe_payment_id: string;
+  confirmation_sent_at: string;
+  customer_info: {
+    customer_email: string;
+    customer_phone: string;
+    customer_firstName: string;
+    customer_lastName: string;
+    customer_adress: string;
+    customer_place: string;
+    customer_postNr: string;
+  };
 
   cart: {
     id: string;
@@ -178,15 +243,19 @@ export interface NewOrderData {
 }
 
 export type OrderItem = {
-  id: string;
+  id?: string;
   order_id: string;
-  customer_email: string;
-  customer_phone: string;
-  customer_firstName: string;
-  customer_lastName: string;
-  customer_adress: string;
-  customer_place: string;
-  customer_postNr: string;
+  stripe_payment_id: string;
+  confirmation_sent_at?: string;
+  customer_info: {
+    customer_email: string;
+    customer_phone: string;
+    customer_firstName: string;
+    customer_lastName: string;
+    customer_adress: string;
+    customer_place: string;
+    customer_postNr: string;
+  };
   status: string;
   cart: {
     id: string;
