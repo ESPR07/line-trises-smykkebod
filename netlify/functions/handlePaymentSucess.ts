@@ -143,8 +143,28 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
 
   if (error) {
     console.error("Failed to create order in webhook:", error);
-    throw error; // important: throw so Stripe retries if needed
+    throw error;
   }
 
   console.log("Order created successfully for PaymentIntent:", paymentIntent.id);
+
+    try {
+    const emailRes = await fetch(
+      "https://www.ltkunstsmykker.no/.netlify/functions/createOrderConfirmation",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderInsert),
+      }
+    );
+
+    if (!emailRes.ok) {
+      const text = await emailRes.text();
+      console.error("Failed to send order confirmation email:", text);
+    } else {
+      console.log("Order confirmation email sent successfully");
+    }
+  } catch (err) {
+    console.error("Unexpected error sending order confirmation email:", err);
+  }
 }
