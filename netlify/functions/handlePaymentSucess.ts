@@ -7,7 +7,12 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
   const metadata = paymentIntent.metadata;
 
   // Parse cart snapshot
-  let cartItems: { id: string; quantity: number; price: number; discountPrice: number }[] = [];
+  let cartItems: {
+    id: string;
+    quantity: number;
+    price: number;
+    discountPrice: number;
+  }[] = [];
   if (metadata.cart_snapshot) {
     try {
       cartItems = JSON.parse(metadata.cart_snapshot);
@@ -42,8 +47,8 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
     unitPrice: number;
     lineTotal: number;
     metadata?: {
-      createdAt: string,
-      clientPlatform: string
+      createdAt: string;
+      clientPlatform: string;
     };
   }[] = [];
 
@@ -103,11 +108,17 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
   }
 
   if (!verifiedCart.length) {
-    console.error("No valid items to create order for PaymentIntent:", paymentIntent.id);
+    console.error(
+      "No valid items to create order for PaymentIntent:",
+      paymentIntent.id,
+    );
     throw new Error("Cart empty after verification");
   }
 
-  console.log(`Verified total for PaymentIntent ${paymentIntent.id}:`, verifiedTotal);
+  console.log(
+    `Verified total for PaymentIntent ${paymentIntent.id}:`,
+    verifiedTotal,
+  );
 
   // Build order object
   const orderInsert: Omit<OrderItem, "order_id"> = {
@@ -139,23 +150,31 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
     },
   };
 
-  const { error } = await supabaseServerClient.from("orders").insert(orderInsert);
+  const { data: insertedOrder, error } = await supabaseServerClient
+  .from("orders")
+  .insert(orderInsert)
+  .select()
+  .single();
 
   if (error) {
     console.error("Failed to create order in webhook:", error);
     throw error;
   }
 
-  console.log("Order created successfully for PaymentIntent:", paymentIntent.id);
+  console.log(
+    "Order created successfully for PaymentIntent:",
+    paymentIntent.id,
+  );
 
-    try {
+  try {
+    const emailPayload = { ...orderInsert, order_id: insertedOrder.id };
     const emailRes = await fetch(
       "https://www.ltkunstsmykker.no/.netlify/functions/createOrderConfirmation",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderInsert),
-      }
+        body: JSON.stringify(emailPayload),
+      },
     );
 
     if (!emailRes.ok) {
