@@ -166,14 +166,18 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
     paymentIntent.id,
   );
 
+  const orderPayload = {
+  ...orderInsert,
+  order_id: insertedOrder.id,
+};
+
   try {
-    const emailPayload = { ...orderInsert, order_id: insertedOrder.id };
     const emailRes = await fetch(
       "https://www.ltkunstsmykker.no/.netlify/functions/createOrderConfirmation",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(emailPayload),
+        body: JSON.stringify(orderPayload),
       },
     );
 
