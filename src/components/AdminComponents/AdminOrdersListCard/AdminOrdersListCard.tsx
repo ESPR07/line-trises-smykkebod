@@ -32,7 +32,7 @@ export default function AdminOrdersListCard({ orderItem }: AdminOrdersListCardPr
         <div className={style.status}>
           {orderItem.status === "paid" && <span className={style.pending}>Venter</span>}
           {orderItem.status === "refunded" && <span className={style.refunded}>Refundert</span>}
-          {orderItem.status === "complete" && <span className={style.complete}>Fullført</span>}
+          {orderItem.status === "completed" && <span className={style.complete}>Fullført</span>}
         </div>
       </div>
 

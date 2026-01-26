@@ -521,7 +521,7 @@ export const OrderConfirmationEmail = ({
                         lineHeight: "1.5",
                       }}
                     >
-                      Du mottar sporingsnummer på e-post
+                      Du mottar pakkenummer på e-post
                     </Text>
                   </td>
                 </tr>
@@ -607,7 +607,7 @@ export const OrderConfirmationEmail = ({
                 margin: 0,
               }}
             >
-              Spørsmål? Kontakt oss på{" "}
+              Spørsmål? Kontakt meg på{" "}
               <a
                 href="mailto:support@ltkunstsmykker.no"
                 style={{

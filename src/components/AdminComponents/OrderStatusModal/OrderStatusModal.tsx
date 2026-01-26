@@ -49,6 +49,31 @@ export default function OrderStatusModal({
     };
   });
 
+  const handleCompleteOrder = async () => {
+    if (!window.confirm("Markere bestillingen som fullført og sende e-post?")) {
+      return;
+    }
+
+    try {
+      const res = await fetch("/.netlify/functions/completeOrder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order.order_id }),
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text);
+      }
+
+      alert("Bestillingen er fullført og e-post sendt!");
+      toggleModal(false);
+    } catch (err) {
+      console.error(err);
+      alert("Kunne ikke fullføre bestillingen.");
+    }
+  };
+
   // Refund handler
   const handleRefund = async () => {
     if (
@@ -131,9 +156,11 @@ export default function OrderStatusModal({
               ? "Venter"
               : order.status === "paid"
                 ? "Betalt"
-                : order.status === "partially_refunded"
-                  ? "Delvis refundert"
-                  : "Refundert"}
+                : order.status === "completed"
+                  ? "Fullført"
+                  : order.status === "partially_refunded"
+                    ? "Delvis refundert"
+                    : "Refundert"}
           </p>
           <p>
             <strong>Opprettet:</strong> {dateFormatting(order.meta.createdAt)}
@@ -151,11 +178,17 @@ export default function OrderStatusModal({
         {/* Action Buttons */}
         {order.status !== "refunded" && (
           <div className={style.buttonContainer}>
-            <button className={style.updateButton}>Godkjenn</button>
+            <button
+              className={style.updateButton}
+              onClick={handleCompleteOrder}
+              disabled={order.status === "completed"}
+            >
+              Godkjenn
+            </button>
             <button
               className={style.updateButton}
               onClick={handleRefund}
-              disabled={isRefunding || order.status === "refunded"}
+              disabled={isRefunding || order.status === "refunded" || order.status === "completed"}
             >
               {isRefunding ? "Refunderer..." : "Refunder"}
             </button>
