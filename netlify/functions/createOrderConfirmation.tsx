@@ -1,10 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// @ts-ignore
 import React from "react";
-/* eslint-enable @typescript-eslint/no-unused-vars */
 import { Handler } from "@netlify/functions";
 import { render } from "@react-email/render";
 import { OrderConfirmationEmail } from "./emails/OrderConfirmationEmail";
+
+void React;
 
 interface OrderItem {
   name: string;
