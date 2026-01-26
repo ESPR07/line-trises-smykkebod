@@ -18,22 +18,35 @@ export const handler: Handler = async (event) => {
 
     const body = JSON.parse(event.body || "{}");
 
-    const { data, error } = await supabase
+    const { data: order, error } = await supabase
       .from("orders")
       .insert([body])
       .select()
       .single();
 
-    if (error) {
+    if (error || !order) {
       return {
         statusCode: 400,
-        body: JSON.stringify({ error: error.message }),
+        body: JSON.stringify({ error: error?.message || "Insert failed" }),
       };
+    }
+
+    try {
+      await fetch(
+        "https://www.ltkunstsmykker.no/.netlify/functions/createOrderConfirmation",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(order),
+        }
+      );
+    } catch (emailErr) {
+      console.error("Failed to send order confirmation email:", emailErr);
     }
 
     return {
       statusCode: 200,
-      body: JSON.stringify(data),
+      body: JSON.stringify(order),
     };
   } catch (err) {
     console.error("Unexpected function error:", err);
