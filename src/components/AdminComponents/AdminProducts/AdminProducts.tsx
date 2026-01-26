@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import AdminProductColumn from "../AdminProductColumn/AdminProductColumn";
 import style from "./AdminProducts.module.css";
-import { APIResult } from "../../../App";
 import EventButton from "../../utils/EventButton/EventButton";
 import NewBox from "../NewBox/NewBox";
+import { APIResult } from "../../../context/siteContexts";
 
 interface AdminProductsProps {
   canEdit?: boolean;

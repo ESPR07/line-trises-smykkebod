@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from "react";
 import styles from "./MakeYourOwnPage.module.css";
-import { CartContext } from "../App";
 import { CustomOptionGroup } from "../@types/Database";
 import { useCustomOptions } from "../API/useCustomOptions";
+import { CartContext } from "../context/siteContexts";
 
 const MakeYourOwn: React.FC = () => {
   const { options, fetchCustomOptions, isLoading } = useCustomOptions();
@@ -13,7 +13,6 @@ const MakeYourOwn: React.FC = () => {
   const [basePrice] = useState(599);
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
-  console.log(selectedType);
 
   useEffect(() => {
     fetchCustomOptions();
@@ -75,7 +74,6 @@ const MakeYourOwn: React.FC = () => {
         calculated_price: calculateTotal(),
         expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 1 day expiry
       };
-      console.log("Payload for custom product:", payload);
 
       // Call Netlify function
       const res = await fetch("/.netlify/functions/createCustomProduct", {
@@ -93,7 +91,6 @@ const MakeYourOwn: React.FC = () => {
       }
 
       const savedProduct = await res.json();
-      console.log("Saved custom product:", savedProduct);
 
       // Add only ID and quantity to the cart
       dispatch({

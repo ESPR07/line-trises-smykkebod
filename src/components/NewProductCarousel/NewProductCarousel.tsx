@@ -3,7 +3,7 @@ import { useSwipeable } from "react-swipeable";
 import ProductCard from "../ProductCard/ProductCard";
 import style from "./NewProductCarousel.module.css";
 import { FetchResult } from "../../@types/Database";
-import { APIResult } from "../../App";
+import { APIResult } from "../../context/siteContexts";
 
 function NewProductCarousel() {
   const scrollRef = useRef<HTMLUListElement>(null);

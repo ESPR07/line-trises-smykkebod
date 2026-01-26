@@ -1,8 +1,9 @@
 import { Link, useNavigate } from "react-router";
 import style from "./Navbar.module.css";
 import { useContext, useEffect, useState, useRef } from "react";
-import { Cart, CartContext } from "../../App";
+import { Cart } from "../../App";
 import { initialValue } from "../../Reducers/cartInteractions";
+import { CartContext } from "../../context/siteContexts";
 
 function Navbar() {
   const [burgerToggle, setBurgerToggle] = useState<boolean>(false);

@@ -1,6 +1,5 @@
 import { useContext, useMemo } from "react";
 import style from "./AdminSalesStas.module.css"
-import { ordersResult } from "../../../App";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,6 +14,7 @@ import {
   ChartData,
 } from "chart.js";
 import { Chart, Bar, Line } from "react-chartjs-2";
+import { ordersResult } from "../../../context/siteContexts";
 
 ChartJS.register(
   CategoryScale,

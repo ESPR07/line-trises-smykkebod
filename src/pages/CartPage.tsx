@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import style from "./CartPage.module.css";
-import { CartContext, CartItem, CartItemMinimal, APIResult } from "../App";
+import { CartItem, CartItemMinimal } from "../App";
 import CartProductCard from "../components/CartProductCard/CartProductCard";
 import NavigationButton from "../components/utils/Button/NavigationButton";
 import ShippingForm from "../components/ShippingForm/ShippingForm";
@@ -8,9 +8,10 @@ import { shippingData } from "../@types/Database";
 import { useNavigate } from "react-router";
 import { useCustomProducts } from "../API/useCustomProducts";
 import { handleCheckout as handleCheckoutFn } from "../API/checkout";
-import { loadStripe } from "@stripe/stripe-js";
+import { loadStripe, Stripe, StripeElements } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import PaymentForm from "../components/PaymentForm/PaymentForm";
+import { APIResult, CartContext } from "../context/siteContexts";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
 
@@ -147,7 +148,7 @@ function CartPage() {
   };
 
   // Checkout wrapper for ShippingForm
-  const handleCheckout = async (stripe: any, elements: any) => {
+  const handleCheckout = async (stripe: Stripe | null, elements: StripeElements | null) => {
     await handleCheckoutFn({
       enrichedCart,
       setEnrichedCart,

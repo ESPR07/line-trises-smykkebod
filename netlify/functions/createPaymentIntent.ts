@@ -65,8 +65,9 @@ export const handler: Handler = async (event) => {
       statusCode: 200,
       body: JSON.stringify({ clientSecret: paymentIntent.client_secret }),
     };
-  } catch (err: any) {
-    console.error("Stripe error:", err);
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+  } catch (err: unknown) {
+    console.error("Failed to parse request body:", err);
+    const message = err instanceof Error ? err.message : JSON.stringify(err);
+    return { statusCode: 400, body: JSON.stringify({ error: message }) };
   }
 };

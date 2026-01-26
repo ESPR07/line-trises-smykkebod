@@ -19,7 +19,6 @@ function OrderProcessingPage() {
       return;
     }
 
-    let intervalId: number;
     let attempts = 0;
     const maxAttempts = 30; // e.g., poll for 1 min (30 * 2s)
 
@@ -57,7 +56,7 @@ function OrderProcessingPage() {
 
     // Check immediately and then every 2s
     checkOrder();
-    intervalId = window.setInterval(checkOrder, 2000);
+    const intervalId: number = window.setInterval(checkOrder, 2000);
 
     return () => clearInterval(intervalId);
   }, [paymentIntentId, navigate]);

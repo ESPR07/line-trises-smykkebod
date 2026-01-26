@@ -41,7 +41,10 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
     quantity: number;
     unitPrice: number;
     lineTotal: number;
-    metadata?: any;
+    metadata?: {
+      createdAt: string,
+      clientPlatform: string
+    };
   }[] = [];
 
   let verifiedTotal = 0;

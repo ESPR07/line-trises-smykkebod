@@ -8,8 +8,6 @@ export function useOrderStatus(paymentIntentId: string) {
   useEffect(() => {
     if (!paymentIntentId) return;
 
-    let intervalId: number;
-
     const checkOrder = async () => {
       const { data } = await supabaseClient
         .from("orders")
@@ -24,7 +22,7 @@ export function useOrderStatus(paymentIntentId: string) {
       }
     };
 
-    intervalId = window.setInterval(checkOrder, 2000);
+    const intervalId: number = window.setInterval(checkOrder, 2000);
     checkOrder();
 
     return () => clearInterval(intervalId);

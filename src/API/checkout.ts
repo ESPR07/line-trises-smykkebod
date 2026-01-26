@@ -41,7 +41,7 @@ export async function handleCheckout({
       enrichedCart.reduce((sum, item) => {
         const price = item.discountPrice ?? item.price;
         return sum + price * item.quantity;
-      }, 0) * 100
+      }, 0) * 100,
     );
 
     if (totalAmountOere <= 0) {
@@ -109,8 +109,12 @@ export async function handleCheckout({
 
     // Navigate to order-processing page
     navigate(`/order-processing?paymentIntentId=${paymentIntentId}`);
-  } catch (err: any) {
-    console.error("Checkout failed:", err);
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      console.error("Checkout failed:", err.message);
+    } else {
+      console.error("Checkout failed:", err);
+    }
     alert("Noe gikk galt. Prøv igjen.");
   } finally {
     setIsProcessing?.(false);
