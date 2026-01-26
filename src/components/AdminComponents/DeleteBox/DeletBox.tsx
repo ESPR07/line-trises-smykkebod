@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useDeleteProduct } from "../../../API/useDeleteProduct";
 import style from "./DeleteBox.module.css";
-import { APIResult } from "../../../App";
+import { APIResult } from "../../../context/siteContexts";
 
 interface DeleteBoxProps {
   id: string;

@@ -1,9 +1,9 @@
 import { useState, useContext, ChangeEvent, useEffect } from "react";
 import style from "../UpdateBox/UpdateBox.module.css";
 import { useCreateProduct } from "../../../API/useCreateProduct";
-import { APIResult } from "../../../App";
 import { uploadImage } from "../../../API/uploadImage";
 import imageCompression from "browser-image-compression";
+import { APIResult } from "../../../context/siteContexts";
 
 // Hash utility for files
 async function hashFile(file: File): Promise<string> {

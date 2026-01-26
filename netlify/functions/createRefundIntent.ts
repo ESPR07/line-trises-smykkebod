@@ -50,11 +50,12 @@ export const handler: Handler = async (event) => {
         amount: refund.amount,
       }),
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Stripe refund error:", err);
+    const message = err instanceof Error ? err.message : JSON.stringify(err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: err.message }),
+      body: JSON.stringify({ error: message }),
     };
   }
 };

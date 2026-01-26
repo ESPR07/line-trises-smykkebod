@@ -1,8 +1,8 @@
 import { Link, useParams } from "react-router";
 import { useContext, useState } from "react";
 import style from "./ProductPage.module.css"
-import { CartContext } from "../App";
 import { useSingleProduct } from "../API/useSingleProduct";
+import { CartContext } from "../context/siteContexts";
 
 function SingleProduct() {
   const { id } = useParams() as { id: string };

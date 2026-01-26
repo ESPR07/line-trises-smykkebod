@@ -2,10 +2,10 @@ import { useContext, useState, useEffect, useRef } from "react";
 import NotificationIcon from "../../../assets/svg_components/NotificationIcon";
 import SearchIcon from "../../../assets/svg_components/SearchIcon";
 import style from "./AdminTopBar.module.css";
-import { APIResult, ordersResult } from "../../../App";
 import UpdateBox from "../UpdateBox/UpdateBox";
 import OrderStatusModal from "../OrderStatusModal/OrderStatusModal";
 import { Database } from "../../../@types/Database";
+import { APIResult, ordersResult } from "../../../context/siteContexts";
 
 type Product = Database["public"]["Tables"]["products"]["Row"];
 type Order = Database["public"]["Tables"]["orders"]["Row"];

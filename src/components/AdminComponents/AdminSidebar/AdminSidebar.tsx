@@ -33,6 +33,7 @@ function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarP
       setHighlightTop(currentLi.offsetTop);
       setHighlightHeight(currentLi.offsetHeight);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentActive]);
 
   const handleMenuItemClick = (item: "dashboard" | "products" | "orders" | "settings") => {

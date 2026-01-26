@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { APIResult } from "../../../App";
 import style from "../UpdateBox/UpdateBox.module.css";
 import AdminProductColumn from "../AdminProductColumn/AdminProductColumn";
 import { OrderItem, FetchResult } from "../../../@types/Database";
 import { dateFormatting } from "../../utils/dateFormatting";
+import { APIResult } from "../../../context/siteContexts";
 
 interface OrderStatusModalProps {
   order: OrderItem;
@@ -75,9 +75,14 @@ export default function OrderStatusModal({
       } else {
         alert("Refundering initiert!");
       }
-    } catch (err: any) {
-      console.error("Refund error:", err);
-      alert("Noe gikk galt under refundering.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        console.error("Refund error:", err);
+        alert("Noe gikk galt under refundering: " + err.message);
+      } else {
+        console.error("Refund error (unknown):", err);
+        alert("Noe gikk galt under refundering.");
+      }
     } finally {
       setIsRefunding(false);
     }
@@ -125,10 +130,10 @@ export default function OrderStatusModal({
             {order.status === "pending"
               ? "Venter"
               : order.status === "paid"
-              ? "Betalt"
-              : order.status === "partially_refunded"
-              ? "Delvis refundert"
-              : "Refundert"}
+                ? "Betalt"
+                : order.status === "partially_refunded"
+                  ? "Delvis refundert"
+                  : "Refundert"}
           </p>
           <p>
             <strong>Opprettet:</strong> {dateFormatting(order.meta.createdAt)}

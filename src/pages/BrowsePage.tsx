@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import ProductCard from "../components/ProductCard/ProductCard";
 import style from "./BrowsePage.module.css";
-import { APIResult } from "../App";
+import { APIResult } from "../context/siteContexts";
 
 function BrowsePage() {
   const {
@@ -16,6 +16,7 @@ function BrowsePage() {
 
   useEffect(() => {
     fetchProducts(currentPage, true); // Always show active products
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
 
   const goToNextPage = () => {

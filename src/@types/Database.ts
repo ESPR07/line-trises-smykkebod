@@ -147,7 +147,7 @@ export type Database = {
         Row: {
           id: string;
           type: string;
-          configuration: Record<string, any>;
+          configuration: Record<string, string>;
           calculated_price: number;
           expires_at: string | null;
           is_purchased: boolean;
@@ -156,7 +156,7 @@ export type Database = {
         Insert: {
           id?: string;
           type: string;
-          configuration: Record<string, any>;
+          configuration: Record<string, string>;
           calculated_price: number;
           expires_at?: string | null;
           is_purchased?: boolean;
@@ -164,7 +164,7 @@ export type Database = {
         };
         Update: {
           type: string;
-          configuration?: Record<string, any>;
+          configuration?: Record<string, string>;
           calculated_price?: number;
           expires_at?: string | null;
           is_purchased?: boolean;
@@ -212,6 +212,7 @@ export type shippingData = {
 export interface NewOrderData {
   customer_email: string;
   stripe_payment_id: string;
+  confirmation_sent_at: string;
   customer_info: {
     customer_email: string;
     customer_phone: string;
@@ -245,6 +246,7 @@ export type OrderItem = {
   id?: string;
   order_id: string;
   stripe_payment_id: string;
+  confirmation_sent_at?: string;
   customer_info: {
     customer_email: string;
     customer_phone: string;

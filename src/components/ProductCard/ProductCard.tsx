@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useContext, useState } from "react";
-import { CartContext } from "../../App";
 import style from "./ProductCard.module.css";
+import { CartContext } from "../../context/siteContexts";
 
 interface ProductCardProps {
   imageURL: string;

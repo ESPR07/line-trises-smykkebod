@@ -3,7 +3,6 @@ import { Outlet, Route, Routes } from "react-router";
 import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
 import {
-  createContext,
   useReducer,
   lazy,
   Suspense,
@@ -11,15 +10,14 @@ import {
   useState,
 } from "react";
 import cartInteractions, {
-  InteractionAction,
   initialValue,
 } from "./Reducers/cartInteractions";
 import { useProductList } from "./API/useProducts";
 import { useGetOrders } from "./API/useGetOrders";
-import { Database } from "./@types/Database";
 import UnderConstruction from "./pages/UnderConstruction";
 import { useAuthStatus } from "./API/useAuthStatus";
 import OrderProcessingPage from "./pages/OrderProccessingPage";
+import { CartContext, APIResult, ordersResult } from "./context/siteContexts";
 
 
 // Lazy-loaded pages
@@ -53,48 +51,6 @@ export interface Cart {
   totalPrice: number;
 }
 
-export const CartContext = createContext<{
-  state: Cart;
-  dispatch: ({ type, payload }: InteractionAction) => void;
-}>({ state: initialValue, dispatch: () => {} });
-
-export const APIResult = createContext({
-  allProducts: [] as
-    | Database["public"]["Tables"]["products"]["Row"][]
-    | undefined,
-  loading: false,
-  error: false,
-  searchQuery: "",
-  setSearchQuery: (_query: string) => {},
-  fetchProducts: (
-    _page?: number,
-    _showAvailable?: boolean,
-    _searchQuery?: string
-  ) => {},
-  currentPage: 1,
-  totalPages: 1,
-  itemsPerPage: 10,
-  setCurrentPage: (_page: number) => {},
-});
-
-export const ordersResult = createContext({
-  allOrders: [] as Database["public"]["Tables"]["orders"]["Row"][] | undefined,
-  loading: false,
-  error: false,
-  searchQuery: "",
-  setSearchQuery: (_query: string) => {},
-  fetchOrders: (
-    _page?: number,
-    _sortBy?: string,
-    _ascending?: boolean,
-    _searchQuery?: string
-  ) => {},
-  currentPage: 1,
-  totalPages: 1,
-  itemsPerPage: 10,
-  setCurrentPage: (_page: number) => {},
-});
-
 function Layout() {
   const [productSearchQuery, setProductSearchQuery] = useState("");
   const {
@@ -120,6 +76,7 @@ function Layout() {
 
   useEffect(() => {
     fetchProducts(currentPage, true, searchQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, searchQuery]);
 
   return (
@@ -174,10 +131,12 @@ function AdminLayout() {
 
   useEffect(() => {
     fetchProducts(currentPage, false, productSearchQuery); // All products for admin
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage, productSearchQuery]);
 
   useEffect(() => {
     fetchOrders(ordersPage, undefined, true, orderSearchQuery);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ordersPage, orderSearchQuery]);
 
   return (
