@@ -233,6 +233,7 @@ export interface NewOrderData {
 
   totals: {
     verifiedTotal: number;
+    shippingCost: number;
     itemCount: number;
   };
 
@@ -266,6 +267,7 @@ export type OrderItem = {
   }[];
   totals: {
     verifiedTotal: number;
+    shippingCost: number;
     itemCount: number;
   };
   meta: {

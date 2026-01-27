@@ -28,6 +28,8 @@ function CartPage() {
   const [shippingData, setShippingData] = useState<Partial<shippingData>>({});
   const [clientSecret, setClientSecret] = useState<string | null>(null);
 
+  const shippingCost = 59;
+
   const {
     customProducts,
     isLoading: isLoadingCustoms,
@@ -86,7 +88,7 @@ function CartPage() {
     });
 
     const validItems = enriched.filter(
-      (item): item is CartItem => item !== null
+      (item): item is CartItem => item !== null,
     );
 
     const afterDiscount = validItems.reduce((sum, item) => {
@@ -115,7 +117,7 @@ function CartPage() {
       enrichedCart.reduce((sum, item) => {
         const price = item.discountPrice ?? item.price;
         return sum + price * item.quantity;
-      }, 0) * 100
+      }, 0) * 100,
     );
 
     try {
@@ -123,7 +125,7 @@ function CartPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: totalOere,
+          amount: totalOere + shippingCost * 100,
           cart: enrichedCart.map((item) => ({
             id: item.id,
             quantity: item.quantity,
@@ -148,7 +150,10 @@ function CartPage() {
   };
 
   // Checkout wrapper for ShippingForm
-  const handleCheckout = async (stripe: Stripe | null, elements: StripeElements | null) => {
+  const handleCheckout = async (
+    stripe: Stripe | null,
+    elements: StripeElements | null,
+  ) => {
     await handleCheckoutFn({
       enrichedCart,
       setEnrichedCart,
@@ -221,21 +226,45 @@ function CartPage() {
         </article>
 
         <div className={style.cartPaymentInfo}>
-          <article className={style.cartInfo}>
-            <h2>Oppsummering</h2>
-            <div className={style.cartInfoRow}>
-              <p>Rabatter:</p>
-              <p>kr {totalDiscount.toFixed(2)}</p>
-            </div>
-            <div className={style.cartInfoRow}>
-              <p>Totalt:</p>
-              <p>
-                {verifiedTotal !== null
-                  ? verifiedTotal.toFixed(2)
-                  : totalPrice.toFixed(2)}
-              </p>
-            </div>
-          </article>
+          <div className={style.cartPaymentInfo}>
+            <article className={style.cartInfo}>
+              <h2>Oppsummering</h2>
+
+              <div className={style.cartInfoBody}>
+                <div className={style.cartInfoRow}>
+                  <p>Delsum:</p>
+                  <p>kr {totalPrice.toFixed(2)}</p>
+                </div>
+
+                {totalDiscount > 0 && (
+                  <div className={`${style.cartInfoRow} ${style.discount}`}>
+                    <p>Rabatt:</p>
+                    <p>-kr {totalDiscount.toFixed(2)}</p>
+                  </div>
+                )}
+
+                <div className={style.cartInfoRow}>
+                  <p>Frakt:</p>
+                  <p>
+                    {shippingCost !== 59
+                      ? "Gratis"
+                      : `kr ${shippingCost.toFixed(2)}`}
+                  </p>
+                </div>
+              </div>
+
+              <div className={`${style.cartInfoRow} ${style.totalRow}`}>
+                <p>Totalt:</p>
+                <p>
+                  kr{" "}
+                  {(verifiedTotal !== null
+                    ? verifiedTotal + shippingCost
+                    : totalPrice + shippingCost
+                  ).toFixed(2)}
+                </p>
+              </div>
+            </article>
+          </div>
 
           {!clientSecret ? (
             <ShippingForm
