@@ -68,14 +68,15 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
         continue;
       }
 
-      const lineTotal = custom.calculated_price * item.quantity;
+      const unitPrice = Number(custom.calculated_price ?? 0);
+      const lineTotal = unitPrice * item.quantity;
 
       verifiedCart.push({
         id: item.id,
         name: "Lag Din Egen",
         quantity: item.quantity,
-        unitPrice: custom.calculated_price,
-        lineTotal: lineTotal,
+        unitPrice,
+        lineTotal,
         metadata: custom.configuration,
       });
       continue;
@@ -93,15 +94,15 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
       continue;
     }
 
-    const unitPrice = product.discount_amount ?? product.price;
+    const unitPrice = Number(product.discount_amount ?? product.price ?? 0);
     const lineTotal = unitPrice * item.quantity;
 
     verifiedCart.push({
       id: item.id,
       name: product.name,
       quantity: item.quantity,
-      unitPrice: product.discount_amount ?? product.price,
-      lineTotal: lineTotal,
+      unitPrice,
+      lineTotal,
     });
   }
 
