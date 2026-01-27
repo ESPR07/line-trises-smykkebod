@@ -66,6 +66,7 @@ export type Database = {
           }[];
           totals: {
             verifiedTotal: number;
+            shippingCost: number;
             itemCount: number;
           };
           meta: {
@@ -93,6 +94,7 @@ export type Database = {
           }[];
           totals: {
             verifiedTotal: number;
+            shippingCost: number;
             itemCount: number;
           };
           meta: {
@@ -119,6 +121,7 @@ export type Database = {
           }[];
           totals?: {
             verifiedTotal?: number;
+            shippingCost?: number;
             itemCount?: number;
           };
           meta?: {
