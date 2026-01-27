@@ -24,7 +24,7 @@ interface Order {
   order_id: string;
   customer_info: CustomerInfo;
   cart: OrderItem[];
-  totals: { verifiedTotal: number };
+  totals: { verifiedTotal: number, shippingCost: number };
 }
 
 const handler: Handler = async (event) => {
@@ -39,7 +39,7 @@ const handler: Handler = async (event) => {
       order_id,
       customer_info,
       cart = [],
-      totals = { verifiedTotal: 0 },
+      totals = { verifiedTotal: 0, shippingCost: 0 },
     } = order;
 
     const email = customer_info?.customer_email;
