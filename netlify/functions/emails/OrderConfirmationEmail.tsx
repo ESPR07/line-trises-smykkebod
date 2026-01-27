@@ -355,6 +355,8 @@ export const OrderConfirmationEmail = ({
                       Frakt: {totals.shippingCost.toFixed(2)} kr
                     </Text>
                   </td>
+                </tr>
+                <tr>
                   <td style={{ textAlign: "right" }}>
                     <Text
                       style={{
