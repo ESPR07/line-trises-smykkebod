@@ -66,10 +66,12 @@
     background: var(--boxColor);
     position: relative;
     max-width: 50%;
+    font-size: clamp(1.2rem, 2vw, 2rem);
 
     a {
       color: black;
       text-decoration: underline;
+      font-size: clamp(1.2rem, 2vw, 2rem);
 
       &:hover {
         color: var(--highlight);

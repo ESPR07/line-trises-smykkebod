@@ -6,7 +6,7 @@
   font-size: 3rem;
   font-weight: 300;
   color: var(--highlight);
-  font-family: 'storyScript', 'Courier New', Courier, monospace;
+  font-family: "storyScript", "Courier New", Courier, monospace;
   margin: 40px 0px 0px 0px;
 }
 
@@ -30,21 +30,20 @@
 .cartInfo {
   background-color: var(--highlight);
   border-radius: 5px;
-  padding: 10px;
+  padding: 20px;
   min-width: 350px;
 
   h2 {
     color: var(--background);
-    margin: 0;
-    padding: 0 0 5px 0;
+    margin: 0 0 15px 0;
+    padding: 0 0 10px 0;
     border-bottom: 1px solid var(--background);
+    font-size: 1.4rem;
   }
 
   p {
     color: var(--background);
-    font-size: 1.5rem;
-    text-align: center;
-    margin-top: 10px;
+    font-size: 1.3rem;
   }
 
   button {
@@ -53,13 +52,51 @@
   }
 }
 
-.emptyMessage {
-  margin-bottom: 50px;
+.cartInfoBody {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(var(--background-rgb), 0.2);
 }
 
 .cartInfoRow {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  align-items: center;
+
+  p {
+    font-size: 1.2rem;
+  }
+
+  p:first-child {
+    font-weight: 400;
+  }
+
+  p:last-child {
+    font-weight: 500;
+  }
+}
+
+.discount {
+
+  p {
+    color: #1fe066;
+  }
+}
+
+.totalRow {
+  padding-top: 5px;
+
+  p {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+}
+
+.emptyMessage {
+  margin-bottom: 15px;
 }
 
 @media screen and (max-width: 900px) {
