@@ -75,7 +75,7 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
         name: "Lag Din Egen",
         quantity: item.quantity,
         unitPrice: custom.calculated_price,
-        lineTotal,
+        lineTotal: lineTotal,
         metadata: custom.configuration,
       });
       continue;
@@ -100,8 +100,8 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
       id: item.id,
       name: product.name,
       quantity: item.quantity,
-      unitPrice,
-      lineTotal,
+      unitPrice: product.discount_amount ?? product.price,
+      lineTotal: lineTotal,
     });
   }
 

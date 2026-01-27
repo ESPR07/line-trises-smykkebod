@@ -56,6 +56,7 @@ export const handler: Handler = async (event) => {
         customer_adress: body.adress,
         customer_place: body.place,
         customer_postNr: body.postNr,
+        shipping_cost: "59.0",
         client_platform: body.clientPlatform ?? "web",
         cart_snapshot: JSON.stringify(body.cart),
       },
