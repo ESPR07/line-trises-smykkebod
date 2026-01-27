@@ -72,7 +72,7 @@ function PaymentForm({
       <h3>Betaling</h3>
       <PaymentElement />
       <button type="submit" disabled={disabled} className={style.kortBetaling}>
-        Betal
+        {disabled ? "Behandler..." : "Betal"}
       </button>
     </form>
   );

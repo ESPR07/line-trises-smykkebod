@@ -6,6 +6,8 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
   const paymentIntent = stripeEvent.data.object as Stripe.PaymentIntent;
   const metadata = paymentIntent.metadata;
 
+  const totalPaidOere = paymentIntent.amount_received ?? paymentIntent.amount;
+
   // Parse cart snapshot
   let cartItems: {
     id: string;
@@ -52,8 +54,6 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
     };
   }[] = [];
 
-  let verifiedTotal = 0;
-
   for (const item of cartItems) {
     // Custom products first
     const { data: custom } = await supabaseServerClient
@@ -69,7 +69,6 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
       }
 
       const lineTotal = custom.calculated_price * item.quantity;
-      verifiedTotal += lineTotal;
 
       verifiedCart.push({
         id: item.id,
@@ -95,8 +94,7 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
     }
 
     const unitPrice = product.discount_amount ?? product.price;
-    const lineTotal = (item.discountPrice ?? item.price ?? 0) * item.quantity;
-    verifiedTotal += lineTotal;
+    const lineTotal = unitPrice * item.quantity;
 
     verifiedCart.push({
       id: item.id,
@@ -114,11 +112,6 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
     );
     throw new Error("Cart empty after verification");
   }
-
-  console.log(
-    `Verified total for PaymentIntent ${paymentIntent.id}:`,
-    verifiedTotal,
-  );
 
   // Build order object
   const orderInsert: Omit<OrderItem, "order_id"> = {
@@ -141,7 +134,8 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
       lineTotal: i.lineTotal,
     })),
     totals: {
-      verifiedTotal,
+      verifiedTotal: totalPaidOere / 100,
+      shippingCost: parseFloat(metadata.shipping_cost ?? "0"),
       itemCount: verifiedCart.reduce((sum, i) => sum + i.quantity, 0),
     },
     meta: {
@@ -151,10 +145,10 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
   };
 
   const { data: insertedOrder, error } = await supabaseServerClient
-  .from("orders")
-  .insert(orderInsert)
-  .select()
-  .single();
+    .from("orders")
+    .insert(orderInsert)
+    .select()
+    .single();
 
   if (error) {
     console.error("Failed to create order in webhook:", error);
@@ -167,9 +161,9 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
   );
 
   const orderPayload = {
-  ...orderInsert,
-  order_id: insertedOrder.order_id,
-};
+    ...orderInsert,
+    order_id: insertedOrder.order_id,
+  };
 
   try {
     const emailRes = await fetch(
