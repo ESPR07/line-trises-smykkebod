@@ -32,6 +32,7 @@
   border-radius: 5px;
   padding: 20px;
   min-width: 350px;
+  margin-bottom: 20px;
 
   h2 {
     color: var(--background);

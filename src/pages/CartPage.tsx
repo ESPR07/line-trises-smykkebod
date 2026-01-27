@@ -225,7 +225,7 @@ function CartPage() {
           ))}
         </article>
 
-        <div className={style.cartPaymentInfo}>
+        <div className={style.cartPaymentContainer}>
           <div className={style.cartPaymentInfo}>
             <article className={style.cartInfo}>
               <h2>Oppsummering</h2>

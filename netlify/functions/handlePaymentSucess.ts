@@ -68,7 +68,7 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
         continue;
       }
 
-      const unitPrice = Number(custom.calculated_price ?? 0);
+      const unitPrice = custom.calculated_price;
       const lineTotal = unitPrice * item.quantity;
 
       verifiedCart.push({
@@ -94,7 +94,13 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
       continue;
     }
 
-    const unitPrice = Number(product.discount_amount ?? product.price ?? 0);
+    console.log("Product found:", product);
+
+    const unitPrice =
+      product.discount_amount && product.discount_amount > 0
+        ? product.discount_amount
+        : product.price;
+
     const lineTotal = unitPrice * item.quantity;
 
     verifiedCart.push({

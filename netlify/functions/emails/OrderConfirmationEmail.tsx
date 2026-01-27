@@ -32,7 +32,7 @@ interface OrderConfirmationEmailProps {
   order_id: string;
   customer_info: CustomerInfo;
   cart: OrderItem[];
-  totals: { verifiedTotal: number };
+  totals: { verifiedTotal: number, shippingCost: number };
 }
 
 export const OrderConfirmationEmail = ({
@@ -352,7 +352,19 @@ export const OrderConfirmationEmail = ({
                         margin: 0,
                       }}
                     >
-                      Total: {totals.verifiedTotal.toFixed(2)} kr
+                      Frakt: {totals.shippingCost.toFixed(2)} kr
+                    </Text>
+                  </td>
+                  <td style={{ textAlign: "right" }}>
+                    <Text
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "700",
+                        color: "#1f2937",
+                        margin: 0,
+                      }}
+                    >
+                      Totalt: {totals.verifiedTotal.toFixed(2)} kr
                     </Text>
                   </td>
                 </tr>
