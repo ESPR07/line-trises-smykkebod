@@ -1,7 +1,10 @@
+import * as React from "react";
 import { Handler } from "@netlify/functions";
 import { createClient } from "@supabase/supabase-js";
 import { render } from "@react-email/render";
 import { ShippingConfirmationEmail } from "./emails/ShippingConfirmationEmail";
+
+void React;
 
 const supabase = createClient(
   process.env.SUPABASE_URL!,
