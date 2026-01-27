@@ -31,7 +31,7 @@ interface ShippingConfirmationEmailProps {
   order_id: string;
   customer_info: CustomerInfo;
   cart: OrderItem[];
-  totals: { verifiedTotal: number };
+  totals: { verifiedTotal: number, shippingCost: number};
 }
 
 export const ShippingConfirmationEmail = ({
@@ -213,6 +213,16 @@ export const ShippingConfirmationEmail = ({
               </tbody>
             </table>
 
+            <Text
+              style={{
+                textAlign: "right",
+                fontSize: "20px",
+                fontWeight: "700",
+                marginTop: "16px",
+              }}
+            >
+              Frakt: {totals.shippingCost.toFixed(2)} kr
+            </Text>    
             <Text
               style={{
                 textAlign: "right",
