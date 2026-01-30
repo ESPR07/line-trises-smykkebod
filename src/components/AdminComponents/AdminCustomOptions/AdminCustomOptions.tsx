@@ -10,16 +10,19 @@ interface CustomOptionRow {
   id: number;
   type: string;
   type_options: CustomOptionGroup[];
+  base_price: number;
 }
 
 function AdminCustomOptions() {
-  const { options, isLoading, isError, fetchCustomOptions } = useCustomOptions();
+  const { options, isLoading, isError, fetchCustomOptions } =
+    useCustomOptions();
   const { updateCustomOptions } = useUpdateCustomOptions();
   const { createCustomOption } = useCreateCustomOption();
   const { deleteCustomOption } = useDeleteCustomOption();
-  
+
   const [allOptions, setAllOptions] = useState<CustomOptionRow[]>([]);
   const [newProductType, setNewProductType] = useState("");
+  const [newProductTypeBasePrice, setNewProductTypeBasePrice] = useState("");
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
@@ -37,34 +40,31 @@ function AdminCustomOptions() {
 
   const addProductType = async () => {
     if (!newProductType.trim()) return;
-    
-    const exists = allOptions.some(opt => opt.type.toLowerCase() === newProductType.toLowerCase());
-    if (exists) {
-      alert("Denne produkttypen finnes allerede!");
-      return;
-    }
 
-    // Create new product type in database
+    const basePrice = Number(newProductTypeBasePrice) || 0;
+
     const newOption = await createCustomOption({
       type: newProductType.trim(),
-      type_options: []
+      type_options: [],
+      base_price: basePrice,
     });
 
     if (newOption) {
       setAllOptions([...allOptions, newOption]);
       setNewProductType("");
-    } else {
-      alert("Kunne ikke opprette produkttype. Prøv igjen.");
+      setNewProductTypeBasePrice("");
     }
   };
 
   const removeProductType = async (id: number) => {
-    const confirmed = window.confirm("Er du sikker på at du vil slette denne produkttypen?");
+    const confirmed = window.confirm(
+      "Er du sikker på at du vil slette denne produkttypen?",
+    );
     if (!confirmed) return;
 
     const success = await deleteCustomOption(id);
     if (success) {
-      setAllOptions(allOptions.filter(opt => opt.id !== id));
+      setAllOptions(allOptions.filter((opt) => opt.id !== id));
     } else {
       alert("Kunne ikke slette produkttype. Prøv igjen.");
     }
@@ -72,84 +72,111 @@ function AdminCustomOptions() {
 
   const addOptionCategory = (productId: number, categoryKey: string) => {
     if (!categoryKey.trim()) return;
-    
-    setAllOptions(allOptions.map(product => {
-      if (product.id === productId) {
-        const exists = product.type_options.some(opt => opt.key.toLowerCase() === categoryKey.toLowerCase());
-        if (exists) {
-          alert("Denne kategorien finnes allerede!");
-          return product;
+
+    setAllOptions(
+      allOptions.map((product) => {
+        if (product.id === productId) {
+          const exists = product.type_options.some(
+            (opt) => opt.key.toLowerCase() === categoryKey.toLowerCase(),
+          );
+          if (exists) {
+            alert("Denne kategorien finnes allerede!");
+            return product;
+          }
+          return {
+            ...product,
+            type_options: [
+              ...product.type_options,
+              { key: categoryKey.trim(), options: [] },
+            ],
+          };
         }
-        return {
-          ...product,
-          type_options: [...product.type_options, { key: categoryKey.trim(), options: [] }]
-        };
-      }
-      return product;
-    }));
+        return product;
+      }),
+    );
   };
 
   const removeOptionCategory = (productId: number, key: string) => {
-    setAllOptions(allOptions.map(product => {
-      if (product.id === productId) {
-        return {
-          ...product,
-          type_options: product.type_options.filter(opt => opt.key !== key)
-        };
-      }
-      return product;
-    }));
+    setAllOptions(
+      allOptions.map((product) => {
+        if (product.id === productId) {
+          return {
+            ...product,
+            type_options: product.type_options.filter((opt) => opt.key !== key),
+          };
+        }
+        return product;
+      }),
+    );
   };
 
-  const addOptionValue = (productId: number, categoryKey: string, valueName: string, price: number = 0) => {
+  const addOptionValue = (
+    productId: number,
+    categoryKey: string,
+    valueName: string,
+    price: number = 0,
+  ) => {
     if (!valueName.trim()) return;
 
-    setAllOptions(allOptions.map(product => {
-      if (product.id === productId) {
-        return {
-          ...product,
-          type_options: product.type_options.map(opt => {
-            if (opt.key === categoryKey) {
-              const exists = opt.options.some(o => o.name.toLowerCase() === valueName.toLowerCase());
-              if (exists) {
-                alert("Dette alternativet finnes allerede!");
-                return opt;
+    setAllOptions(
+      allOptions.map((product) => {
+        if (product.id === productId) {
+          return {
+            ...product,
+            type_options: product.type_options.map((opt) => {
+              if (opt.key === categoryKey) {
+                const exists = opt.options.some(
+                  (o) => o.name.toLowerCase() === valueName.toLowerCase(),
+                );
+                if (exists) {
+                  alert("Dette alternativet finnes allerede!");
+                  return opt;
+                }
+                return {
+                  ...opt,
+                  options: [
+                    ...opt.options,
+                    {
+                      id: valueName.toLowerCase().replace(/\s+/g, "-"),
+                      name: valueName.trim(),
+                      price: price,
+                    },
+                  ],
+                };
               }
-              return {
-                ...opt,
-                options: [...opt.options, { 
-                  id: valueName.toLowerCase().replace(/\s+/g, '-'), 
-                  name: valueName.trim(),
-                  price: price 
-                }]
-              };
-            }
-            return opt;
-          })
-        };
-      }
-      return product;
-    }));
+              return opt;
+            }),
+          };
+        }
+        return product;
+      }),
+    );
   };
 
-  const removeOptionValue = (productId: number, categoryKey: string, optionId: string) => {
-    setAllOptions(allOptions.map(product => {
-      if (product.id === productId) {
-        return {
-          ...product,
-          type_options: product.type_options.map(opt => {
-            if (opt.key === categoryKey) {
-              return {
-                ...opt,
-                options: opt.options.filter(o => o.id !== optionId)
-              };
-            }
-            return opt;
-          })
-        };
-      }
-      return product;
-    }));
+  const removeOptionValue = (
+    productId: number,
+    categoryKey: string,
+    optionId: string,
+  ) => {
+    setAllOptions(
+      allOptions.map((product) => {
+        if (product.id === productId) {
+          return {
+            ...product,
+            type_options: product.type_options.map((opt) => {
+              if (opt.key === categoryKey) {
+                return {
+                  ...opt,
+                  options: opt.options.filter((o) => o.id !== optionId),
+                };
+              }
+              return opt;
+            }),
+          };
+        }
+        return product;
+      }),
+    );
   };
 
   const handleSave = async () => {
@@ -159,18 +186,18 @@ function AdminCustomOptions() {
 
     try {
       // Update all modified options in the database
-      const updatePromises = allOptions.map(option => 
+      const updatePromises = allOptions.map((option) =>
         updateCustomOptions(option.id, {
           type: option.type,
-          type_options: option.type_options
-        })
+          type_options: option.type_options,
+        }),
       );
 
       const results = await Promise.all(updatePromises);
-      
+
       // Check if all updates were successful
-      const allSuccessful = results.every(result => result !== null);
-      
+      const allSuccessful = results.every((result) => result !== null);
+
       if (allSuccessful) {
         setSuccess(true);
         // Refresh the data from the server
@@ -215,7 +242,7 @@ function AdminCustomOptions() {
           <div className={style.errorIcon}>⚠️</div>
           <h3>Kunne ikke laste alternativer</h3>
           <p>Det oppstod et problem ved henting av data fra databasen.</p>
-          <button 
+          <button
             className={style.retryButton}
             onClick={() => fetchCustomOptions()}
           >
@@ -234,7 +261,7 @@ function AdminCustomOptions() {
           <div className={style.errorIcon}>❌</div>
           <h3>Ingen data tilgjengelig</h3>
           <p>Alternativene kunne ikke lastes inn.</p>
-          <button 
+          <button
             className={style.retryButton}
             onClick={() => fetchCustomOptions()}
           >
@@ -259,6 +286,17 @@ function AdminCustomOptions() {
               value={newProductType}
               onChange={(e) => setNewProductType(e.target.value)}
               placeholder="Produkttype navn..."
+              onKeyPress={(e) => e.key === "Enter" && addProductType()}
+            />
+            <input
+              type="text"
+              value={newProductTypeBasePrice}
+              onChange={(e) =>
+                setNewProductTypeBasePrice(
+                  e.target.value.replace(/[^0-9]/g, ""),
+                )
+              }
+              placeholder="Basisspris..."
               onKeyPress={(e) => e.key === "Enter" && addProductType()}
             />
             <button
@@ -302,7 +340,7 @@ function AdminCustomOptions() {
           </div>
         </div>
       )}
-      
+
       {success && (
         <div className={style.successBanner}>
           <span className={style.successIcon}>✓</span>
@@ -330,8 +368,17 @@ interface ProductTypeSectionProps {
   onRemoveProductType: (id: number) => Promise<void>;
   onAddCategory: (productId: number, categoryKey: string) => void;
   onRemoveCategory: (productId: number, key: string) => void;
-  onAddValue: (productId: number, categoryKey: string, valueName: string, price: number) => void;
-  onRemoveValue: (productId: number, categoryKey: string, optionId: string) => void;
+  onAddValue: (
+    productId: number,
+    categoryKey: string,
+    valueName: string,
+    price: number,
+  ) => void;
+  onRemoveValue: (
+    productId: number,
+    categoryKey: string,
+    optionId: string,
+  ) => void;
 }
 
 function ProductTypeSection({
@@ -365,15 +412,15 @@ function ProductTypeSection({
             {isCollapsed ? "▶" : "▼"}
           </button>
           <h3>{productType.type}</h3>
+          <h3>|</h3>
+          <h3>Basis Pris: {productType.base_price || 0} kr</h3>
         </div>
         <button
           type="button"
           className={style.removeProductTypeButton}
           onClick={() => onRemoveProductType(productType.id)}
           title="Fjern produkttype"
-        >
-          ×
-        </button>
+        ></button>
       </div>
 
       {!isCollapsed && (
@@ -427,8 +474,17 @@ interface CategorySectionProps {
   productId: number;
   category: CustomOptionGroup;
   onRemoveCategory: (productId: number, key: string) => void;
-  onAddValue: (productId: number, categoryKey: string, valueName: string, price: number) => void;
-  onRemoveValue: (productId: number, categoryKey: string, optionId: string) => void;
+  onAddValue: (
+    productId: number,
+    categoryKey: string,
+    valueName: string,
+    price: number,
+  ) => void;
+  onRemoveValue: (
+    productId: number,
+    categoryKey: string,
+    optionId: string,
+  ) => void;
 }
 
 function CategorySection({
@@ -472,9 +528,7 @@ function CategorySection({
           className={style.removeCategoryButton}
           onClick={() => onRemoveCategory(productId, category.key)}
           title="Fjern kategori"
-        >
-          ×
-        </button>
+        ></button>
       </div>
 
       <div className={style.addValueSection}>
@@ -508,14 +562,16 @@ function CategorySection({
         {category.options.map((opt) => (
           <div key={opt.id} className={style.valueChip}>
             <span className={style.optionName}>{opt.name}</span>
-            {opt.price > 0 && <span className={style.optionPrice}>+{opt.price} kr</span>}
+            {opt.price > 0 && (
+              <span className={style.optionPrice}>+{opt.price} kr</span>
+            )}
             <button
               type="button"
               className={style.removeValueButton}
               onClick={() => onRemoveValue(productId, category.key, opt.id)}
               title="Fjern alternativ"
             >
-              ×
+              x
             </button>
           </div>
         ))}
