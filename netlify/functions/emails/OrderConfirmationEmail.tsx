@@ -632,7 +632,7 @@ export const OrderConfirmationEmail = ({
                   textDecoration: "none",
                 }}
               >
-                support@ltkunstsmykker.no
+                trine-lise@ltkunstsmykker.no
               </a>
             </Text>
           </Section>

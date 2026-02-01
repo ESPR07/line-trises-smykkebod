@@ -39,16 +39,21 @@ const CartProductCard = ({ product, onUpdate, onRemove }: Props) => {
               <TrashIcon />
             </button>
           </span>
-          {product.discountPrice ? (
-            <p className={style.discount}>kr {product.price}</p>
-          ) : (
-            <p>kr {product.price}</p>
-          )}
-          {product.discountPrice ? (
-            <p>kr {product.discountPrice.toFixed(2)}</p>
-          ) : (
-            ""
-          )}
+          <span className={style.priceContainer}>
+            {product.discountPrice ? (
+              <p className={style.discount}>kr {product.price}</p>
+            ) : (
+              <p>kr {product.price}</p>
+            )}
+            {product.discountPrice ? (
+              <p>kr {product.discountPrice.toFixed(2)}</p>
+            ) : (
+              ""
+            )}
+          </span>
+          <div className={style.short_description}>
+            <p>{product.short_description ?? ""}</p>
+          </div>
         </div>
         <div className={style.cartItemInteraction}>
           <div className={style.quantitySection}>

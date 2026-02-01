@@ -277,7 +277,7 @@ export const ShippingConfirmationEmail = ({
                 href="mailto:support@ltkunstsmykker.no"
                 style={{ color: "#3b82f6", textDecoration: "none" }}
               >
-                support@ltkunstsmykker.no
+                trine-lise@ltkunstsmykker.no
               </a>
             </Text>
           </Section>
