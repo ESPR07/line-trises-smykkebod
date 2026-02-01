@@ -37,6 +37,14 @@
   font-size: 0.95rem;
 }
 
+.addCategorySection label input:first-of-type {
+  flex: 3;
+}
+
+.addCategorySection label input:last-of-type {
+  flex: 1;
+}
+
 .inputWithButton {
   display: flex;
   gap: 12px;
@@ -118,7 +126,7 @@
 /* Product Type Card */
 .productTypeCard {
   background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
-  border: 3px solid #3b82f6;
+  border: 3px solid var(--boxColor);
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
@@ -131,7 +139,7 @@
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 3px solid #3b82f6;
+  border-bottom: 3px solid var(--boxColor);
 }
 
 .productTypeTitle {
@@ -144,7 +152,7 @@
   background: transparent;
   border: none;
   font-size: 1.2rem;
-  color: #3b82f6;
+  color: var(--highlight);
   cursor: pointer;
   padding: 8px;
   display: flex;
@@ -168,12 +176,12 @@
 .productTypeHeader h3 {
   margin: 0;
   font-size: 1.6rem;
-  color: #1e40af;
+  color: var(--highlight);
   font-weight: 700;
   text-transform: capitalize;
 }
 
-.removeProductTypeButton {
+/* .removeProductTypeButton {
   background-color: #fee2e2;
   color: #ef4444;
   border: none;
@@ -198,6 +206,58 @@
 
 .removeProductTypeButton:active {
   transform: scale(0.95);
+} */
+
+.removeProductTypeButton, .removeCategoryButton {
+  border: none;
+  position: relative;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  background-color: transparent;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.removeProductTypeButton::before,
+.removeProductTypeButton::after, .removeCategoryButton::before,
+.removeCategoryButton::after {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 2.5px;
+  background-color: #6b7280;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.removeProductTypeButton::before, .removeCategoryButton::before {
+  transform: rotate(45deg);
+}
+
+.removeProductTypeButton::after, .removeCategoryButton::after {
+  transform: rotate(-45deg);
+}
+
+.removeProductTypeButton:hover, .removeCategoryButton:hover {
+  cursor: pointer;
+  background-color: #fee2e2;
+  transform: rotate(90deg);
+}
+
+.removeProductTypeButton:hover::before,
+.removeProductTypeButton:hover::after, .removeCategoryButton:hover::before,
+.removeCategoryButton:hover::after {
+  background-color: #ef4444;
+  width: 22px;
+}
+
+.removeProductTypeButton:active, .removeCategoryButton:active {
+  transform: rotate(90deg) scale(0.9);
 }
 
 .addSubCategorySection {
@@ -324,33 +384,6 @@
   text-transform: capitalize;
 }
 
-.removeCategoryButton {
-  background-color: #fee2e2;
-  color: #ef4444;
-  border: none;
-  border-radius: 8px;
-  width: 32px;
-  height: 32px;
-  font-size: 1.8rem;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  line-height: 1;
-}
-
-.removeCategoryButton:hover {
-  background-color: #ef4444;
-  color: white;
-  transform: scale(1.1);
-}
-
-.removeCategoryButton:active {
-  transform: scale(0.95);
-}
-
 /* Add Value Section */
 .addValueSection {
   margin-bottom: 16px;
@@ -437,15 +470,14 @@
   background: transparent;
   border: none;
   color: #ef4444;
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-size: 1.2rem;
+  font-weight: 400;
   line-height: 1;
   cursor: pointer;
   width: 20px;
   height: 20px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  place-content: center;
   border-radius: 50%;
   transition: all 0.15s ease;
   padding: 0;
@@ -670,10 +702,6 @@
     max-width: 100%;
   }
 
-  .productTypesContainer {
-    max-height: 600px;
-  }
-
   .productTypeCard {
     padding: 20px;
   }
@@ -795,9 +823,5 @@
   .error,
   .success {
     font-size: 0.85rem;
-  }
-
-  .categoriesContainer {
-    max-height: 400px;
   }
 }

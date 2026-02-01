@@ -4,6 +4,8 @@ import AdminProductColumn from "../AdminProductColumn/AdminProductColumn";
 import { OrderItem, FetchResult } from "../../../@types/Database";
 import { dateFormatting } from "../../utils/dateFormatting";
 import { APIResult } from "../../../context/siteContexts";
+import RefundBox from "../RefundBox/RefundBox";
+import ShipOrderBox from "../OrderConfirmBox/OrderConfirmBox";
 
 interface OrderStatusModalProps {
   order: OrderItem;
@@ -18,7 +20,8 @@ export default function OrderStatusModal({
   modalOpen,
 }: OrderStatusModalProps) {
   const { allProducts } = useContext(APIResult);
-  const [isRefunding, setIsRefunding] = useState(false);
+  const [showRefundBox, setShowRefundBox] = useState(false);
+  const [showShipBox, setShowShipBox] = useState(false);
 
   useEffect(() => {
     if (modalOpen) {
@@ -50,10 +53,6 @@ export default function OrderStatusModal({
   });
 
   const handleCompleteOrder = async () => {
-    if (!window.confirm("Markere bestillingen som fullført og sende e-post?")) {
-      return;
-    }
-
     try {
       const res = await fetch("/.netlify/functions/completeOrder", {
         method: "POST",
@@ -65,51 +64,10 @@ export default function OrderStatusModal({
         const text = await res.text();
         throw new Error(text);
       }
-
-      alert("Bestillingen er fullført og e-post sendt!");
       toggleModal(false);
     } catch (err) {
       console.error(err);
       alert("Kunne ikke fullføre bestillingen.");
-    }
-  };
-
-  // Refund handler
-  const handleRefund = async () => {
-    if (
-      !window.confirm("Er du sikker på at du vil refundere denne bestillingen?")
-    )
-      return;
-
-    setIsRefunding(true);
-
-    try {
-      const res = await fetch("/.netlify/functions/createRefundIntent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          paymentIntentId: order.stripe_payment_id,
-          amount: order.totals.verifiedTotal * 100, // full refund in cents
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert("Kunne ikke refundere bestillingen: " + data.error);
-      } else {
-        alert("Refundering initiert!");
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        console.error("Refund error:", err);
-        alert("Noe gikk galt under refundering: " + err.message);
-      } else {
-        console.error("Refund error (unknown):", err);
-        alert("Noe gikk galt under refundering.");
-      }
-    } finally {
-      setIsRefunding(false);
     }
   };
 
@@ -178,20 +136,41 @@ export default function OrderStatusModal({
         {/* Action Buttons */}
         {order.status !== "refunded" && (
           <div className={style.buttonContainer}>
-            <button
-              className={style.updateButton}
-              onClick={handleCompleteOrder}
-              disabled={order.status === "completed"}
-            >
-              Godkjenn
-            </button>
-            <button
-              className={style.updateButton}
-              onClick={handleRefund}
-              disabled={isRefunding || order.status === "refunded" || order.status === "completed"}
-            >
-              {isRefunding ? "Refunderer..." : "Refunder"}
-            </button>
+            <div className={style.buttonGroup}>
+              <button
+                className={style.updateButton}
+                onClick={() => setShowShipBox(true)}
+                disabled={order.status === "completed"}
+              >
+                Godkjenn
+              </button>
+              <button
+                className={style.updateButton}
+                onClick={() => setShowRefundBox(true)}
+                disabled={
+                  order.status === "completed" || order.status === "refunded"
+                }
+              >
+                Refunder
+              </button>
+            </div>
+            <div className={style.confimationContainer}>
+              {showRefundBox && (
+                <RefundBox
+                  order={order}
+                  refundBoxValue={showRefundBox}
+                  toggleRefundBox={setShowRefundBox}
+                />
+              )}
+              {showShipBox && (
+                <ShipOrderBox
+                  order={order}
+                  shipBoxValue={showShipBox}
+                  toggleShipBox={setShowShipBox}
+                  handleOrderComplete={handleCompleteOrder}
+                />
+              )}
+            </div>
           </div>
         )}
       </div>

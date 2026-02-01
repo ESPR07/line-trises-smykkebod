@@ -301,9 +301,22 @@
 /* Button Container */
 .buttonContainer {
   display: flex;
+  flex-direction: column;
   width: 100%;
   justify-content: space-around;
   gap: 20px;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+}
+
+.confimationContainer {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .buttonContainer button:first-of-type {

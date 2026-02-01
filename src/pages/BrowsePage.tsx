@@ -83,14 +83,14 @@ function BrowsePage() {
         </div>
         <section className={style.browseContainer}>
           <h1 className={style.browseHeader}>Alle Produkter</h1>
-          <article className={style.filterMenu}>
+          {/* <article className={style.filterMenu}> TODO: Filter options
             <select>
               <option defaultValue={"Filter"} hidden>
                 Filter
               </option>
               <option value="Yellow">Yellow</option>
             </select>
-          </article>
+          </article> */}
           <span className={style.divider}></span>
           <article className={style.productGrid}>
             {allProducts?.length === 0 ? <h2>Ingen produkter til salgs</h2> : null}

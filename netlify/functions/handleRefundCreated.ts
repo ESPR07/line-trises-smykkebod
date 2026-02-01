@@ -9,9 +9,13 @@ export async function handleRefundCreated(stripeEvent: Stripe.Event) {
 
   // Handle different refund event types
   switch (stripeEvent.type) {
-    case "charge.refunded": {
+    case "charge.refunded":
+    case "charge.refund.updated": {
       const charge = stripeEvent.data.object as Stripe.Charge;
-      refundId = charge.refunds?.data?.[0]?.id; // Most recent refund
+
+      // Use the most recent refund (live Stripe can have multiple)
+      refundId = charge.refunds?.data?.at(-1)?.id;
+
       paymentIntentId =
         typeof charge.payment_intent === "string"
           ? charge.payment_intent
@@ -43,8 +47,11 @@ export async function handleRefundCreated(stripeEvent: Stripe.Event) {
   }
 
   if (!paymentIntentId) {
-    console.warn("Could not determine PaymentIntent for refund:", refundId);
-    return; // skip; CLI test events might miss it
+    console.warn("Could not determine PaymentIntent for refund:", {
+      refundId,
+      eventType: stripeEvent.type,
+    });
+    return;
   }
 
   // Fetch the order in Supabase
@@ -55,13 +62,16 @@ export async function handleRefundCreated(stripeEvent: Stripe.Event) {
     .single();
 
   if (fetchError || !order) {
-    console.error("Order not found for refund:", paymentIntentId, fetchError);
-    return; // skip; no retry needed
+    console.error("Order not found for refund:", {
+      paymentIntentId,
+      error: fetchError,
+    });
+    return;
   }
 
   if (order.status === "refunded") {
     console.log("Order already refunded:", order.id);
-    return; // idempotent
+    return;
   }
 
   // Update order status to refunded
@@ -75,5 +85,7 @@ export async function handleRefundCreated(stripeEvent: Stripe.Event) {
     throw updateError; // Stripe will retry webhook
   }
 
-  console.log(`Order ${order.id} status updated to refunded for refund ${refundId}`);
+  console.log(
+    `Order ${order.id} marked as refunded (event: ${stripeEvent.type}, refund: ${refundId})`
+  );
 }

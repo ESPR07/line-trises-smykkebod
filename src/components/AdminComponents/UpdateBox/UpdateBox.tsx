@@ -130,7 +130,7 @@ export default function UpdateBox({
       // Upload new image if selected
       if (imageFile) {
         const url = await uploadImageWithHash(imageFile);
-        if (url) uploadedUrl = `${url}?cacheBust=${Date.now()}`;
+        if (url) uploadedUrl = url;
       }
 
       const oldUrl = product.image_url;

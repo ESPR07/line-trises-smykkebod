@@ -52,23 +52,25 @@ const CartProductCard = ({ product, onUpdate, onRemove }: Props) => {
         </div>
         <div className={style.cartItemInteraction}>
           <div className={style.quantitySection}>
-            <div className={style.quantityControls}>
-              <button
-                className={style.quantityButton}
-                onClick={() => handleQunatityChange(-1)}
-                disabled={quantity <= 1}
-              >
-                −
-              </button>
-              <span className={style.quantityDisplay}>{quantity}</span>
-              <button
-                className={style.quantityButton}
-                onClick={() => handleQunatityChange(1)}
-                disabled={quantity >= 10}
-              >
-                +
-              </button>
-            </div>
+            {quantity > 1 && (
+              <div className={style.quantityControls}>
+                <button
+                  className={style.quantityButton}
+                  onClick={() => handleQunatityChange(-1)}
+                  disabled={quantity <= 1}
+                >
+                  −
+                </button>
+                <span className={style.quantityDisplay}>{quantity}</span>
+                <button
+                  className={style.quantityButton}
+                  onClick={() => handleQunatityChange(1)}
+                  disabled={quantity >= 10}
+                >
+                  +
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
