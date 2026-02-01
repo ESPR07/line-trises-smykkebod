@@ -98,7 +98,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
       // Upload the image if one was selected
       if (imageFile) {
         const url = await uploadImageWithHash(imageFile);
-        if (url) uploadedUrl = `${url}?cacheBust=${Date.now()}`;
+        if (url) uploadedUrl = url;
       }
 
       // Create product with uploaded image URL
