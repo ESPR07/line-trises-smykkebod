@@ -167,6 +167,21 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
     paymentIntent.id,
   );
 
+  for (const item of verifiedCart) {
+  if (!item.metadata) {
+    const { error } = await supabaseServerClient
+      .from("products")
+      .update({ active_status: false })
+      .eq("id", item.id);
+
+    if (error) {
+      console.error(`Failed to deactivate product ${item.id}:`, error);
+    } else {
+      console.log(`Standard product ${item.id} set to inactive`);
+    }
+  }
+}
+
   const orderPayload = {
     ...orderInsert,
     order_id: insertedOrder.order_id,

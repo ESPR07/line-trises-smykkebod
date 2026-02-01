@@ -135,15 +135,18 @@ export type Database = {
           id: number;
           type: string;
           type_options: CustomOptionGroup[];
+          base_price: number;
         };
         Insert: {
           id?: number;
           type: string;
           type_options: CustomOptionGroup[];
+          base_price: number;
         };
         Update: {
           type?: string;
           type_options?: CustomOptionGroup[];
+          base_price?: number;
         };
       };
       custom_products: {

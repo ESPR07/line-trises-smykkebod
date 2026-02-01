@@ -10,7 +10,6 @@ const MakeYourOwn: React.FC = () => {
 
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selections, setSelections] = useState<Record<string, string>>({});
-  const [basePrice] = useState(599);
   const [isAdding, setIsAdding] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
@@ -25,7 +24,7 @@ const MakeYourOwn: React.FC = () => {
   }, [options, selectedType]);
 
   const selectedTypeOptions = options?.find(
-    (option) => option.type === selectedType
+    (option) => option.type === selectedType,
   )?.type_options as CustomOptionGroup[] | undefined;
 
   const handleTypeChange = (typeId: string) => {
@@ -39,6 +38,11 @@ const MakeYourOwn: React.FC = () => {
       [category]: optionId,
     }));
   };
+
+  const basePrice = React.useMemo(() => {
+    const type = options?.find((o) => o.type === selectedType);
+    return type?.base_price ?? 0;
+  }, [options, selectedType]);
 
   const calculateTotal = (): number => {
     let total = basePrice;
@@ -113,7 +117,7 @@ const MakeYourOwn: React.FC = () => {
 
   const renderOptionRow = (
     category: string,
-    options: CustomOptionGroup["options"]
+    options: CustomOptionGroup["options"],
   ) => (
     <div key={category} className={styles.optionRow}>
       <h3 className={styles.categoryTitle}>{category}</h3>
@@ -171,7 +175,7 @@ const MakeYourOwn: React.FC = () => {
       <div className={styles.customizationSection}>
         <h2 className={styles.sectionTitle}>Tilpass Ditt Valg</h2>
         {selectedTypeOptions?.map((group) =>
-          renderOptionRow(group.key, group.options)
+          renderOptionRow(group.key, group.options),
         )}
       </div>
       <div className={styles.summary}>

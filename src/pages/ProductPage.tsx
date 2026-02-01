@@ -9,26 +9,26 @@ function SingleProduct() {
   const { product, isLoading, isError } = useSingleProduct(id);
   const dispatch = useContext(CartContext).dispatch;
   const [addedToCart, setAddedToCart] = useState(false);
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState<number>(1);
 
   const handleAddToCart = () => {
     if (!product) return;
     
     dispatch({
       type: "addToCart",
-      payload: { id: product.id, quantity },
+      payload: { id: product.id, quantity: 1 },
     });
     
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
   };
 
-  const handleQuantityChange = (change: number) => {
-    const newQuantity = quantity + change;
-    if (newQuantity >= 1 && newQuantity <= 10) {
-      setQuantity(newQuantity);
-    }
-  };
+  // const handleQuantityChange = (change: number) => {
+  //   const newQuantity = quantity + change;
+  //   if (newQuantity >= 1 && newQuantity <= 10) {
+  //     setQuantity(newQuantity);
+  //   }
+  // };
 
   if (isLoading) {
     return (
@@ -120,7 +120,7 @@ function SingleProduct() {
 
             <div className={style.quantitySection}>
               <label className={style.quantityLabel}>Antall:</label>
-              <div className={style.quantityControls}>
+              {/* <div className={style.quantityControls}>
                 <button 
                   className={style.quantityButton}
                   onClick={() => handleQuantityChange(-1)}
@@ -136,7 +136,7 @@ function SingleProduct() {
                 >
                   +
                 </button>
-              </div>
+              </div> */}
             </div>
 
             <button 
