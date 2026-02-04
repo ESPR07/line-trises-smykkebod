@@ -1,26 +1,40 @@
-import { useContext, useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import NotificationIcon from "../../../assets/svg_components/NotificationIcon";
 import SearchIcon from "../../../assets/svg_components/SearchIcon";
 import style from "./AdminTopBar.module.css";
 import UpdateBox from "../UpdateBox/UpdateBox";
 import OrderStatusModal from "../OrderStatusModal/OrderStatusModal";
 import { Database } from "../../../@types/Database";
-import { APIResult, ordersResult } from "../../../context/siteContexts";
+import { useProductList } from "../../../API/useProducts";
+import { useGetOrders } from "../../../API/useGetOrders";
+
+// Debounce hook
+function useDebounce(value: string, delay: number) {
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+
+  return debouncedValue;
+}
 
 type Product = Database["public"]["Tables"]["products"]["Row"];
 type Order = Database["public"]["Tables"]["orders"]["Row"];
 
 function AdminTopBar() {
-  const { allProducts, searchQuery: productQuery, setSearchQuery: setProductQuery } = useContext(APIResult);
-  const { allOrders, searchQuery: orderQuery, setSearchQuery: setOrderQuery } = useContext(ordersResult);
+  const { productList, fetchProducts } = useProductList();
+  const { orderList, fetchOrders } = useGetOrders();
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const debouncedSearch = useDebounce(searchQuery, 300); // 300ms delay
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const combinedQuery = productQuery || orderQuery;
 
   // Click outside to close dropdown
   useEffect(() => {
@@ -33,22 +47,23 @@ function AdminTopBar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setProductQuery(value);
-    setOrderQuery(value);
+  // Fetch data on search (debounced)
+  useEffect(() => {
+    fetchProducts(1, undefined, debouncedSearch);
+    fetchOrders(1, undefined, true, debouncedSearch);
     setDropdownVisible(true);
+  }, [debouncedSearch]);
+
+  // Filter JSON fields (customer names) client-side
+  const filteredOrders = orderList?.filter(order =>
+    order.customer_info.customer_firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    order.customer_info.customer_lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    order.order_id.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
-
-  const filteredProducts = allProducts?.filter(p =>
-    p.name.toLowerCase().includes(combinedQuery.toLowerCase())
-  );
-
-  const filteredOrders = allOrders?.filter(order =>
-    order.customer_info.customer_firstName.toLowerCase().includes(combinedQuery.toLowerCase()) ||
-    order.customer_info.customer_lastName.toLowerCase().includes(combinedQuery.toLowerCase()) ||
-    order.order_id.toLowerCase().includes(combinedQuery.toLowerCase())
-  );
 
   const handleSelectProduct = (product: Product) => {
     setSelectedProduct(product);
@@ -71,12 +86,12 @@ function AdminTopBar() {
         <input
           type="text"
           placeholder="Søk produkter eller bestillinger"
-          value={combinedQuery}
+          value={searchQuery}
           onChange={handleInputChange}
         />
-        {dropdownVisible && combinedQuery && (
+        {dropdownVisible && searchQuery && (
           <div className={style.searchDropdown}>
-            {filteredProducts?.slice(0, 5).map(product => (
+            {productList?.slice(0, 5).map(product => (
               <div
                 key={product.id}
                 className={style.dropdownItem}
@@ -94,7 +109,7 @@ function AdminTopBar() {
                 Bestilling: {order.order_id} – {order.customer_info.customer_firstName} {order.customer_info.customer_lastName}
               </div>
             ))}
-            {filteredProducts?.length === 0 && filteredOrders?.length === 0 && (
+            {(!productList?.length && !filteredOrders?.length) && (
               <div className={style.dropdownItem}>Ingen resultater</div>
             )}
           </div>
@@ -105,7 +120,6 @@ function AdminTopBar() {
         <NotificationIcon />
       </div>
 
-      {/* Modals */}
       {selectedProduct && modalOpen && (
         <UpdateBox
           product={selectedProduct}

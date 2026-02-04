@@ -3,14 +3,21 @@ import { supabaseClient } from "../components/utils/supabaseClient";
 import { Database } from "../@types/Database";
 
 export function useGetOrders() {
-  const [orderList, setOrderList] = useState<Database["public"]["Tables"]["orders"]["Row"][] | undefined>(undefined);
+  const [orderList, setOrderList] = useState<
+    Database["public"]["Tables"]["orders"]["Row"][] | undefined
+  >(undefined);
   const [ordersLoading, setOrdersLoading] = useState<boolean>(true);
   const [ordersError, setOrdersError] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalOrders, setTotalOrders] = useState<number>(0);
   const itemsPerPage = 10;
 
-  async function fetchOrders(page: number = 1, sortBy?: string, ascending: boolean = true, searchQuery?: string) {
+  async function fetchOrders(
+    page: number = 1,
+    sortBy?: string,
+    ascending: boolean = true,
+    searchQuery?: string,
+  ) {
     try {
       setOrdersLoading(true);
       setOrdersError(false);
@@ -23,13 +30,11 @@ export function useGetOrders() {
         .select("*", { count: "exact" })
         .range(from, to);
 
-      if (sortBy) {
-        query = query.order(sortBy, { ascending });
-      }
+      if (sortBy) query = query.order(sortBy, { ascending });
 
-      if (searchQuery && searchQuery.trim()) {
-        // Search by customer name, email, or order_id
-        query = query.or(`customer_firstName.ilike.%${searchQuery}%,customer_lastName.ilike.%${searchQuery}%,order_id.ilike.%${searchQuery}%`);
+      if (searchQuery?.trim()) {
+        // Server-side search only on order_id (JSON fields filtered client-side)
+        query = query.ilike("order_id", `%${searchQuery}%`);
       }
 
       const { data, error, count } = await query;

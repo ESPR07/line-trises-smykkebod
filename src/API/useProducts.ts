@@ -3,7 +3,9 @@ import { supabaseClient } from "../components/utils/supabaseClient";
 import { Database } from "../@types/Database";
 
 export function useProductList() {
-  const [productList, setProductList] = useState<Database["public"]["Tables"]["products"]["Row"][] | undefined>(undefined);
+  const [productList, setProductList] = useState<
+    Database["public"]["Tables"]["products"]["Row"][] | undefined
+  >(undefined);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -23,13 +25,13 @@ export function useProductList() {
         .select("*", { count: "exact" })
         .range(from, to);
 
-      if (activeStatus === true) {
-        query = query.eq("active_status", true);
-      }
+      if (activeStatus) query = query.eq("active_status", true);
 
-      if (searchQuery && searchQuery.trim()) {
-        // Search in name or description
-        query = query.or(`name.ilike.%${searchQuery}%,short_description.ilike.%${searchQuery}%,long_description.ilike.%${searchQuery}%`);
+      if (searchQuery?.trim()) {
+        // Server-side search only in top-level product fields
+        query = query.or(
+          `name.ilike.%${searchQuery}%,short_description.ilike.%${searchQuery}%,long_description.ilike.%${searchQuery}%`,
+        );
       }
 
       const { data, error, count } = await query;
