@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { supabaseClient } from "../components/utils/supabaseClient";
 import { Database } from "../@types/Database";
 
@@ -17,7 +17,14 @@ export function useCreateProduct() {
   const [isError, setIsError] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  async function createProduct(data: NewProductData): Promise<Database["public"]["Tables"]["products"]["Row"] | null> {
+  const creatingRef = useRef(false);
+
+  async function createProduct(
+    data: NewProductData,
+  ): Promise<Database["public"]["Tables"]["products"]["Row"] | null> {
+    if (creatingRef.current) return null;
+    creatingRef.current = true;
+
     try {
       setIsLoading(true);
       setIsError(false);
@@ -25,7 +32,7 @@ export function useCreateProduct() {
 
       const { data: insertedData, error } = await supabaseClient
         .from("products")
-        .insert([data])
+        .upsert([data], { onConflict: "name" })
         .select()
         .single();
 
@@ -42,6 +49,7 @@ export function useCreateProduct() {
       console.error("Unexpected error:", err);
       return null;
     } finally {
+      creatingRef.current = false;
       setIsLoading(false);
     }
   }
