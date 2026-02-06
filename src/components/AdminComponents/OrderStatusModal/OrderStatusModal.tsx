@@ -139,17 +139,21 @@ export default function OrderStatusModal({
             <div className={style.buttonGroup}>
               <button
                 className={style.updateButton}
-                onClick={() => setShowShipBox(true)}
-                disabled={order.status === "completed"}
+                onClick={() => {
+                  setShowShipBox(true);
+                  setShowRefundBox(false);
+                }}
+                disabled={order.status === "completed" || order.status === "refunded"}
               >
                 Godkjenn
               </button>
               <button
                 className={style.updateButton}
-                onClick={() => setShowRefundBox(true)}
-                disabled={
-                  order.status === "completed" || order.status === "refunded"
-                }
+                onClick={() => {
+                  setShowRefundBox(true);
+                  setShowShipBox(false);
+                }}
+                disabled={order.status === "refunded"}
               >
                 Refunder
               </button>

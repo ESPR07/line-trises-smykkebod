@@ -52,9 +52,6 @@ export default function UpdateBox({
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const [name, setName] = useState<string>(product.name);
-  const [shortDescription, setShortDescription] = useState<string>(
-    product.short_description || "",
-  );
   const [longDescription, setLongDescription] = useState<string>(
     product.long_description || "",
   );
@@ -138,7 +135,6 @@ export default function UpdateBox({
       // Update product
       await updateProduct(product.id, {
         name,
-        short_description: shortDescription,
         long_description: longDescription,
         price: numericPrice,
         discount: hasDiscount,
@@ -209,15 +205,7 @@ export default function UpdateBox({
         </label>
 
         <label>
-          Kort beskrivelse:
-          <input
-            value={shortDescription}
-            onChange={(e) => setShortDescription(e.target.value)}
-          />
-        </label>
-
-        <label>
-          Lang beskrivelse:
+          Beskrivelse:
           <textarea
             value={longDescription}
             onChange={(e) => setLongDescription(e.target.value)}

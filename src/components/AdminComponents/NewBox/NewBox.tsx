@@ -32,7 +32,6 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [discountAmount, setDiscountAmount] = useState("0.00");
-  const [shortDesc, setShortDesc] = useState("");
   const [longDesc, setLongDesc] = useState("");
 
   // Store image in memory only
@@ -107,7 +106,6 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
         price: numericPrice,
         discount: numericDiscount > 0,
         discount_amount: numericDiscount,
-        short_description: shortDesc || undefined,
         long_description: longDesc || undefined,
         image_url: uploadedUrl,
       });
@@ -188,18 +186,9 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
         </label>
 
         <label>
-          Kort beskrivelse:
+          Beskrivelse:
           <textarea
-            placeholder="En kort beskrivelse av produktet"
-            value={shortDesc}
-            onChange={(e) => setShortDesc(e.target.value)}
-          />
-        </label>
-
-        <label>
-          Lang beskrivelse:
-          <textarea
-            placeholder="En detaljert beskrivelse av produktet"
+            placeholder="En beskrivelse av produktet"
             value={longDesc}
             onChange={(e) => setLongDesc(e.target.value)}
           />
