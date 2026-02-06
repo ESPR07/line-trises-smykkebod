@@ -1,8 +1,10 @@
-import AdminOverview from "../AdminOverview/AdminOverview";
+import style from './AdminDashboard.module.css';
 
 function AdminDashboard() {
   return (
-    <AdminOverview/>
+    <>
+      <h1 className={style.adminHeader}>Ingenting å vise for øyeblikket.</h1>
+    </>
   );
 }
 

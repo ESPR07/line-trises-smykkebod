@@ -44,6 +44,7 @@ export type CartItem = CartItemMinimal & {
   price: number;
   discountPrice: number | null;
   imageURL: string;
+  short_description?: string;
 };
 
 export interface Cart {

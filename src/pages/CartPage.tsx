@@ -65,6 +65,7 @@ function CartPage() {
             : null,
           imageURL: product.image_url,
           quantity: cartItem.quantity,
+          short_description: product.short_description,
         } as CartItem;
       }
 
