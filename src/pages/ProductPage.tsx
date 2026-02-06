@@ -69,7 +69,7 @@ function SingleProduct() {
   return (
     <>
       <title>{`${product.name} | Line Trises Kunstsmykker`}</title>
-      <meta name="description" content={product.short_description || product.long_description || `Kjøp ${product.name}`} />
+      <meta name="description" content={product.long_description || `Kjøp ${product.name}`} />
       
       <main className={style.productPageContainer}>
         <Link to="/produkter" className={style.backLink}>

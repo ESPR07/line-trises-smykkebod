@@ -51,9 +51,6 @@ const CartProductCard = ({ product, onUpdate, onRemove }: Props) => {
               ""
             )}
           </span>
-          <div className={style.short_description}>
-            <p>{product.short_description ?? ""}</p>
-          </div>
         </div>
         <div className={style.cartItemInteraction}>
           <div className={style.quantitySection}>
