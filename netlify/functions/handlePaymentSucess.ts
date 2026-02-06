@@ -94,8 +94,6 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
       continue;
     }
 
-    console.log("Product found:", product);
-
     const unitPrice =
       product.discount_amount && product.discount_amount > 0
         ? product.discount_amount
@@ -168,19 +166,19 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
   );
 
   for (const item of verifiedCart) {
-  if (!item.metadata) {
-    const { error } = await supabaseServerClient
-      .from("products")
-      .update({ active_status: false })
-      .eq("id", item.id);
+    if (!item.metadata) {
+      const { error } = await supabaseServerClient
+        .from("products")
+        .update({ active_status: false })
+        .eq("id", item.id);
 
-    if (error) {
-      console.error(`Failed to deactivate product ${item.id}:`, error);
-    } else {
-      console.log(`Standard product ${item.id} set to inactive`);
+      if (error) {
+        console.error(`Failed to deactivate product ${item.id}:`, error);
+      } else {
+        console.log(`Standard product ${item.id} set to inactive`);
+      }
     }
   }
-}
 
   const orderPayload = {
     ...orderInsert,
@@ -196,6 +194,17 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
         body: JSON.stringify(orderPayload),
       },
     );
+
+    if (emailRes.ok) {
+      const { error } = await supabaseServerClient
+        .from("orders")
+        .update({ confirmation_sent_at: new Date().toISOString() })
+        .eq("order_id", orderPayload.order_id);
+
+      if (error) {
+        console.error("Failed to update confirmation_sent_at:", error);
+      }
+    }
 
     if (!emailRes.ok) {
       const text = await emailRes.text();
