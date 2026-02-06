@@ -32,7 +32,7 @@ export function useCreateProduct() {
 
       const { data: insertedData, error } = await supabaseClient
         .from("products")
-        .upsert([data], { onConflict: "name" })
+        .insert([data])
         .select()
         .single();
 
