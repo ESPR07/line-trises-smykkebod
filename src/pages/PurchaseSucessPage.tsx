@@ -1,16 +1,19 @@
 import { Link, useSearchParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import style from "./PurchaseSucessPage.module.css";
+import { APIResult } from "../context/siteContexts";
 
 function PurchaseSuccess() {
   const [searchParams] = useSearchParams();
   const [isVisible, setIsVisible] = useState(false);
+  const { fetchProducts } = useContext(APIResult);
   
   const orderNumber = searchParams.get("order") || "12345";
   const customerName = searchParams.get("name") || "Kunde";
 
   useEffect(() => {
     setIsVisible(true);
+    fetchProducts();
   }, []);
 
   return (
