@@ -20,6 +20,13 @@
   flex: 2;
 }
 
+.cartPaymentContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
 .cartPaymentInfo {
   flex: 1;
   display: flex;

@@ -14,6 +14,7 @@ export interface CheckoutDependencies {
   navigate: ReturnType<typeof useNavigate>;
   stripe: Stripe | null;
   elements: StripeElements | null;
+  clientSecret: string;
 }
 
 export async function handleCheckout({
@@ -25,6 +26,7 @@ export async function handleCheckout({
   navigate,
   stripe,
   elements,
+  clientSecret,
 }: CheckoutDependencies) {
   if (enrichedCart.length === 0) return;
 
@@ -38,8 +40,17 @@ export async function handleCheckout({
   try {
     const result = await stripe.confirmPayment({
       elements,
+      clientSecret,
       confirmParams: {
         receipt_email: shippingData.email,
+        return_url: `${window.location.origin}/order-processing`,
+        payment_method_data: {
+          billing_details: {
+            address: {
+              country: "NO",
+            },
+          },
+        },
       },
       redirect: "if_required",
     });
@@ -50,17 +61,15 @@ export async function handleCheckout({
       return;
     }
 
-    const paymentIntentId = result.paymentIntent?.id;
-    if (!paymentIntentId) {
-      alert("Noe gikk galt med betalingen.");
-      return;
+    if (result.paymentIntent?.status === "succeeded") {
+      const paymentIntentId = result.paymentIntent.id;
+
+      localStorage.removeItem("cart");
+      setEnrichedCart([]);
+      dispatch({ type: "clearCart", payload: { id: "", quantity: 0 } });
+
+      navigate(`/order-processing?paymentIntentId=${paymentIntentId}`);
     }
-
-    localStorage.removeItem("cart");
-    setEnrichedCart([]);
-    dispatch({ type: "clearCart", payload: { id: "", quantity: 0 } });
-
-    navigate(`/order-processing?paymentIntentId=${paymentIntentId}`);
   } catch (err: unknown) {
     if (err instanceof Error) {
       console.error("Checkout failed:", err.message);

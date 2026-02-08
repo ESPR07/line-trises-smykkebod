@@ -1,4 +1,8 @@
-import { PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import {
+  PaymentElement,
+  useStripe,
+  useElements,
+} from "@stripe/react-stripe-js";
 import style from "./PaymentForm.module.css";
 import { CartItem } from "../../App";
 import { shippingData } from "../../@types/Database";
@@ -44,8 +48,8 @@ function PaymentForm({
         <div className={style.summaryHeader}>
           <span className={style.summaryLabel}>Leveres til</span>
           {onEditShipping && (
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={onEditShipping}
               className={style.editButton}
             >
@@ -57,9 +61,7 @@ function PaymentForm({
           <strong>
             {shippingData.firstName} {shippingData.lastName}
           </strong>
-          <div className={style.summaryAddress}>
-            {shippingData.adress}
-          </div>
+          <div className={style.summaryAddress}>{shippingData.adress}</div>
           <div className={style.summaryAddress}>
             {shippingData.postNr} {shippingData.place}
           </div>
@@ -70,7 +72,12 @@ function PaymentForm({
       </div>
 
       <h3>Betaling</h3>
-      <PaymentElement />
+      <PaymentElement
+        options={{
+          fields: { billingDetails: { address: { country: "never" } } },
+          defaultValues: { billingDetails: { address: { country: "NO" } } },
+        }}
+      />
       <button type="submit" disabled={disabled} className={style.kortBetaling}>
         {disabled ? "Behandler..." : "Betal"}
       </button>

@@ -10,6 +10,7 @@
   margin-right: 10px;
   object-fit: cover;
   border-radius: 5px;
+  max-height: 300px;
 }
 
 .itemInfo {
