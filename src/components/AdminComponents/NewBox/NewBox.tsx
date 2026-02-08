@@ -16,8 +16,7 @@ async function hashFile(file: File): Promise<string> {
 // Deduplicated upload using hash
 async function uploadImageWithHash(file: File): Promise<string | null> {
   const fileHash = await hashFile(file);
-  const extension = file.name.split(".").pop();
-  const fileName = `products/${fileHash}.${extension}`;
+  const fileName = `products/${fileHash}.webp`;
   return uploadImage(file, fileName);
 }
 
@@ -48,11 +47,11 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
 
     try {
       const options = {
-        maxSizeMB: 2,            // Ensure final file <= 2MB
+        maxSizeMB: 0.7, // Ensure final file <= 700KB
         maxWidthOrHeight: 1200,  // Downscale large images
         useWebWorker: true,
         fileType: "image/webp",
-        initialQuality: 0.8,
+        initialQuality: 0.75,
       };
 
       const compressedFile = await imageCompression(file, options);

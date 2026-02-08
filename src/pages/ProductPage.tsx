@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router";
 import { useContext, useState } from "react";
-import style from "./ProductPage.module.css"
+import style from "./ProductPage.module.css";
 import { useSingleProduct } from "../API/useSingleProduct";
 import { CartContext } from "../context/siteContexts";
 
@@ -13,12 +13,12 @@ function SingleProduct() {
 
   const handleAddToCart = () => {
     if (!product) return;
-    
+
     dispatch({
       type: "addToCart",
       payload: { id: product.id, quantity: 1 },
     });
-    
+
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
   };
@@ -62,15 +62,23 @@ function SingleProduct() {
     );
   }
 
-  const displayPrice = product.discount ? product.discount_amount : product.price;
-  const savings = product.discount ? product.price - product.discount_amount : 0;
-  const savingsPercent = savings > 0 ? Math.round((savings / product.price) * 100) : 0;
+  const displayPrice = product.discount
+    ? product.discount_amount
+    : product.price;
+  const savings = product.discount
+    ? product.price - product.discount_amount
+    : 0;
+  const savingsPercent =
+    savings > 0 ? Math.round((savings / product.price) * 100) : 0;
 
   return (
     <>
       <title>{`${product.name} | Line Trises Kunstsmykker`}</title>
-      <meta name="description" content={product.long_description || `Kjøp ${product.name}`} />
-      
+      <meta
+        name="description"
+        content={product.long_description || `Kjøp ${product.name}`}
+      />
+
       <main className={style.productPageContainer}>
         <Link to="/produkter" className={style.backLink}>
           <div className={style.backArrow}></div>
@@ -80,13 +88,11 @@ function SingleProduct() {
         <section className={style.productContainer}>
           <article className={style.imageSection}>
             {product.discount && savingsPercent > 0 && (
-              <div className={style.discountBadge}>
-                -{savingsPercent}%
-              </div>
+              <div className={style.discountBadge}>-{savingsPercent}%</div>
             )}
             <div className={style.imageWrapper}>
-              <img 
-                src={product.image_url || "/placeholder-image.jpg"} 
+              <img
+                src={product.image_url || "/placeholder-image.jpg"}
                 alt={product.name}
                 className={style.productImage}
               />
@@ -102,20 +108,26 @@ function SingleProduct() {
               <div className={style.priceContainer}>
                 {product.discount ? (
                   <>
-                    <span className={style.currentPrice}>kr {displayPrice}</span>
-                    <span className={style.originalPrice}>kr {product.price}</span>
+                    <span className={style.currentPrice}>
+                      kr {displayPrice}
+                    </span>
+                    <span className={style.originalPrice}>
+                      kr {product.price}
+                    </span>
                   </>
                 ) : (
                   <span className={style.currentPrice}>kr {product.price}</span>
                 )}
               </div>
               {savings > 0 && (
-                <div className={style.savingsInfo}>
-                  Du sparer kr {savings}
-                </div>
+                <div className={style.savingsInfo}>Du sparer kr {savings}</div>
               )}
               <h2 className={style.descriptionTitle}>Beskrivelse</h2>
-              <p className={style.descriptionText}>{product.long_description}</p>
+              <p className={style.descriptionText}>
+                {product.long_description
+                  ? product.long_description
+                  : "Hvert smykke er laget for hånd med kjærlighet og lidenskap. Jeg legger stor vekt på detaljer og kvalitet, slik at hvert produkt blir unikt og kan glede deg i mange år."}
+              </p>
             </div>
 
             <div className={style.quantitySection}>
@@ -139,12 +151,12 @@ function SingleProduct() {
               </div> */}
             </div>
 
-            <button 
-              className={`${style.addToCartButton} ${addedToCart ? style.added : ''}`}
+            <button
+              className={`${style.addToCartButton} ${addedToCart ? style.added : ""}`}
               onClick={handleAddToCart}
               disabled={!product.active_status}
             >
-              {addedToCart ? '✓ Lagt til!' : 'Legg til i handlekurv'}
+              {addedToCart ? "✓ Lagt til!" : "Legg til i handlekurv"}
             </button>
 
             {!product.active_status && (
@@ -155,7 +167,10 @@ function SingleProduct() {
 
             <div className={style.featuresSection}>
               <h2 className={style.featuresTitle}>Viktig Informasjon</h2>
-              <p>✨ Alle varer er håndlaget og kan derfor variere litt i størrelse og form</p>
+              <p>
+                ✨ Alle varer er håndlaget og kan derfor variere litt i
+                størrelse og form
+              </p>
             </div>
           </article>
         </section>
