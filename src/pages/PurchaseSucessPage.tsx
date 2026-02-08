@@ -72,7 +72,7 @@ function PurchaseSuccess() {
                 <div className={style.stepNumber}>2</div>
                 <div className={style.stepContent}>
                   <h3>Forsendelse</h3>
-                  <p>Du mottar sporingsnummer på e-post</p>
+                  <p>Du mottar en bekreftelse når pakken din er sendt</p>
                 </div>
               </div>
               <div className={style.step}>
