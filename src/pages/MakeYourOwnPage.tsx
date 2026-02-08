@@ -140,10 +140,18 @@ const MakeYourOwn: React.FC = () => {
     </div>
   );
 
-  if (isLoading || !selectedType) {
+  if (isLoading) {
     return (
       <div className={styles.container}>
         <h2>Laster valg...</h2>
+      </div>
+    );
+  }
+
+  if(options?.length === 0) {
+    return (
+      <div className={styles.container}>
+        <h2>Lag din egen er ikke tilgjengelig akkurat nå.</h2>
       </div>
     );
   }
