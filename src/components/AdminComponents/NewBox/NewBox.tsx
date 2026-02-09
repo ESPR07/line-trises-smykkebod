@@ -10,14 +10,13 @@ async function hashFile(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
   const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
 // Deduplicated upload using hash
 async function uploadImageWithHash(file: File): Promise<string | null> {
   const fileHash = await hashFile(file);
-  const extension = file.name.split(".").pop();
-  const fileName = `products/${fileHash}.${extension}`;
+  const fileName = `products/${fileHash}.webp`;
   return uploadImage(file, fileName);
 }
 
@@ -34,39 +33,81 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
   const [discountAmount, setDiscountAmount] = useState("0.00");
   const [longDesc, setLongDesc] = useState("");
 
-  // Store image in memory only
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>("");
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [mainImageIndex, setMainImageIndex] = useState(0);
+
   const [previewError, setPreviewError] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   const { createProduct, isLoading, isSuccess, isError } = useCreateProduct();
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
 
     try {
       const options = {
-        maxSizeMB: 2,            // Ensure final file <= 2MB
-        maxWidthOrHeight: 1200,  // Downscale large images
+        maxSizeMB: 0.7,
+        maxWidthOrHeight: 1200,
         useWebWorker: true,
         fileType: "image/webp",
-        initialQuality: 0.8,
+        initialQuality: 0.75,
       };
 
-      const compressedFile = await imageCompression(file, options);
+      const newFiles: File[] = [];
+      const newPreviews: string[] = [];
 
-      setImageFile(compressedFile);
+      for (const file of files) {
+        const compressed = await imageCompression(file, options);
 
-      // Generate preview in memory
-      const previewURL = URL.createObjectURL(compressedFile);
-      setImagePreview(previewURL);
+        // Prevent duplicate selection (same file picked twice)
+        const alreadyAdded = imageFiles.some(
+          (existing) =>
+            existing.name === compressed.name &&
+            existing.size === compressed.size,
+        );
+
+        if (alreadyAdded) continue;
+
+        newFiles.push(compressed);
+        newPreviews.push(URL.createObjectURL(compressed));
+      }
+
+      if (!newFiles.length) return;
+
+      setImageFiles((prev) => [...prev, ...newFiles]);
+      setImagePreviews((prev) => [...prev, ...newPreviews]);
+
       setPreviewError(false);
+
+      // Reset input so the same file can be selected again if needed
+      e.target.value = "";
     } catch (err) {
       console.error("Image processing failed:", err);
       setPreviewError(true);
     }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    setImageFiles((prev) => {
+      const updated = [...prev];
+      updated.splice(index, 1);
+      return updated;
+    });
+
+    setImagePreviews((prev) => {
+      const updated = [...prev];
+      URL.revokeObjectURL(updated[index]);
+      updated.splice(index, 1);
+      return updated;
+    });
+
+    setMainImageIndex((prev) => {
+      if (index === prev) return 0; // removed main image
+      if (index < prev) return prev - 1; // shift left
+      return prev; // unaffected
+    });
   };
 
   const handleNumericInput = (value: string, setter: (val: string) => void) => {
@@ -78,8 +119,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
     let sanitized = value.replace(/[^0-9.]/g, "");
     const parts = sanitized.split(".");
     if (parts.length > 2) sanitized = parts[0] + "." + parts[1];
-    if (parts[1]?.length > 2)
-      sanitized = parts[0] + "." + parts[1].slice(0, 2);
+    if (parts[1]?.length > 2) sanitized = parts[0] + "." + parts[1].slice(0, 2);
 
     sanitized = sanitized.replace(/^0+(\d)/, "$1");
     setter(sanitized);
@@ -92,24 +132,33 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
     setUploading(true);
 
     try {
-      let uploadedUrl: string | undefined;
+      let uploadedImages: string[] = [];
 
-      // Upload the image if one was selected
-      if (imageFile) {
-        const url = await uploadImageWithHash(imageFile);
-        if (url) uploadedUrl = url;
+      if (imageFiles.length) {
+        const results = await Promise.all(
+          imageFiles.map((file) => uploadImageWithHash(file)),
+        );
+
+        uploadedImages = results.filter((url): url is string => Boolean(url));
       }
 
-      // Create product with uploaded image URL
+      const orderedImages = uploadedImages.length
+        ? [
+            uploadedImages[mainImageIndex],
+            ...uploadedImages.filter((_, i) => i !== mainImageIndex),
+          ]
+        : [];
+
       await createProduct({
         name,
         price: numericPrice,
         discount: numericDiscount > 0,
         discount_amount: numericDiscount,
         long_description: longDesc || undefined,
-        image_url: uploadedUrl,
-      });
 
+        image_links: orderedImages.length ? orderedImages : undefined,
+        image_url: orderedImages[0],
+      });
     } catch (err) {
       console.error("Failed to create product:", err);
       setPreviewError(true);
@@ -118,14 +167,6 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      setTimeout(() => toggleModal(false), 1200);
-      setTimeout(() => fetchProducts(), 1400);
-    }
-  }, [isSuccess, fetchProducts, toggleModal]);
-
-  // Prevent scroll behind modal
   useEffect(() => {
     if (showModal) {
       const scrollY = window.scrollY;
@@ -140,6 +181,19 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
       };
     }
   }, [showModal]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      setTimeout(() => toggleModal(false), 1200);
+      setTimeout(() => fetchProducts(), 1400);
+    }
+  }, [isSuccess, fetchProducts, toggleModal]);
+
+  useEffect(() => {
+    return () => {
+      imagePreviews.forEach((url) => URL.revokeObjectURL(url));
+    };
+  }, [imagePreviews]);
 
   if (!showModal) return null;
 
@@ -156,75 +210,93 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
 
         <label>
           Produktnavn:
-          <input
-            placeholder="F.eks. Rødt Smykke"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="f.eks Rødt smykke"/>
         </label>
 
         <label>
           Pris (NOK):
           <input
-            type="text"
-            placeholder="F.eks. 199.99"
             value={price}
             onChange={(e) => handleNumericInput(e.target.value, setPrice)}
+            placeholder="f.eks 299.90"
           />
         </label>
 
         <label>
           Rabattbeløp:
           <input
-            type="text"
-            placeholder="F.eks. 20.00"
             value={discountAmount}
             onChange={(e) =>
               handleNumericInput(e.target.value, setDiscountAmount)
             }
+            placeholder="f.eks 210"
           />
         </label>
 
         <label>
           Beskrivelse:
           <textarea
-            placeholder="En beskrivelse av produktet"
             value={longDesc}
             onChange={(e) => setLongDesc(e.target.value)}
+            placeholder="Skriv noe om produktet"
           />
         </label>
 
         <label>
-          Last opp bilde:
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+          Last opp bilder:
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileChange}
+          />
         </label>
 
-        {uploading && <p>Laster opp bilde...</p>}
+        {uploading && <p>Laster opp bilder...</p>}
 
-        {imagePreview && !previewError && (
-          <img
-            className={style.previewImage}
-            src={imagePreview}
-            alt="Produktbilde forhåndsvisning"
-            onError={() => setPreviewError(true)}
-          />
+        {imagePreviews.length > 0 && !previewError && (
+          <div className={style.previewGrid}>
+            {imagePreviews.map((src, i) => (
+              <div
+                key={i}
+                className={`${style.previewWrapper} ${
+                  i === mainImageIndex ? style.mainImage : ""
+                }`}
+              >
+                <button
+                  type="button"
+                  className={style.removeImageButton}
+                  onClick={() => handleRemoveImage(i)}
+                  title="Fjern bilde"
+                >
+                  ✕
+                </button>
+
+                <button
+                  type="button"
+                  className={style.selectMainButton}
+                  onClick={() => setMainImageIndex(i)}
+                  title="Velg som hovedbilde"
+                >
+                  <img src={src} alt={`Produktbilde ${i + 1}`} />
+                  {i === mainImageIndex && (
+                    <span className={style.mainBadge}>Hovedbilde</span>
+                  )}
+                </button>
+              </div>
+            ))}
+          </div>
         )}
 
         {previewError && (
           <p className={style.previewError}>Kunne ikke laste bildet</p>
         )}
 
-        {isError && (
-          <p className={style.error}>Noe gikk galt, prøv igjen.</p>
-        )}
-
-        {isSuccess && (
-          <p className={style.success}>Produktet ble lagt til!</p>
-        )}
+        {isError && <p className={style.error}>Noe gikk galt, prøv igjen.</p>}
+        {isSuccess && <p className={style.success}>Produktet ble lagt til!</p>}
 
         <button
           className={style.updateButton}
-          type="button"
           disabled={isLoading || uploading || !name || !price}
           onClick={handleCreate}
         >

@@ -1,31 +1,81 @@
 import { useNavigate, useLocation } from "react-router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { supabaseClient } from "../components/utils/supabaseClient";
 import style from "./OrderProccessingPage.module.css";
+import { loadStripe } from "@stripe/stripe-js";
+import { CartContext } from "../context/siteContexts";
+
+const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
 function OrderProcessingPage() {
   const navigate = useNavigate();
   const params = new URLSearchParams(useLocation().search);
-  const paymentIntentId = params.get("paymentIntentId") ?? "";
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const dispatch = useContext(CartContext).dispatch;
+
+  const initialPaymentIntentId = params.get("paymentIntentId") ?? "";
+  const clientSecret = params.get("payment_intent_client_secret");
+
+  const [paymentIntentId, setPaymentIntentId] = useState<string>(
+    initialPaymentIntentId,
+  );
+  const [klarnaLoaded, setKlarnaLoaded] = useState<boolean>(
+    !initialPaymentIntentId || !clientSecret,
+  );
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading",
+  );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [dots, setDots] = useState("");
 
   // Animated dots for loading state
   useEffect(() => {
     if (status !== "loading") return;
-    
+
     const dotsInterval = setInterval(() => {
-      setDots(prev => prev.length >= 3 ? "" : prev + ".");
+      setDots((prev) => (prev.length >= 3 ? "" : prev + "."));
     }, 500);
 
     return () => clearInterval(dotsInterval);
   }, [status]);
 
   useEffect(() => {
-    if (!paymentIntentId) {
-      setStatus("error");
-      setErrorMessage("Ingen betaling å behandle.");
+    if (!clientSecret || paymentIntentId) {
+      setKlarnaLoaded(true);
+      return;
+    }
+
+    const fetchPaymentIntent = async () => {
+      try {
+        const stripe = await loadStripe(stripePublishableKey);
+        if (!stripe) throw new Error("Stripe could not be loaded");
+
+        const { paymentIntent, error } =
+          await stripe.retrievePaymentIntent(clientSecret);
+        if (error) {
+          console.error("Stripe retrievePaymentIntent error:", error);
+          setStatus("error");
+          setErrorMessage("Kunne ikke hente betaling. Prøv igjen.");
+          return;
+        }
+
+        if (paymentIntent?.id) {
+          setPaymentIntentId(paymentIntent.id);
+        } else {
+          setStatus("error");
+          setErrorMessage("Ingen betaling å behandle.");
+        }
+      } catch (err) {
+        console.error("Error fetching PaymentIntent:", err);
+        setStatus("error");
+        setErrorMessage("En uventet feil oppstod.");
+      }
+    };
+
+    fetchPaymentIntent();
+  }, [clientSecret, paymentIntentId]);
+
+  useEffect(() => {
+    if (!paymentIntentId || !klarnaLoaded) {
       return;
     }
 
@@ -49,17 +99,20 @@ function OrderProcessingPage() {
         if (order) {
           clearInterval(intervalId);
           setStatus("success");
+          
+          dispatch({ type: "clearCart", payload: { id: "", quantity: 0 } });
+
           // Small delay to show success state before navigation
           setTimeout(() => {
             navigate(
-              `/velykket?order=${order.order_id}&name=${order.customer_info.customer_firstName}`
+              `/velykket?order=${order.order_id}&name=${order.customer_info.customer_firstName}`,
             );
           }, 800);
         } else if (attempts >= maxAttempts) {
           clearInterval(intervalId);
           setStatus("error");
           setErrorMessage(
-            "Kunne ikke bekrefte bestillingen. Kontakt kundeservice hvis problemet vedvarer."
+            "Kunne ikke bekrefte bestillingen. Kontakt kundeservice hvis problemet vedvarer.",
           );
         }
       } catch (err) {
@@ -77,7 +130,7 @@ function OrderProcessingPage() {
     const intervalId: number = window.setInterval(checkOrder, 2000);
 
     return () => clearInterval(intervalId);
-  }, [paymentIntentId, navigate]);
+  }, [paymentIntentId, klarnaLoaded, navigate]);
 
   return (
     <main className={style.processingPage}>
@@ -87,7 +140,9 @@ function OrderProcessingPage() {
             <div className={style.spinner}></div>
             <h1>Behandler bestillingen din{dots}</h1>
             <p>Vent litt mens vi bekrefter betalingen din.</p>
-            <p className={style.subtext}>Dette tar vanligvis bare noen sekunder</p>
+            <p className={style.subtext}>
+              Dette tar vanligvis bare noen sekunder
+            </p>
           </div>
         )}
 
@@ -114,7 +169,7 @@ function OrderProcessingPage() {
             </div>
             <h1>Noe gikk galt</h1>
             <p>{errorMessage}</p>
-            <button 
+            <button
               className={style.retryButton}
               onClick={() => navigate("/handlekurv")}
             >

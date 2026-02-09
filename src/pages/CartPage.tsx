@@ -26,7 +26,7 @@ function CartPage() {
   const [verifiedTotal, setVerifiedTotal] = useState<number | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [shippingData, setShippingData] = useState<Partial<shippingData>>({});
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [clientSecret, setClientSecret] = useState<string>("");
 
   const shippingCost = 59;
 
@@ -164,6 +164,7 @@ function CartPage() {
       navigate,
       stripe,
       elements,
+      clientSecret,
     });
   };
 
@@ -275,14 +276,14 @@ function CartPage() {
               initialData={shippingData}
             />
           ) : (
-            <Elements stripe={stripePromise} options={{ clientSecret }}>
+            <Elements stripe={stripePromise} options={{ clientSecret, locale: "nb" }}>
               <PaymentForm
                 enrichedCart={enrichedCart}
                 shippingData={shippingData}
                 handleCheckout={handleCheckout}
                 disabled={isProcessing}
                 clientSecret={clientSecret}
-                onEditShipping={() => setClientSecret(null)}
+                onEditShipping={() => setClientSecret("")}
               />
             </Elements>
           )}

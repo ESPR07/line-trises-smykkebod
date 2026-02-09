@@ -1,16 +1,19 @@
 import { Link, useSearchParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import style from "./PurchaseSucessPage.module.css";
+import { APIResult } from "../context/siteContexts";
 
 function PurchaseSuccess() {
   const [searchParams] = useSearchParams();
   const [isVisible, setIsVisible] = useState(false);
+  const { fetchProducts } = useContext(APIResult);
   
   const orderNumber = searchParams.get("order") || "12345";
   const customerName = searchParams.get("name") || "Kunde";
 
   useEffect(() => {
     setIsVisible(true);
+    fetchProducts();
   }, []);
 
   return (
@@ -69,7 +72,7 @@ function PurchaseSuccess() {
                 <div className={style.stepNumber}>2</div>
                 <div className={style.stepContent}>
                   <h3>Forsendelse</h3>
-                  <p>Du mottar sporingsnummer på e-post</p>
+                  <p>Du mottar en bekreftelse når pakken din er sendt</p>
                 </div>
               </div>
               <div className={style.step}>

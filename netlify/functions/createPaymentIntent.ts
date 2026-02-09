@@ -1,7 +1,10 @@
 import Stripe from "stripe";
 import type { Handler } from "@netlify/functions";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  // @ts-ignore overrides the pinned API version
+  apiVersion: "2025-12-15.clover;",
+});
 
 interface CreatePaymentIntentBody {
   amount: number;
@@ -12,7 +15,12 @@ interface CreatePaymentIntentBody {
   adress: string;
   place: string;
   postNr: string;
-  cart: { id: string; quantity: number, price: number, discountPrice: number }[];
+  cart: {
+    id: string;
+    quantity: number;
+    price: number;
+    discountPrice: number;
+  }[];
   clientPlatform?: string;
 }
 
@@ -47,7 +55,7 @@ export const handler: Handler = async (event) => {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: body.amount,
       currency: "nok",
-      automatic_payment_methods: { enabled: true },
+      payment_method_types: ["card", "klarna"],
       metadata: {
         customer_email: body.email,
         customer_firstName: body.firstName,

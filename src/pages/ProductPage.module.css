@@ -101,6 +101,23 @@
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
+.imageList {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.thumbnailImage {
+  max-width: 150px;
+  max-height: 150px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
 /* Info Section */
 .infoSection {
   display: flex;
@@ -131,7 +148,11 @@
 
 /* Price Section */
 .priceSection {
-  background: linear-gradient(135deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.04) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.02) 0%,
+    rgba(0, 0, 0, 0.04) 100%
+  );
   border-radius: 16px;
   padding: 24px;
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -160,7 +181,11 @@
 
 .savingsInfo {
   display: inline-block;
-  background: linear-gradient(135deg, var(--compContainer, #10b981) 0%, color-mix(in srgb, var(--compContainer, #10b981) 85%, black) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--compContainer, #10b981) 0%,
+    color-mix(in srgb, var(--compContainer, #10b981) 85%, black) 100%
+  );
   color: white;
   padding: 6px 14px;
   border-radius: 8px;
@@ -236,7 +261,11 @@
   padding: 18px 32px;
   border: none;
   border-radius: 12px;
-  background: linear-gradient(135deg, var(--highlight, #3b82f6) 0%, color-mix(in srgb, var(--highlight, #3b82f6) 85%, black) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--highlight, #3b82f6) 0%,
+    color-mix(in srgb, var(--highlight, #3b82f6) 85%, black) 100%
+  );
   color: white;
   font-size: 1.3rem;
   font-weight: 700;
@@ -254,7 +283,12 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -282,7 +316,8 @@
 }
 
 @keyframes success {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
@@ -393,7 +428,11 @@
 
 .backButton {
   padding: 12px 24px;
-  background: linear-gradient(135deg, var(--highlight, #3b82f6) 0%, color-mix(in srgb, var(--highlight, #3b82f6) 85%, black) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--highlight, #3b82f6) 0%,
+    color-mix(in srgb, var(--highlight, #3b82f6) 85%, black) 100%
+  );
   color: white;
   text-decoration: none;
   border-radius: 10px;
@@ -412,7 +451,7 @@
   .productPageContainer {
     padding: 40px 8vw;
   }
-  
+
   .productContainer {
     gap: 40px;
   }
@@ -430,6 +469,11 @@
 
   .imageSection {
     position: static;
+  }
+
+  .imageList img {
+    max-width: 70px;
+    max-height: 70px;
   }
 
   .productName {

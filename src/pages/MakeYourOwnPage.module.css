@@ -8,7 +8,14 @@
   min-height: 100vh;
   max-width: 1200px;
   width: 90vw;
-  margin-inline: auto
+  margin-inline: auto;
+
+  h2 {
+    font-size: 1.5rem;
+    color: var(--highlight);
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
 }
 
 /* Header */
@@ -272,7 +279,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {
