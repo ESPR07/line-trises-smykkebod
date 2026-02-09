@@ -9,6 +9,7 @@ function SingleProduct() {
   const { product, isLoading, isError } = useSingleProduct(id);
   const dispatch = useContext(CartContext).dispatch;
   const [addedToCart, setAddedToCart] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<number>(0);
   // const [quantity, setQuantity] = useState<number>(1);
 
   const handleAddToCart = () => {
@@ -92,11 +93,29 @@ function SingleProduct() {
             )}
             <div className={style.imageWrapper}>
               <img
-                src={product.image_url || "/placeholder-image.jpg"}
+                src={
+                  product.image_links?.[selectedImage] ||
+                  "/placeholder-image.jpg"
+                }
                 alt={product.name}
                 className={style.productImage}
               />
             </div>
+            {product.image_links && product.image_links.length > 1 ? (
+              <div className={style.imageList}>
+                {product.image_links?.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image}
+                    alt={`${product.name} - Bilde ${index + 1}`}
+                    className={style.thumbnailImage}
+                    onClick={() => setSelectedImage(index)}
+                  />
+                ))}
+              </div>
+            ) : (
+              ""
+            )}
           </article>
 
           <article className={style.infoSection}>
