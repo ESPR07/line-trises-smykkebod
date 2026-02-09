@@ -82,11 +82,11 @@ export default function UpdateBox({
 
     try {
       const options = {
-        maxSizeMB: 0.7,
+        maxSizeMB: 1,
         maxWidthOrHeight: 1200,
         useWebWorker: true,
         fileType: "image/webp",
-        initialQuality: 0.8,
+        initialQuality: 0.90,
       };
 
       const compressedFiles: File[] = [];
