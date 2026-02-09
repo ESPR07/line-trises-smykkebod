@@ -10,6 +10,7 @@ export interface NewProductData {
   short_description?: string;
   long_description?: string;
   image_url?: string;
+  image_links?: string[];
 }
 
 export function useCreateProduct() {

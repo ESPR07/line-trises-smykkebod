@@ -11,7 +11,10 @@ export function useDeleteProduct() {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<DeleteResult | null>(null);
 
-  async function deleteProduct(id: string, imageUrl?: string): Promise<void> {
+  async function deleteProduct(
+    id: string,
+    imageUrls?: string | string[]
+  ): Promise<void> {
     setIsLoading(true);
     setResult(null);
 
@@ -35,30 +38,36 @@ export function useDeleteProduct() {
 
       tableDeleted = true;
 
-      if (imageUrl) {
-        storageDeleted = false;
-        try {
-          const url = new URL(imageUrl);
-          const parts = url.pathname.split("/storage/v1/object/public/");
-          if (parts[1]) {
-            const [bucket, ...fileParts] = parts[1].split("/");
-            const filePath = fileParts.join("/").split("?")[0];
+      if (imageUrls) {
+        const urlsArray = Array.isArray(imageUrls) ? imageUrls : [imageUrls];
+        storageDeleted = true;
 
-            const { error: storageError } = await supabaseClient.storage
-              .from(bucket)
-              .remove([filePath]);
+        for (const url of urlsArray) {
+          try {
+            const parsed = new URL(url);
+            const parts = parsed.pathname.split("/storage/v1/object/public/");
+            if (parts[1]) {
+              const [bucket, ...fileParts] = parts[1].split("/");
+              const filePath = fileParts.join("/").split("?")[0];
 
-            storageDeleted = !storageError;
-          } else {
-            storageDeleted = null;
+              const { error: storageError } = await supabaseClient.storage
+                .from(bucket)
+                .remove([filePath]);
+
+              if (storageError) {
+                console.error("Failed to delete image:", storageError.message);
+                storageDeleted = false;
+              }
+            }
+          } catch (err) {
+            console.error("Failed to parse/delete image:", err);
+            storageDeleted = false;
           }
-        } catch {
-          storageDeleted = false;
         }
       }
 
       setResult({ tableDeleted, storageDeleted });
-    } catch {
+    } catch (err) {
       setResult({
         tableDeleted,
         storageDeleted,

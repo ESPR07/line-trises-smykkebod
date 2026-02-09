@@ -7,7 +7,6 @@ import { supabaseClient } from "../../../components/utils/supabaseClient";
 import imageCompression from "browser-image-compression";
 import { APIResult } from "../../../context/siteContexts";
 
-// Hash utility for files
 async function hashFile(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
   const hashBuffer = await crypto.subtle.digest("SHA-256", arrayBuffer);
@@ -15,15 +14,12 @@ async function hashFile(file: File): Promise<string> {
   return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-// Upload file using hash as filename
 async function uploadImageWithHash(file: File): Promise<string | null> {
   const fileHash = await hashFile(file);
-  const extension = file.name.split(".").pop();
-  const fileName = `products/${fileHash}.${extension}`;
+  const fileName = `products/${fileHash}.webp`;
   return uploadImage(file, fileName);
 }
 
-// Parse Supabase public URL into bucket & path
 function parseSupabaseFilePath(imageUrl: string) {
   try {
     const url = new URL(imageUrl);
@@ -51,54 +47,96 @@ export default function UpdateBox({
   const { fetchProducts } = useContext(APIResult);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const [name, setName] = useState<string>(product.name);
-  const [longDescription, setLongDescription] = useState<string>(
-    product.long_description || "",
+  const [name, setName] = useState(product.name);
+  const [longDescription, setLongDescription] = useState(
+    product.long_description || ""
   );
-  const [price, setPrice] = useState<string>(product.price.toString());
-  const [discountAmount, setDiscountAmount] = useState<string>(
-    (product.discount_amount || 0).toFixed(2),
+  const [price, setPrice] = useState(product.price.toString());
+  const [discountAmount, setDiscountAmount] = useState(
+    (product.discount_amount || 0).toFixed(2)
   );
-  const [activeStatus, setActiveStatus] = useState<boolean>(
-    product.active_status ?? true,
+  const [activeStatus, setActiveStatus] = useState(
+    product.active_status ?? true
   );
 
-  // Image states
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string>(
-    product.image_url || "",
+  const [existingImages, setExistingImages] = useState<string[]>(
+    product.image_links?.length
+      ? product.image_links
+      : product.image_url
+      ? [product.image_url]
+      : []
   );
-  const [previewError, setPreviewError] = useState<boolean>(false);
-  const [uploading, setUploading] = useState<boolean>(false);
+
+  const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
+  const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
+  const [mainImageIndex, setMainImageIndex] = useState(0);
+
+  const [previewError, setPreviewError] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const { updateProduct, isLoading, isSuccess, isError } = useUpdateProduct();
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
 
-    setUploading(true);
     try {
       const options = {
-        maxSizeMB: 2,
+        maxSizeMB: 0.7,
         maxWidthOrHeight: 1200,
         useWebWorker: true,
         fileType: "image/webp",
         initialQuality: 0.8,
       };
 
-      const compressedFile = await imageCompression(file, options);
-      setImageFile(compressedFile);
+      const compressedFiles: File[] = [];
+      const previews: string[] = [];
 
-      const previewURL = URL.createObjectURL(compressedFile);
-      setImagePreview(previewURL);
+      for (const file of files) {
+        const compressed = await imageCompression(file, options);
+
+        const duplicate = newImageFiles.some(
+          (f) => f.name === compressed.name && f.size === compressed.size
+        );
+        if (duplicate) continue;
+
+        compressedFiles.push(compressed);
+        previews.push(URL.createObjectURL(compressed));
+      }
+
+      if (!compressedFiles.length) return;
+
+      setNewImageFiles((prev) => [...prev, ...compressedFiles]);
+      setNewImagePreviews((prev) => [...prev, ...previews]);
       setPreviewError(false);
+
+      e.target.value = "";
     } catch (err) {
       console.error("Image processing failed:", err);
       setPreviewError(true);
-    } finally {
-      setUploading(false);
     }
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const existingCount = existingImages.length;
+
+    if (index < existingCount) {
+      setExistingImages((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      const newIndex = index - existingCount;
+
+      setNewImageFiles((prev) => prev.filter((_, i) => i !== newIndex));
+      setNewImagePreviews((prev) => {
+        URL.revokeObjectURL(prev[newIndex]);
+        return prev.filter((_, i) => i !== newIndex);
+      });
+    }
+
+    setMainImageIndex((prev) => {
+      if (index === prev) return 0;
+      if (index < prev) return prev - 1;
+      return prev;
+    });
   };
 
   const handleNumericInput = (value: string, setter: (val: string) => void) => {
@@ -109,7 +147,8 @@ export default function UpdateBox({
     let sanitized = value.replace(/[^0-9.]/g, "");
     const parts = sanitized.split(".");
     if (parts.length > 2) sanitized = parts[0] + "." + parts[1];
-    if (parts[1]?.length > 2) sanitized = parts[0] + "." + parts[1].slice(0, 2);
+    if (parts[1]?.length > 2)
+      sanitized = parts[0] + "." + parts[1].slice(0, 2);
     sanitized = sanitized.replace(/^0+(\d)/, "$1");
     setter(sanitized);
   };
@@ -117,42 +156,53 @@ export default function UpdateBox({
   const handleUpdate = async () => {
     const numericPrice = Number(price) || 0;
     const numericDiscount = Number(discountAmount) || 0;
-    const hasDiscount = numericDiscount > 0;
 
     setUploading(true);
 
     try {
-      let uploadedUrl = imagePreview; // keep existing URL if no new file
+      let uploadedNewImages: string[] = [];
 
-      // Upload new image if selected
-      if (imageFile) {
-        const url = await uploadImageWithHash(imageFile);
-        if (url) uploadedUrl = url;
+      if (newImageFiles.length) {
+        const results = await Promise.all(
+          newImageFiles.map((file) => uploadImageWithHash(file))
+        );
+        uploadedNewImages = results.filter(
+          (url): url is string => Boolean(url)
+        );
       }
 
-      const oldUrl = product.image_url;
+      const allImages = [...existingImages, ...uploadedNewImages];
 
-      // Update product
+      const orderedImages = allImages.length
+        ? [
+            allImages[mainImageIndex],
+            ...allImages.filter((_, i) => i !== mainImageIndex),
+          ]
+        : [];
+
       await updateProduct(product.id, {
         name,
         long_description: longDescription,
         price: numericPrice,
-        discount: hasDiscount,
+        discount: numericDiscount > 0,
         discount_amount: numericDiscount,
-        image_url: uploadedUrl,
         active_status: activeStatus,
+        image_url: orderedImages[0],
+        image_links: orderedImages,
       });
 
-      // Delete old image if replaced
-      if (oldUrl && oldUrl !== uploadedUrl) {
-        const parsed = parseSupabaseFilePath(oldUrl);
-        if (parsed) {
-          const { bucket, filePath } = parsed;
-          const { error } = await supabaseClient.storage
-            .from(bucket)
-            .remove([filePath]);
-          if (error)
-            console.error("Failed to delete old image:", error.message);
+      const removedImages = product.image_links?.filter(
+        (url) => !orderedImages.includes(url)
+      );
+
+      if (removedImages?.length) {
+        for (const url of removedImages) {
+          const parsed = parseSupabaseFilePath(url);
+          if (parsed) {
+            await supabaseClient.storage
+              .from(parsed.bucket)
+              .remove([parsed.filePath]);
+          }
         }
       }
     } catch (err) {
@@ -188,13 +238,15 @@ export default function UpdateBox({
     }
   }, [updateBoxValue]);
 
+  if (!updateBoxValue) return null;
+
   return (
     <div className={style.updateModal}>
       <div className={style.updateBox}>
         <button
           className={style.closeButton}
           type="button"
-          onClick={() => toggleUpdateBox(!updateBoxValue)}
+          onClick={() => toggleUpdateBox(false)}
         />
 
         <h3>Endre {product.name}</h3>
@@ -242,28 +294,59 @@ export default function UpdateBox({
         </label>
 
         <label>
-          Last opp bilde:
-          <input type="file" accept="image/*" onChange={handleFileChange} />
+          Last opp bilder:
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileChange}
+          />
         </label>
 
-        {uploading && <p>Laster opp bilde...</p>}
+        {[...existingImages, ...newImagePreviews].length > 0 &&
+          !previewError && (
+            <div className={style.previewGrid}>
+              {[...existingImages, ...newImagePreviews].map((src, i) => (
+                <div
+                  key={i}
+                  className={`${style.previewWrapper} ${
+                    i === mainImageIndex ? style.mainImage : ""
+                  }`}
+                >
+                  <button
+                    type="button"
+                    className={style.removeImageButton}
+                    onClick={() => handleRemoveImage(i)}
+                  >
+                    ✕
+                  </button>
 
-        {imagePreview && !previewError && (
-          <img
-            className={style.previewImage}
-            src={imagePreview}
-            alt="Preview"
-            onError={() => setPreviewError(true)}
-          />
-        )}
+                  <button
+                    type="button"
+                    className={style.selectMainButton}
+                    onClick={() => setMainImageIndex(i)}
+                  >
+                    <img src={src} alt={`Bilde ${i + 1}`} />
+                    {i === mainImageIndex && (
+                      <span className={style.mainBadge}>Hovedbilde</span>
+                    )}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
         {previewError && (
           <p className={style.previewError}>Kunne ikke laste bildet</p>
         )}
 
-        {isError && <p className={style.error}>Noe gikk galt, prøv igjen.</p>}
+        {isError && (
+          <p className={style.error}>Noe gikk galt, prøv igjen.</p>
+        )}
 
-        {isSuccess && <p className={style.success}>Produktet ble oppdatert!</p>}
+        {isSuccess && (
+          <p className={style.success}>Produktet ble oppdatert!</p>
+        )}
 
         <button
           className={style.updateButton}

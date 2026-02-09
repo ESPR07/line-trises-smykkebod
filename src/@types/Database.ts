@@ -17,6 +17,7 @@ export type Database = {
           short_description?: string;
           long_description?: string;
           image_url?: string;
+          image_links?: string[];
           active_status: boolean;
         };
         Insert: {
@@ -28,6 +29,7 @@ export type Database = {
           short_description?: string;
           long_description?: string;
           image_url?: string;
+          image_links?: string[];
           active_status?: boolean;
         };
         Update: {
@@ -38,6 +40,7 @@ export type Database = {
           short_description?: string;
           long_description?: string;
           image_url?: string;
+          image_links?: string[];
           active_status?: boolean;
         };
       };
@@ -198,6 +201,7 @@ export type FetchResult = {
   price: number;
   discount: boolean;
   discount_amount: number | null;
+  image_links?: string[];
   image_url?: string;
   short_description?: string;
   long_description?: string;

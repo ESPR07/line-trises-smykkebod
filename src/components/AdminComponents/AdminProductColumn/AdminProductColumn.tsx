@@ -20,7 +20,7 @@ function AdminProductColumn({ data, canEdit = true }: ProductCardProps) {
     <>
       <div className={style.productColumnContainer}>
         <div className={style.imageWrapper}>
-          <img src={data.image_url?? "/images/image_placeholder.webp"} alt={data.name} />
+          <img src={data.image_links?.[0]} alt={data.name} />
         </div>
         
         <div className={style.productName}>
@@ -52,7 +52,7 @@ function AdminProductColumn({ data, canEdit = true }: ProductCardProps) {
     <>
       <div className={`${style.productColumnContainer} ${data.active_status ? style.mobileStatusActive : style.mobileStatusInactive}`}>
         <div className={style.imageWrapper}>
-          <img src={data.image_url} alt={data.name} />
+          <img src={data.image_links?.[0]} alt={data.name} />
         </div>
         
         <div className={style.productName}>
@@ -103,7 +103,7 @@ function AdminProductColumn({ data, canEdit = true }: ProductCardProps) {
       {deleteBox && (
         <DeleteBox 
           id={data.id} 
-          imageUrl={data.image_url} 
+          imageUrl={data.image_links?.[0]} 
           deleteBoxValue={deleteBox} 
           toggleDeleteBox={setDeleteBox}
         />
