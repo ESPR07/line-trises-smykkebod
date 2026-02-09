@@ -37,7 +37,7 @@ function DeleteBox({
   const [showStorageError, setShowStorageError] = useState(false);
 
   const handleDelete = async () => {
-    await deleteProduct(id, imageUrl);
+    await deleteProduct(id, imageLinks?.length ? imageLinks : imageUrl ? [imageUrl] : undefined);
 
     const imagesToDelete = imageLinks?.length
       ? imageLinks
