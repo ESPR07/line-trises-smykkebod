@@ -47,6 +47,8 @@ export default function UpdateBox({
   const { fetchProducts } = useContext(APIResult);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const { updateProduct, isLoading, isSuccess, isError } = useUpdateProduct();
+
   const [name, setName] = useState(product.name);
   const [longDescription, setLongDescription] = useState(
     product.long_description || ""
@@ -59,22 +61,22 @@ export default function UpdateBox({
     product.active_status ?? true
   );
 
-  const [existingImages, setExistingImages] = useState<string[]>(
+  // ORIGINAL images (used for comparison when saving)
+  const originalImages =
     product.image_links?.length
       ? product.image_links
       : product.image_url
       ? [product.image_url]
-      : []
-  );
+      : [];
+
+  const [existingImages, setExistingImages] =
+    useState<string[]>(originalImages);
 
   const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
   const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
   const [mainImageIndex, setMainImageIndex] = useState(0);
-
   const [previewError, setPreviewError] = useState(false);
   const [uploading, setUploading] = useState(false);
-
-  const { updateProduct, isLoading, isSuccess, isError } = useUpdateProduct();
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -86,7 +88,7 @@ export default function UpdateBox({
         maxWidthOrHeight: 1200,
         useWebWorker: true,
         fileType: "image/webp",
-        initialQuality: 0.90,
+        initialQuality: 0.9,
       };
 
       const compressedFiles: File[] = [];
@@ -95,16 +97,9 @@ export default function UpdateBox({
       for (const file of files) {
         const compressed = await imageCompression(file, options);
 
-        const duplicate = newImageFiles.some(
-          (f) => f.name === compressed.name && f.size === compressed.size
-        );
-        if (duplicate) continue;
-
         compressedFiles.push(compressed);
         previews.push(URL.createObjectURL(compressed));
       }
-
-      if (!compressedFiles.length) return;
 
       setNewImageFiles((prev) => [...prev, ...compressedFiles]);
       setNewImagePreviews((prev) => [...prev, ...previews]);
@@ -117,6 +112,7 @@ export default function UpdateBox({
     }
   };
 
+  // REMOVE IMAGE (only from state)
   const handleRemoveImage = (index: number) => {
     const existingCount = existingImages.length;
 
@@ -144,12 +140,14 @@ export default function UpdateBox({
       setter("");
       return;
     }
+
     let sanitized = value.replace(/[^0-9.]/g, "");
     const parts = sanitized.split(".");
     if (parts.length > 2) sanitized = parts[0] + "." + parts[1];
     if (parts[1]?.length > 2)
       sanitized = parts[0] + "." + parts[1].slice(0, 2);
     sanitized = sanitized.replace(/^0+(\d)/, "$1");
+
     setter(sanitized);
   };
 
@@ -187,23 +185,25 @@ export default function UpdateBox({
         discount: numericDiscount > 0,
         discount_amount: numericDiscount,
         active_status: activeStatus,
-        image_url: orderedImages[0],
+        image_url: orderedImages[0] || undefined,
         image_links: orderedImages,
       });
-
-      const removedImages = product.image_links?.filter(
+      
+      const removedImages = originalImages.filter(
         (url) => !orderedImages.includes(url)
       );
 
-      if (removedImages?.length) {
-        for (const url of removedImages) {
-          const parsed = parseSupabaseFilePath(url);
-          if (parsed) {
+      if (removedImages.length) {
+        await Promise.all(
+          removedImages.map(async (url) => {
+            const parsed = parseSupabaseFilePath(url);
+            if (!parsed) return;
+
             await supabaseClient.storage
               .from(parsed.bucket)
               .remove([parsed.filePath]);
-          }
-        }
+          })
+        );
       }
     } catch (err) {
       console.error("Update failed:", err);
@@ -221,22 +221,7 @@ export default function UpdateBox({
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
-
-  useEffect(() => {
-    if (updateBoxValue) {
-      const scrollY = window.scrollY;
-      document.body.style.position = "fixed";
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.width = "100%";
-      return () => {
-        document.body.style.position = "";
-        document.body.style.top = "";
-        window.scrollTo(0, scrollY);
-      };
-    }
-  }, [updateBoxValue]);
 
   if (!updateBoxValue) return null;
 

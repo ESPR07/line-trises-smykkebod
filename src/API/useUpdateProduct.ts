@@ -2,14 +2,6 @@ import { useState } from "react";
 import { supabaseClient } from "../components/utils/supabaseClient";
 import { Database } from "../@types/Database";
 
-export interface ProductUpdateData {
-  name: string;
-  price: number;
-  discount: boolean;
-  discount_amount: number;
-  image_url: string;
-}
-
 export function useUpdateProduct() {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);

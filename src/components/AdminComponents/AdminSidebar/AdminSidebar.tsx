@@ -104,7 +104,7 @@ function AdminSidebar({ currentActive, setCurrentActive, logout }: AdminSidebarP
               onClick={() => handleMenuItemClick("settings")}
             >
               <SettingsIcon/>
-              Instillinger
+              Innstillinger
             </li>
           </ul>
         </article>
