@@ -18,6 +18,7 @@ import UnderConstruction from "./pages/UnderConstruction";
 import { useAuthStatus } from "./API/useAuthStatus";
 import OrderProcessingPage from "./pages/OrderProccessingPage";
 import { CartContext, APIResult, ordersResult } from "./context/siteContexts";
+import ReturnPolicyPage from "./pages/ReturnPolicyPage";
 
 
 // Lazy-loaded pages
@@ -194,6 +195,7 @@ function App() {
           <Route path="handlekurv" element={<CartPage />} />
           <Route path="om-meg" element={<AboutPage />} />
           <Route path="kontakt" element={<ContactPage />} />
+          <Route path="retur-og-angrerett" element={<ReturnPolicyPage />} />
           <Route path="lag-din-egen" element={<MakeYourOwnPage />} />
           <Route path="velykket" element={<PurchaseSuccess />} />
           <Route path="order-processing" element={<OrderProcessingPage />} />

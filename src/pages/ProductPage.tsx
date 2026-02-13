@@ -149,9 +149,9 @@ function SingleProduct() {
               </p>
             </div>
 
-            <div className={style.quantitySection}>
+            {/* <div className={style.quantitySection}>
               <label className={style.quantityLabel}>Antall:</label>
-              {/* <div className={style.quantityControls}>
+              <div className={style.quantityControls}>
                 <button 
                   className={style.quantityButton}
                   onClick={() => handleQuantityChange(-1)}
@@ -167,8 +167,8 @@ function SingleProduct() {
                 >
                   +
                 </button>
-              </div> */}
-            </div>
+              </div>
+            </div> */}
 
             <button
               className={`${style.addToCartButton} ${addedToCart ? style.added : ""}`}

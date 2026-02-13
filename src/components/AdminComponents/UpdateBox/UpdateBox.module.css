@@ -513,9 +513,14 @@
     max-width: 100%;
   }
 
-  .previewWrapper img {
+  .previewWrapper {
     width: 130px;
     height: 130px;
+  }
+
+  .previewWrapper img {
+    width: 100%;
+    height: 100%;
   }
 
   .closeButton {
@@ -590,9 +595,14 @@
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   }
 
+  .previewWrapper {
+    width: 120px;
+    height: 120px;
+  }
+
   .previewWrapper img {
-    width: 110px;
-    height: 110px;
+    width: 100%;
+    height: 100%;
   }
 
   .error,

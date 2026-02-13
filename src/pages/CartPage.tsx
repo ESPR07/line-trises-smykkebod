@@ -5,7 +5,7 @@ import CartProductCard from "../components/CartProductCard/CartProductCard";
 import NavigationButton from "../components/utils/Button/NavigationButton";
 import ShippingForm from "../components/ShippingForm/ShippingForm";
 import { shippingData } from "../@types/Database";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useCustomProducts } from "../API/useCustomProducts";
 import { handleCheckout as handleCheckoutFn } from "../API/checkout";
 import { loadStripe, Stripe, StripeElements } from "@stripe/stripe-js";
@@ -267,6 +267,13 @@ function CartPage() {
               </div>
             </article>
           </div>
+
+          <div className={style.featuresSection}>
+              <h2 className={style.featuresTitle}>Informasjon om angrerett</h2>
+              <p>
+                All informasjon om angrerett og retur finner du på min <Link to="/retur-og-angrerett" target="_blank">angrerett- og retur-side</Link>.
+              </p>
+            </div>
 
           {!clientSecret ? (
             <ShippingForm
