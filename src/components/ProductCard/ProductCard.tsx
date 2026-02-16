@@ -28,8 +28,10 @@ function ProductCard({
   discountPrice,
   id,
 }: ProductCardProps) {
-  const dispatch = useContext(CartContext).dispatch;
+  const { state: cartState, dispatch } = useContext(CartContext);
   const [isAdded, setIsAdded] = useState(false);
+
+  const isInCart = cartState.productList.some((item) => item.id === id);
   
   const handleAddToCart = (e: React.MouseEvent, _data: AddToCart) => {
     e.preventDefault();
@@ -68,8 +70,9 @@ function ProductCard({
           {/* Add to Cart Button - Desktop */}
           <button
             onClick={(e) => handleAddToCart(e, { id, name, discountPrice, price, imageURL })}
-            className={`${style.addButtonDesktop} ${isAdded ? style.added : ''}`}
+            className={`${style.addButtonDesktop} ${isInCart ? style.inCart : ''} ${isAdded ? style.added : ''}`}
             aria-label="Legg til i handlekurv"
+            disabled={isInCart}
           >
             {isAdded ? (
               <svg 
@@ -135,8 +138,9 @@ function ProductCard({
         {/* Mobile Add Button */}
         <button
           onClick={(e) => handleAddToCart(e, { id, name, discountPrice, price, imageURL })}
-          className={`${style.addButtonMobile} ${isAdded ? style.addedMobile : ''}`}
+          className={`${style.addButtonMobile} ${isInCart ? style.inCartMobile : ''} ${isAdded ? style.addedMobile : ''}`}
           aria-label="Legg til i handlekurv"
+          disabled={isInCart}
         >
           {isAdded ? '✓ Lagt til!' : 'Legg til i handlekurv'}
         </button>

@@ -99,6 +99,16 @@
   height: 24px;
 }
 
+.inCart {
+  background: #6b7280;
+  box-shadow: 0 6px 16px #6b7280;
+}
+
+.inCart:hover {
+  background: #4b5563;
+  box-shadow: 0 6px 16px #4b5563;
+}
+
 /* Mobile Add Button */
 .addButtonMobile {
   display: none;
