@@ -9,6 +9,7 @@ vi.mock("../components/utils/supabaseClient", () => {
 
   chain.select = vi.fn().mockImplementation(() => chain);
   chain.range = vi.fn().mockImplementation(() => chain);
+  chain.order = vi.fn().mockImplementation(() => chain);
   chain.eq = vi.fn().mockImplementation(() => chain);
   chain.or = vi.fn().mockImplementation(() => chain);
 

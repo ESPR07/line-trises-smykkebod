@@ -23,6 +23,7 @@ export function useProductList() {
       let query = supabaseClient
         .from("products")
         .select("*", { count: "exact" })
+        .order("created_at", { ascending: false })
         .range(from, to);
 
       if (activeStatus) query = query.eq("active_status", true);
