@@ -7,10 +7,11 @@ import { APIResult } from "../../context/siteContexts";
 
 function NewProductCarousel() {
   const scrollRef = useRef<HTMLUListElement>(null);
-  const { allProducts, loading, error } = useContext(APIResult);
+  const { allProducts, loading, error, fetchProducts } = useContext(APIResult);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
+    fetchProducts(1, true, undefined, []);
     const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);

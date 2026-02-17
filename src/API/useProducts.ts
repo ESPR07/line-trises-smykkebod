@@ -16,7 +16,7 @@ export function useProductList() {
     page: number = 1,
     activeStatus?: boolean,
     searchQuery?: string,
-    // categories?: string[],
+    categories?: string[],
   ) {
     try {
       setIsLoading(true);
@@ -39,11 +39,9 @@ export function useProductList() {
         );
       }
 
-      // console.log("Filtering categories:", categories, typeof categories);
-
-      // if (categories?.length) {
-      //   query = query.contains("categories", categories);
-      // }
+      if (categories?.length) {
+        query = query.filter("categories", "cs", JSON.stringify(categories));
+      }
 
       const { data, error, count } = await query;
 
