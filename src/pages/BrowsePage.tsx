@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import ProductCard from "../components/ProductCard/ProductCard";
 import style from "./BrowsePage.module.css";
 import { APIResult } from "../context/siteContexts";
+// import { useCategories } from "../API/useCategories";
 
 function BrowsePage() {
   const {
@@ -14,10 +15,27 @@ function BrowsePage() {
     setCurrentPage,
   } = useContext(APIResult);
 
+  // const { categories, fetchCategories } = useCategories();
+  // const [selectedCategory, setSelectedCategory] = useState<string>("");
+
+  // useEffect(() => {
+  //   fetchCategories();
+  // }, []);
+
   useEffect(() => {
-    fetchProducts(currentPage, true); // Always show active products
+    fetchProducts(
+      currentPage,
+      true,
+      undefined,
+      // selectedCategory ? [selectedCategory] : undefined,
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
+
+  // const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   setCurrentPage(1); // reset to page 1 on filter change
+  //   setSelectedCategory(e.target.value);
+  // };
 
   const goToNextPage = () => {
     if (currentPage < totalPages) {
@@ -81,19 +99,34 @@ function BrowsePage() {
             </svg>
           </div>
         </div>
+
         <section className={style.browseContainer}>
           <h1 className={style.browseHeader}>Alle Produkter</h1>
-          {/* <article className={style.filterMenu}> TODO: Filter options
-            <select>
-              <option defaultValue={"Filter"} hidden>
-                Filter
-              </option>
-              <option value="Yellow">Yellow</option>
-            </select>
-          </article> */}
+
+          {/* Category filter */}
+          {/* {categories.length > 0 && (
+            <div className={style.filterMenu}>
+              <select
+                className={style.categorySelect}
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+              >
+                <option value="">Alle kategorier</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )} */}
+
           <span className={style.divider}></span>
+
           <article className={style.productGrid}>
-            {allProducts?.length === 0 ? <h2>Ingen produkter til salgs</h2> : null}
+            {allProducts?.length === 0 ? (
+              <h2>Ingen produkter til salgs</h2>
+            ) : null}
             {allProducts?.map((product) => (
               <ProductCard
                 key={product.id}
@@ -107,7 +140,7 @@ function BrowsePage() {
             ))}
           </article>
 
-        {/* Pagination Controls */}
+          {/* Pagination Controls */}
           <div className={style.pagination}>
             <button
               onClick={goToPreviousPage}

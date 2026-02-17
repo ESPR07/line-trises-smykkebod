@@ -1,4 +1,3 @@
-// src/context/index.tsx
 import { createContext } from "react";
 import { Database } from "../@types/Database";
 import { Cart } from "../App";
@@ -17,7 +16,12 @@ export const APIResult = createContext({
   error: false,
   searchQuery: "",
   setSearchQuery: (_query: string) => {},
-  fetchProducts: (_page?: number, _showAvailable?: boolean, _searchQuery?: string) => {},
+  fetchProducts: (
+    _page?: number,
+    _showAvailable?: boolean,
+    _searchQuery?: string,
+    _categories?: string[] | string,
+  ) => {},
   currentPage: 1,
   totalPages: 1,
   itemsPerPage: 10,
@@ -31,7 +35,12 @@ export const ordersResult = createContext({
   error: false,
   searchQuery: "",
   setSearchQuery: (_query: string) => {},
-  fetchOrders: (_page?: number, _sortBy?: string, _ascending?: boolean, _searchQuery?: string) => {},
+  fetchOrders: (
+    _page?: number,
+    _sortBy?: string,
+    _ascending?: boolean,
+    _searchQuery?: string,
+  ) => {},
   currentPage: 1,
   totalPages: 1,
   itemsPerPage: 10,

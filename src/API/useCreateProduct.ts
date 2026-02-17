@@ -11,6 +11,7 @@ export interface NewProductData {
   long_description?: string;
   image_url?: string;
   image_links?: string[];
+  categories?: string[];
 }
 
 export function useCreateProduct() {

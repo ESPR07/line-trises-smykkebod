@@ -6,6 +6,7 @@ import { FetchResult } from "../../../@types/Database";
 import { supabaseClient } from "../../../components/utils/supabaseClient";
 import imageCompression from "browser-image-compression";
 import { APIResult } from "../../../context/siteContexts";
+import { useCategories } from "../../../API/useCategories";
 
 async function hashFile(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
@@ -33,6 +34,11 @@ function parseSupabaseFilePath(imageUrl: string) {
   }
 }
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 interface UpdateBoxProps {
   product: FetchResult;
   updateBoxValue: boolean;
@@ -46,6 +52,7 @@ export default function UpdateBox({
 }: UpdateBoxProps) {
   const { fetchProducts } = useContext(APIResult);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { categories, fetchCategories } = useCategories();
 
   const { updateProduct, isLoading, isSuccess, isError } = useUpdateProduct();
 
@@ -61,7 +68,18 @@ export default function UpdateBox({
     product.active_status ?? true
   );
 
-  // ORIGINAL images (used for comparison when saving)
+  // Pre-populate from existing product JSONB (stored as name strings)
+  // We match against the full categories list once it loads
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    if (categories.length && product.categories) {
+      const existingNames = product.categories as string[];
+      const matched = categories.filter((c) => existingNames.includes(c.name));
+      setSelectedCategories(matched);
+    }
+  }, [categories]);
+
   const originalImages =
     product.image_links?.length
       ? product.image_links
@@ -71,12 +89,23 @@ export default function UpdateBox({
 
   const [existingImages, setExistingImages] =
     useState<string[]>(originalImages);
-
   const [newImageFiles, setNewImageFiles] = useState<File[]>([]);
   const [newImagePreviews, setNewImagePreviews] = useState<string[]>([]);
   const [mainImageIndex, setMainImageIndex] = useState(0);
   const [previewError, setPreviewError] = useState(false);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const toggleCategory = (cat: Category) => {
+    setSelectedCategories((prev) =>
+      prev.some((c) => c.id === cat.id)
+        ? prev.filter((c) => c.id !== cat.id)
+        : [...prev, cat]
+    );
+  };
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -96,7 +125,6 @@ export default function UpdateBox({
 
       for (const file of files) {
         const compressed = await imageCompression(file, options);
-
         compressedFiles.push(compressed);
         previews.push(URL.createObjectURL(compressed));
       }
@@ -104,7 +132,6 @@ export default function UpdateBox({
       setNewImageFiles((prev) => [...prev, ...compressedFiles]);
       setNewImagePreviews((prev) => [...prev, ...previews]);
       setPreviewError(false);
-
       e.target.value = "";
     } catch (err) {
       console.error("Image processing failed:", err);
@@ -112,7 +139,6 @@ export default function UpdateBox({
     }
   };
 
-  // REMOVE IMAGE (only from state)
   const handleRemoveImage = (index: number) => {
     const existingCount = existingImages.length;
 
@@ -120,7 +146,6 @@ export default function UpdateBox({
       setExistingImages((prev) => prev.filter((_, i) => i !== index));
     } else {
       const newIndex = index - existingCount;
-
       setNewImageFiles((prev) => prev.filter((_, i) => i !== newIndex));
       setNewImagePreviews((prev) => {
         URL.revokeObjectURL(prev[newIndex]);
@@ -136,18 +161,12 @@ export default function UpdateBox({
   };
 
   const handleNumericInput = (value: string, setter: (val: string) => void) => {
-    if (value === "") {
-      setter("");
-      return;
-    }
-
+    if (value === "") { setter(""); return; }
     let sanitized = value.replace(/[^0-9.]/g, "");
     const parts = sanitized.split(".");
     if (parts.length > 2) sanitized = parts[0] + "." + parts[1];
-    if (parts[1]?.length > 2)
-      sanitized = parts[0] + "." + parts[1].slice(0, 2);
+    if (parts[1]?.length > 2) sanitized = parts[0] + "." + parts[1].slice(0, 2);
     sanitized = sanitized.replace(/^0+(\d)/, "$1");
-
     setter(sanitized);
   };
 
@@ -187,8 +206,9 @@ export default function UpdateBox({
         active_status: activeStatus,
         image_url: orderedImages[0] || undefined,
         image_links: orderedImages,
+        categories: selectedCategories.map((c) => c.name),
       });
-      
+
       const removedImages = originalImages.filter(
         (url) => !orderedImages.includes(url)
       );
@@ -198,7 +218,6 @@ export default function UpdateBox({
           removedImages.map(async (url) => {
             const parsed = parseSupabaseFilePath(url);
             if (!parsed) return;
-
             await supabaseClient.storage
               .from(parsed.bucket)
               .remove([parsed.filePath]);
@@ -278,6 +297,32 @@ export default function UpdateBox({
           />
         </label>
 
+        {/* Category selector */}
+        {categories.length > 0 && (
+          <div className={style.categorySelector}>
+            <span className={style.categorySelectorLabel}>Kategorier:</span>
+            <div className={style.categoryChips}>
+              {categories.map((cat) => {
+                const isSelected = selectedCategories.some(
+                  (c) => c.id === cat.id
+                );
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    className={`${style.categoryChip} ${
+                      isSelected ? style.categoryChipSelected : ""
+                    }`}
+                    onClick={() => toggleCategory(cat)}
+                  >
+                    {cat.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         <label>
           Last opp bilder:
           <input
@@ -305,7 +350,6 @@ export default function UpdateBox({
                   >
                     ✕
                   </button>
-
                   <button
                     type="button"
                     className={style.selectMainButton}
@@ -324,11 +368,7 @@ export default function UpdateBox({
         {previewError && (
           <p className={style.previewError}>Kunne ikke laste bildet</p>
         )}
-
-        {isError && (
-          <p className={style.error}>Noe gikk galt, prøv igjen.</p>
-        )}
-
+        {isError && <p className={style.error}>Noe gikk galt, prøv igjen.</p>}
         {isSuccess && (
           <p className={style.success}>Produktet ble oppdatert!</p>
         )}

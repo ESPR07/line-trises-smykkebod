@@ -9,7 +9,7 @@ function InfoBox() {
       <article className={style.infoContentContainer}>
         <img src="/images/aboutMain.webp" alt="Info Image" className={style.infoImage}/>
         <div className={style.infoTextContainer}>
-          <p className={style.infoText}>Mine produkter er laget av resirkulert glass til noe kult og unikt. Mine produkter er laget av resirkulert glass til noe kult og unikt.</p>
+          <p className={style.infoText}>Materialene jeg bruker er sølv, glass og resin. Jeg bruker sølvtråd og sølvleire. Glasset er staver som jeg smelter til glass perler. Resin er et to komponenter plast materiale  med mange muligheter</p>
           <NavigationButton text="Oppdag" path="produkter" buttonWidth={50}/>
         </div>
       </article>

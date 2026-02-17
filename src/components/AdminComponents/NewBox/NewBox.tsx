@@ -4,6 +4,7 @@ import { useCreateProduct } from "../../../API/useCreateProduct";
 import { uploadImage } from "../../../API/uploadImage";
 import imageCompression from "browser-image-compression";
 import { APIResult } from "../../../context/siteContexts";
+import { useCategories } from "../../../API/useCategories";
 
 // Hash utility for files
 async function hashFile(file: File): Promise<string> {
@@ -20,6 +21,11 @@ async function uploadImageWithHash(file: File): Promise<string | null> {
   return uploadImage(file, fileName);
 }
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 interface AddProductModalProps {
   showModal: boolean;
   toggleModal: (val: boolean) => void;
@@ -27,11 +33,13 @@ interface AddProductModalProps {
 
 function NewBox({ showModal, toggleModal }: AddProductModalProps) {
   const { fetchProducts } = useContext(APIResult);
+  const { categories, fetchCategories } = useCategories();
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [discountAmount, setDiscountAmount] = useState("0.00");
   const [longDesc, setLongDesc] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
@@ -41,6 +49,18 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
   const [uploading, setUploading] = useState(false);
 
   const { createProduct, isLoading, isSuccess, isError } = useCreateProduct();
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const toggleCategory = (cat: Category) => {
+    setSelectedCategories((prev) =>
+      prev.some((c) => c.id === cat.id)
+        ? prev.filter((c) => c.id !== cat.id)
+        : [...prev, cat]
+    );
+  };
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -52,7 +72,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
         maxWidthOrHeight: 1200,
         useWebWorker: true,
         fileType: "image/webp",
-        initialQuality: 0.90,
+        initialQuality: 0.9,
       };
 
       const newFiles: File[] = [];
@@ -61,11 +81,10 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
       for (const file of files) {
         const compressed = await imageCompression(file, options);
 
-        // Prevent duplicate selection (same file picked twice)
         const alreadyAdded = imageFiles.some(
           (existing) =>
             existing.name === compressed.name &&
-            existing.size === compressed.size,
+            existing.size === compressed.size
         );
 
         if (alreadyAdded) continue;
@@ -78,10 +97,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
 
       setImageFiles((prev) => [...prev, ...newFiles]);
       setImagePreviews((prev) => [...prev, ...newPreviews]);
-
       setPreviewError(false);
-
-      // Reset input so the same file can be selected again if needed
       e.target.value = "";
     } catch (err) {
       console.error("Image processing failed:", err);
@@ -104,23 +120,18 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
     });
 
     setMainImageIndex((prev) => {
-      if (index === prev) return 0; // removed main image
-      if (index < prev) return prev - 1; // shift left
-      return prev; // unaffected
+      if (index === prev) return 0;
+      if (index < prev) return prev - 1;
+      return prev;
     });
   };
 
   const handleNumericInput = (value: string, setter: (val: string) => void) => {
-    if (value === "") {
-      setter("");
-      return;
-    }
-
+    if (value === "") { setter(""); return; }
     let sanitized = value.replace(/[^0-9.]/g, "");
     const parts = sanitized.split(".");
     if (parts.length > 2) sanitized = parts[0] + "." + parts[1];
     if (parts[1]?.length > 2) sanitized = parts[0] + "." + parts[1].slice(0, 2);
-
     sanitized = sanitized.replace(/^0+(\d)/, "$1");
     setter(sanitized);
   };
@@ -136,9 +147,8 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
 
       if (imageFiles.length) {
         const results = await Promise.all(
-          imageFiles.map((file) => uploadImageWithHash(file)),
+          imageFiles.map((file) => uploadImageWithHash(file))
         );
-
         uploadedImages = results.filter((url): url is string => Boolean(url));
       }
 
@@ -155,9 +165,11 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
         discount: numericDiscount > 0,
         discount_amount: numericDiscount,
         long_description: longDesc || undefined,
-
         image_links: orderedImages.length ? orderedImages : undefined,
         image_url: orderedImages[0],
+        categories: selectedCategories.length
+          ? selectedCategories.map((c) => c.name)
+          : undefined,
       });
     } catch (err) {
       console.error("Failed to create product:", err);
@@ -210,7 +222,11 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
 
         <label>
           Produktnavn:
-          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="f.eks Rødt smykke"/>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="f.eks Rødt smykke"
+          />
         </label>
 
         <label>
@@ -242,6 +258,32 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
           />
         </label>
 
+        {/* Category selector */}
+        {categories.length > 0 && (
+          <div className={style.categorySelector}>
+            <span className={style.categorySelectorLabel}>Kategorier:</span>
+            <div className={style.categoryChips}>
+              {categories.map((cat) => {
+                const isSelected = selectedCategories.some(
+                  (c) => c.id === cat.id
+                );
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    className={`${style.categoryChip} ${
+                      isSelected ? style.categoryChipSelected : ""
+                    }`}
+                    onClick={() => toggleCategory(cat)}
+                  >
+                    {cat.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         <label>
           Last opp bilder:
           <input
@@ -271,7 +313,6 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
                 >
                   ✕
                 </button>
-
                 <button
                   type="button"
                   className={style.selectMainButton}
@@ -291,7 +332,6 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
         {previewError && (
           <p className={style.previewError}>Kunne ikke laste bildet</p>
         )}
-
         {isError && <p className={style.error}>Noe gikk galt, prøv igjen.</p>}
         {isSuccess && <p className={style.success}>Produktet ble lagt til!</p>}
 

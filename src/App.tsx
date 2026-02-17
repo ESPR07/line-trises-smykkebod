@@ -14,8 +14,8 @@ import cartInteractions, {
 } from "./Reducers/cartInteractions";
 import { useProductList } from "./API/useProducts";
 import { useGetOrders } from "./API/useGetOrders";
-import UnderConstruction from "./pages/UnderConstruction";
-import { useAuthStatus } from "./API/useAuthStatus";
+// import UnderConstruction from "./pages/UnderConstruction";
+// import { useAuthStatus } from "./API/useAuthStatus";
 import OrderProcessingPage from "./pages/OrderProccessingPage";
 import { CartContext, APIResult, ordersResult } from "./context/siteContexts";
 import ReturnPolicyPage from "./pages/ReturnPolicyPage";
@@ -179,11 +179,11 @@ function AdminLayout() {
 }
 
 function App() {
-  const { session } = useAuthStatus();
+  // const { session } = useAuthStatus();
 
-  if (!session) {
-    return <UnderConstruction />;
-  }
+  // if (!session) {
+  //   return <UnderConstruction />;
+  // }
 
   return (
     <Suspense fallback={<div>Laster...</div>}>
