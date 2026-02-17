@@ -19,6 +19,7 @@ export type Database = {
           image_url?: string;
           image_links?: string[];
           active_status: boolean;
+          categories?: string[];
         };
         Insert: {
           id?: string;
@@ -31,6 +32,7 @@ export type Database = {
           image_url?: string;
           image_links?: string[];
           active_status?: boolean;
+          categories?: string[];
         };
         Update: {
           name?: string;
@@ -42,6 +44,21 @@ export type Database = {
           image_url?: string;
           image_links?: string[];
           active_status?: boolean;
+          categories?: string[];
+        };
+      };
+
+      categories: {
+        Row: {
+          id: string;
+          name: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+        };
+        Update: {
+          name?: string;
         };
       };
 
@@ -207,6 +224,7 @@ export type FetchResult = {
   long_description?: string;
   created_at?: string;
   active_status?: boolean;
+  categories?: string[];
 };
 
 export type shippingData = {

@@ -4,6 +4,7 @@
   align-items: center;
   background-color: var(--boxColor)
 }
+
 .banner {
   width: 100%;
   height: 60vh;
@@ -12,6 +13,7 @@
   background-size: cover;
   position: fixed;
 }
+
 .archContainer {
   width: 100%;
   background-color: transparent;
@@ -22,6 +24,7 @@
     width: 100%;
   }
 }
+
 .browseContainerBackground {
   display: flex;
   justify-content: center;
@@ -31,6 +34,7 @@
   position: fixed;
   margin-top: 43vw;
 }
+
 .browseContainer {
   position: relative;
   display: flex;
@@ -43,6 +47,7 @@
   background-color: var(--background);
   z-index: 2;
 }
+
 .browseHeader {
   text-align: center;
   font-family: 'storyScript';
@@ -57,18 +62,53 @@
   position: absolute;
   top: -70px;
 }
+
 .filterMenu {
   display: flex;
-  justify-content: end;
-  margin-bottom: 10px;
+  justify-content: flex-end;
   width: 100%;
+  margin-bottom: 8px;
 }
+
+.categorySelect {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 10px 40px 10px 16px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: #374151;
+  background-color: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+  min-width: 200px;
+
+  /* Custom chevron arrow */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.categorySelect:hover {
+  border-color: #93c5fd;
+  background-color: #eff6ff;
+}
+
+.categorySelect:focus {
+  border-color: #3b82f6;
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
 .divider {
   display: block;
   border-bottom: 2px dotted var(--highlight);
   width: 100%;
   margin-bottom: 20px;
 }
+
 .productGrid {
   display: flex;
   flex-wrap: wrap;
@@ -79,6 +119,7 @@
   margin-bottom: 30px;
   width: 100%;
 }
+
 .loader {
   font-size: 3rem;
   text-align: center;

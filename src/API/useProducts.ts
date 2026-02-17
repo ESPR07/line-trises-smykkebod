@@ -12,7 +12,12 @@ export function useProductList() {
   const [totalProducts, setTotalProducts] = useState<number>(0);
   const itemsPerPage = 10;
 
-  async function fetchProducts(page: number = 1, activeStatus?: boolean, searchQuery?: string) {
+  async function fetchProducts(
+    page: number = 1,
+    activeStatus?: boolean,
+    searchQuery?: string,
+    // categories?: string[],
+  ) {
     try {
       setIsLoading(true);
       setIsError(false);
@@ -29,11 +34,16 @@ export function useProductList() {
       if (activeStatus) query = query.eq("active_status", true);
 
       if (searchQuery?.trim()) {
-        // Server-side search only in top-level product fields
         query = query.or(
           `name.ilike.%${searchQuery}%,short_description.ilike.%${searchQuery}%,long_description.ilike.%${searchQuery}%`,
         );
       }
+
+      // console.log("Filtering categories:", categories, typeof categories);
+
+      // if (categories?.length) {
+      //   query = query.contains("categories", categories);
+      // }
 
       const { data, error, count } = await query;
 
