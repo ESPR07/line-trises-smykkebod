@@ -20,7 +20,7 @@ export const APIResult = createContext({
     _page?: number,
     _showAvailable?: boolean,
     _searchQuery?: string,
-    _categories?: string[] | string,
+    _categories?: string[],
   ) => {},
   currentPage: 1,
   totalPages: 1,

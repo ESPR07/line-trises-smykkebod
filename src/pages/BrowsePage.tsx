@@ -1,8 +1,8 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard/ProductCard";
 import style from "./BrowsePage.module.css";
 import { APIResult } from "../context/siteContexts";
-// import { useCategories } from "../API/useCategories";
+import { useCategories } from "../API/useCategories";
 
 function BrowsePage() {
   const {
@@ -15,27 +15,27 @@ function BrowsePage() {
     setCurrentPage,
   } = useContext(APIResult);
 
-  // const { categories, fetchCategories } = useCategories();
-  // const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const { categories, fetchCategories } = useCategories();
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
-  // useEffect(() => {
-  //   fetchCategories();
-  // }, []);
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   useEffect(() => {
     fetchProducts(
       currentPage,
       true,
       undefined,
-      // selectedCategory ? [selectedCategory] : undefined,
+      selectedCategory ? [selectedCategory] : undefined,
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage]);
+  }, [currentPage, selectedCategory]);
 
-  // const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  //   setCurrentPage(1); // reset to page 1 on filter change
-  //   setSelectedCategory(e.target.value);
-  // };
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCurrentPage(1); // reset to page 1 on filter change
+    setSelectedCategory(e.target.value);
+  };
 
   const goToNextPage = () => {
     if (currentPage < totalPages) {
@@ -104,7 +104,7 @@ function BrowsePage() {
           <h1 className={style.browseHeader}>Alle Produkter</h1>
 
           {/* Category filter */}
-          {/* {categories.length > 0 && (
+          {categories.length > 0 && (
             <div className={style.filterMenu}>
               <select
                 className={style.categorySelect}
@@ -119,7 +119,7 @@ function BrowsePage() {
                 ))}
               </select>
             </div>
-          )} */}
+          )}
 
           <span className={style.divider}></span>
 
