@@ -68,8 +68,6 @@ export default function UpdateBox({
     product.active_status ?? true
   );
 
-  // Pre-populate from existing product JSONB (stored as name strings)
-  // We match against the full categories list once it loads
   const [selectedCategories, setSelectedCategories] = useState<Category[]>([]);
 
   useEffect(() => {

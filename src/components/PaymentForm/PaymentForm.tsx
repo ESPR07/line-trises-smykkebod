@@ -14,7 +14,7 @@ interface PaymentFormProps {
   shippingData: Partial<shippingData>;
   handleCheckout: (stripe: Stripe, elements: StripeElements) => Promise<void>;
   disabled: boolean;
-  onEditShipping?: () => void; // Optional callback to go back to shipping form
+  onEditShipping?: () => void;
 }
 
 function PaymentForm({

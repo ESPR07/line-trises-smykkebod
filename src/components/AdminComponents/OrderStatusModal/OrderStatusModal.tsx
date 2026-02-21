@@ -52,8 +52,6 @@ export default function OrderStatusModal({
     };
   });
 
-  console.log(cartItems);
-
   const handleCompleteOrder = async () => {
     try {
       const res = await fetch("/.netlify/functions/completeOrder", {

@@ -3,7 +3,6 @@ import { useSwipeable } from "react-swipeable";
 import style from "./AdBannerCarousel.module.css";
 import NavigationButton from "../utils/Button/NavigationButton";
 
-// This will be replaced by real data later
 const images = [
   {
     imageurl: "/images/welcomeBanner.webp",

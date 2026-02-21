@@ -18,7 +18,7 @@ function EventButton({ text, event, buttonWidth, checkBox = true}: ButtonProps) 
 
     // trigger “added” animation/text
     setAdded(true);
-    setTimeout(() => setAdded(false), 1500); // revert after 1.5s
+    setTimeout(() => setAdded(false), 1500);
   };
 
   if(!checkBox) {
