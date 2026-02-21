@@ -38,7 +38,7 @@ export async function handlePaymentSuccess(stripeEvent: Stripe.Event) {
 
   if (existingOrder) {
     console.log("Order already exists for PaymentIntent:", paymentIntent.id);
-    return; // idempotent, nothing more to do
+    return;
   }
 
   // Rebuild cart and calculate totals

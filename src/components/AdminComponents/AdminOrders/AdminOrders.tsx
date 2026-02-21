@@ -120,7 +120,6 @@ function AdminOrders() {
     });
   }, [allOrders, sortColumn, ascending]);
 
-  // Loading & error states
   if (loading) {
     return (
       <article className={style.adminOrdersContainer}>

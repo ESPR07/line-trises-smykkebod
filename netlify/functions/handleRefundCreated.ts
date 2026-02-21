@@ -82,7 +82,7 @@ export async function handleRefundCreated(stripeEvent: Stripe.Event) {
 
   if (updateError) {
     console.error("Failed to update order status after refund:", updateError);
-    throw updateError; // Stripe will retry webhook
+    throw updateError;
   }
 
   console.log(

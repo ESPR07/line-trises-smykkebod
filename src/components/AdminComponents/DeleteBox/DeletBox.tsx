@@ -19,8 +19,8 @@ function parseSupabaseFilePath(imageUrl: string) {
 
 interface DeleteBoxProps {
   id: string;
-  imageUrl?: string;        // legacy support
-  imageLinks?: string[];    // NEW: all product images
+  imageUrl?: string;
+  imageLinks?: string[];
   deleteBoxValue: boolean;
   toggleDeleteBox: (val: boolean) => void;
 }

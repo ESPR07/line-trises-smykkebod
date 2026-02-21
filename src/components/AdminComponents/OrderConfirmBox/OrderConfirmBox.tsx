@@ -7,7 +7,7 @@ interface ShipOrderBoxProps {
   order: OrderItem;
   shipBoxValue: boolean;
   toggleShipBox: (val: boolean) => void;
-  handleOrderComplete: () => Promise<void>; // receive the function
+  handleOrderComplete: () => Promise<void>;
 }
 
 function ShipOrderBox({
