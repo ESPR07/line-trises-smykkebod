@@ -3,13 +3,11 @@ import { Database } from "../@types/Database";
 import { Cart } from "../App";
 import { initialValue, InteractionAction } from "../Reducers/cartInteractions";
 
-// Cart context
 export const CartContext = createContext<{
   state: Cart;
   dispatch: ({ type, payload }: InteractionAction) => void;
 }>({ state: initialValue, dispatch: () => {} });
 
-// API products context
 export const APIResult = createContext({
   allProducts: [] as Database["public"]["Tables"]["products"]["Row"][] | undefined,
   loading: false,
@@ -28,7 +26,6 @@ export const APIResult = createContext({
   setCurrentPage: (_page: number) => {},
 });
 
-// Orders context
 export const ordersResult = createContext({
   allOrders: [] as Database["public"]["Tables"]["orders"]["Row"][] | undefined,
   loading: false,

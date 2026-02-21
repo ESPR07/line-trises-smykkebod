@@ -102,7 +102,6 @@ function OrderProcessingPage() {
           
           dispatch({ type: "clearCart", payload: { id: "", quantity: 0 } });
 
-          // Small delay to show success state before navigation
           setTimeout(() => {
             navigate(
               `/velykket?order=${order.order_id}&name=${order.customer_info.customer_firstName}`,

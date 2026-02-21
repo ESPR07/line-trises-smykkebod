@@ -21,14 +21,3 @@ declare module "react" {
     }
   }
 }
-
-// Optional: window type for VippsCheckoutDirect
-declare global {
-  interface Window {
-    VippsCheckoutDirect?: (opts: {
-      checkoutFrontendUrl: string;
-      token: string;
-      language?: string;
-    }) => void;
-  }
-}

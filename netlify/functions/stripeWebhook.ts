@@ -6,7 +6,6 @@ import { handleRefundCreated } from "./handleRefundCreated";
 // Initialize Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-// ⚠️ Disable automatic JSON parsing
 export const config = {
   api: {
     bodyParser: false,

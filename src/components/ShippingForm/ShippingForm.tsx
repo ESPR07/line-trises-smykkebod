@@ -5,7 +5,7 @@ import { shippingData } from "../../@types/Database";
 
 interface ShippingFormProps {
   setShippingInfo: React.Dispatch<React.SetStateAction<Partial<shippingData>>>;
-  onShippingSubmit: () => Promise<void>; // called when shipping form is submitted
+  onShippingSubmit: () => Promise<void>;
   disabled: boolean;
   initialData?: Partial<shippingData>;
 }
@@ -41,7 +41,6 @@ function ShippingForm({
   };
 
   const onSubmit = async () => {
-    // call the parent function to create PaymentIntent
     await onShippingSubmit();
   };
 

@@ -35,7 +35,6 @@ function NewProductCarousel() {
     scrollRef.current.scrollBy({ left: -scrollAmount, behavior: "smooth" });
   }
 
-  // super simple swipe -> call your functions
   const swipeHandlers = useSwipeable({
     onSwipedLeft: scrollRight,
     onSwipedRight: scrollLeft,

@@ -79,7 +79,6 @@ const MakeYourOwn: React.FC = () => {
         expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 1 day expiry
       };
 
-      // Call Netlify function
       const res = await fetch("/.netlify/functions/createCustomProduct", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -96,7 +95,6 @@ const MakeYourOwn: React.FC = () => {
 
       const savedProduct = await res.json();
 
-      // Add only ID and quantity to the cart
       dispatch({
         type: "addToCart",
         payload: {

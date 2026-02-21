@@ -23,7 +23,7 @@ function AdminProducts(canEdit?: AdminProductsProps) {
   const [newBox, setNewBox] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchProducts(currentPage, false); // Admin sees all products
+    fetchProducts(currentPage, false);
   }, [currentPage]);
 
   const goToNextPage = () => {
