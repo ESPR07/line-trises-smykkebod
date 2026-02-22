@@ -1,10 +1,7 @@
 import Stripe from "stripe";
 import type { Handler } from "@netlify/functions";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  // @ts-ignore overrides the pinned API version
-  apiVersion: "2025-12-15.clover;",
-});
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 interface CreatePaymentIntentBody {
   amount: number;
