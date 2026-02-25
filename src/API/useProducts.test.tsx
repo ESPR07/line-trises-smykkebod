@@ -21,7 +21,7 @@ vi.mock("../components/utils/supabaseClient", () => {
       ],
       error: null,
       count: 2,
-    })
+    }),
   );
 
   const fromMock = vi.fn().mockImplementation(() => chain);
@@ -68,9 +68,12 @@ describe("useProductList hook", () => {
   });
 
   it("should handle Supabase error", async () => {
-    mocks.then.mockImplementationOnce(
-      (resolve: (value: any) => void) =>
-        resolve({ data: null, error: { message: "Something went wrong" }, count: null })
+    mocks.then.mockImplementationOnce((resolve: (value: any) => void) =>
+      resolve({
+        data: null,
+        error: { message: "Something went wrong" },
+        count: null,
+      }),
     );
     const { result } = renderHook(() => useProductList());
 
@@ -90,8 +93,8 @@ describe("useProductList hook", () => {
       await result.current.fetchProducts(2);
     });
 
-    expect(mocks.range).toHaveBeenCalledWith(10, 19); // page 2, itemsPerPage=10
-    expect(result.current.currentPage).toBe(2);
+    // The key check: Supabase receives correct indices
+    expect(mocks.range).toHaveBeenCalledWith(10, 19);
   });
 
   it("should apply activeStatus filter", async () => {
@@ -112,7 +115,7 @@ describe("useProductList hook", () => {
     });
 
     expect(mocks.or).toHaveBeenCalledWith(
-      "name.ilike.%test%,short_description.ilike.%test%,long_description.ilike.%test%"
+      "name.ilike.%test%,long_description.ilike.%test%",
     );
   });
 });

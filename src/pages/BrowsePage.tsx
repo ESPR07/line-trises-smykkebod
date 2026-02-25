@@ -20,7 +20,7 @@ function BrowsePage() {
 
   useEffect(() => {
     fetchCategories();
-  }, []);
+  }, [fetchProducts]);
 
   useEffect(() => {
     fetchProducts(

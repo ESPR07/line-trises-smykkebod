@@ -35,7 +35,7 @@ export function useProductList() {
 
       if (searchQuery?.trim()) {
         query = query.or(
-          `name.ilike.%${searchQuery}%,short_description.ilike.%${searchQuery}%,long_description.ilike.%${searchQuery}%`,
+          `name.ilike.%${searchQuery}%,long_description.ilike.%${searchQuery}%`,
         );
       }
 
@@ -51,7 +51,6 @@ export function useProductList() {
       } else if (data) {
         setProductList(data);
         if (count !== null) setTotalProducts(count);
-        setCurrentPage(page);
       }
     } catch (err) {
       console.error("Unexpected error:", err);
