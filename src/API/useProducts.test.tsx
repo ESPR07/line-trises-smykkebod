@@ -112,7 +112,7 @@ describe("useProductList hook", () => {
     });
 
     expect(mocks.or).toHaveBeenCalledWith(
-      "name.ilike.%test%,short_description.ilike.%test%,long_description.ilike.%test%"
+      "name.ilike.%test%,long_description.ilike.%test%"
     );
   });
 });
