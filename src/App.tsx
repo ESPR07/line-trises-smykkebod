@@ -66,8 +66,6 @@ function Layout() {
     setCurrentPage,
   } = useProductList();
 
-  const [searchQuery, _setSearchQuery] = useState("");
-
   const localStoreCart = localStorage.getItem("cart");
   const [state, dispatch] = useReducer(
     cartInteractions,
@@ -75,11 +73,6 @@ function Layout() {
       ? { productList: JSON.parse(localStoreCart), totalPrice: 0 }
       : initialValue
   );
-
-  useEffect(() => {
-    fetchProducts(currentPage, true, searchQuery);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentPage, searchQuery]);
 
   return (
     <CartContext.Provider value={{ state, dispatch }}>

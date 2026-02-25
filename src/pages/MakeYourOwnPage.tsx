@@ -146,10 +146,15 @@ const MakeYourOwn: React.FC = () => {
     );
   }
 
-  if(options?.length === 0) {
+  if (options?.length === 0) {
     return (
       <div className={styles.container}>
         <h2>Lag din egen er ikke tilgjengelig akkurat nå.</h2>
+        <section className={styles.section}>
+          <h2>Har du Sølvbestikk?</h2>
+          <p>Da er det også mulig for meg å lage smykker ut av dem</p>
+          <p>Kontakt meg på <a href="mailto:trine-lise@ltkunstsmykker.no">trine-lise@ltkunstsmykker.no</a> så kan vi se hva vi kan lage sammen!</p>
+        </section>
       </div>
     );
   }
@@ -158,6 +163,11 @@ const MakeYourOwn: React.FC = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1 className={styles.title}>Lag Ditt Eget Smykke</h1>
+        <section className={styles.section}>
+          <h2>Har du Sølvbestikk?</h2>
+          <p>Da er det også mulig for meg å lage smykker ut av dem</p>
+          <p>Kontakt meg på <a href="mailto:trine-lise@ltkunstsmykker.no">trine-lise@ltkunstsmykker.no</a> så kan vi se hva vi kan lage sammen!</p>
+        </section>
         <p className={styles.subtitle}>
           Velg type og tilpass etter dine ønsker
         </p>

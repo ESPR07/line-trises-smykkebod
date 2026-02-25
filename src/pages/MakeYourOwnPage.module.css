@@ -31,6 +31,37 @@
   font-weight: 600;
 }
 
+.section {
+  background: white;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.section h2 {
+  font-size: 1.75rem;
+  color: var(--highlight);
+  margin: 0 0 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.section a {
+  color: var(--highlight);
+  text-decoration: underline;
+}
+
+.section p {
+  line-height: 1.2;
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
 .subtitle {
   font-size: 1.1rem;
   color: #666;
