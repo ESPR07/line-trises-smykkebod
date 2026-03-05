@@ -4,3 +4,5 @@ Allow: /
 # Prevent admin panel from being indexed
 Disallow: /admin
 Disallow: /admin/
+
+Sitemap: https://www.ltkunstsmykker.no/sitemap.xml

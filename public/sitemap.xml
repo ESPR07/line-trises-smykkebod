@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Homepage -->
+  <url>
+    <loc>https://www.ltkunstsmykker.no/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Browse products page -->
+  <url>
+    <loc>https://www.ltkunstsmykker.no/produkter</loc>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- About page -->
+  <url>
+    <loc>https://www.ltkunstsmykker.no/om-meg</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Contact page -->
+  <url>
+    <loc>https://www.ltkunstsmykker.no/kontakt</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Return policy -->
+  <url>
+    <loc>https://www.ltkunstsmykker.no/retur-og-angrerett</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
+  <!-- Make your own page -->
+  <url>
+    <loc>https://www.ltkunstsmykker.no/lag-din-egen</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+</urlset>
