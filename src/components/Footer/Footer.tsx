@@ -6,7 +6,7 @@ function Footer() {
       <Link aria-label="Home Link" className={style.logo} to={"/"}/>
       <ul className={style.logoList}>
         {/* <li><Link aria-label="Instagram Link" className={`${style.socials} ${style.instagram}`} to={"#"}/></li> */}
-        <li><Link aria-label="Facebook Link" className={`${style.socials} ${style.facebook}`} to={"https://www.facebook.com/profile.php?id=61588272663749"}/></li>
+        <li><Link aria-label="Facebook Link" className={`${style.socials} ${style.facebook}`} target="_blank" to={"https://www.facebook.com/profile.php?id=61588272663749"}/></li>
       </ul>
       <div className={style.footerNav}>
         <Link to="/retur-og-angrerett" className={style.footerLink}>
