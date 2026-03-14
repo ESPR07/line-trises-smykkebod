@@ -17,7 +17,6 @@ nav {
   height: 60px;
   width: 100px;
   background-image: url("/src/assets/logo.svg");
-  background-size: cover;
   background-repeat: no-repeat;
   background-position: center left -5px;
   cursor: pointer;
@@ -25,23 +24,8 @@ nav {
   position: relative;
 }
 
-.navLogo::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 3px;
-  background-color: var(--CTA);
-  transition: width 0.3s ease;
-}
-
-.navLogo:hover::after {
-  width: 100%;
-}
-
 .navLogo:hover {
-  transform: scale(1.05);
+  transform: scale(1.10);
   filter: brightness(1.1);
 }
 
