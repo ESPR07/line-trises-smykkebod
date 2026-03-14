@@ -37,6 +37,11 @@ function BrowsePage() {
     setSelectedCategory(e.target.value);
   };
 
+  const handlePageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCurrentPage(Number(e.target.value));
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const goToNextPage = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
@@ -70,7 +75,10 @@ function BrowsePage() {
     return (
       <>
         <title>Fant ikke side | Line Trises Kunstsmykker</title>
-        <meta name="description" content="Kunne ikke finne siden du ser etter." />
+        <meta
+          name="description"
+          content="Kunne ikke finne siden du ser etter."
+        />
         <main className={style.browseMain}>
           <h1 className={style.browseHeader}>Alle Produkter</h1>
           <section className={style.browseContainer}>
@@ -140,6 +148,18 @@ function BrowsePage() {
             ))}
           </article>
 
+          <span className={style.pageInfo}>
+              Side{" "}
+              <select onChange={handlePageChange} defaultValue={currentPage}>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
+              av {totalPages}
+            </span>
+
           {/* Pagination Controls */}
           <div className={style.pagination}>
             <button
@@ -149,10 +169,6 @@ function BrowsePage() {
             >
               ‹ Forrige
             </button>
-
-            <span className={style.pageInfo}>
-              Side {currentPage} av {totalPages}
-            </span>
 
             <button
               onClick={goToNextPage}

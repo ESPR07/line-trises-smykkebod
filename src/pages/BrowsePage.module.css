@@ -131,7 +131,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 15px;
+  gap: 10px;
   margin-top: 20px;
   margin-bottom: 50px;
   width: 100%;
@@ -164,12 +164,25 @@
 }
 
 .pageInfo {
-  padding: 10px 20px;
+  padding: 10px 10px;
   color: var(--highlight);
   font-size: 1.1rem;
   font-weight: 600;
   min-width: 80px;
   text-align: center;
+  text-wrap: nowrap;
+
+  select {
+    margin-inline: 5px;
+    font-size: 1rem;
+    color: var(--highlight);
+    background-color: var(--background);
+    border: 1px var(--boxColor) solid;
+    border-radius: 5px;
+    font-family: 'montserrat', 'Courier New', Courier, monospace;
+    font-weight: 600;
+    padding: 5px 10px;
+  }
 }
 
 @media screen and (max-width: 900px) {

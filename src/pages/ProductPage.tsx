@@ -81,13 +81,12 @@ function SingleProduct() {
       />
 
       <main className={style.productPageContainer}>
-        <Link to="/produkter" className={style.backLink}>
-          <div className={style.backArrow}></div>
-          <span>Tilbake til produkter</span>
-        </Link>
-
         <section className={style.productContainer}>
           <article className={style.imageSection}>
+            <Link to="/produkter" className={style.backLink}>
+              <div className={style.backArrow}></div>
+              <span>Tilbake til produkter</span>
+            </Link>
             {product.discount && savingsPercent > 0 && (
               <div className={style.discountBadge}>-{savingsPercent}%</div>
             )}
