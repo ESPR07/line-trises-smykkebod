@@ -6,28 +6,28 @@ interface Category {
   name: string;
 }
 
-export function useCategories() {
-  const [categories, setCategories] = useState<Category[]>([]);
+export function useTypeSort() {
+  const [sortTypes, setSortTypes] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const fetchCategories = async () => {
+  const fetchTypeSort = async () => {
     setIsLoading(true);
     setIsError(false);
 
     const { data, error } = await supabaseClient
-      .from("categories")
+      .from("product_type")
       .select("id, name")
       .order("name", { ascending: true });
 
     if (error || !data) {
       setIsError(true);
     } else {
-      setCategories(data);
+      setSortTypes(data);
     }
 
     setIsLoading(false);
   };
 
-  return { categories, isLoading, isError, fetchCategories };
+  return { sortTypes, isLoading, isError, fetchTypeSort };
 }

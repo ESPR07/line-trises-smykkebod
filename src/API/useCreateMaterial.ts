@@ -5,21 +5,21 @@ interface Category {
   name: string;
 }
 
-export function useCreateCategory() {
-  const createCategory = async (name: string): Promise<Category | null> => {
+export function useCreateMaterial() {
+  const createMaterial = async (name: string): Promise<Category | null> => {
     const { data, error } = await supabaseClient
-      .from("categories")
+      .from("materials")
       .insert({ name })
       .select("id, name")
       .single();
 
     if (error || !data) {
-      console.error("Failed to create category:", error);
+      console.error("Failed to create material:", error);
       return null;
     }
 
     return data;
   };
 
-  return { createCategory };
+  return { createMaterial };
 }

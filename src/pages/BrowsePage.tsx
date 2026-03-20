@@ -2,7 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard/ProductCard";
 import style from "./BrowsePage.module.css";
 import { APIResult } from "../context/siteContexts";
-import { useCategories } from "../API/useCategories";
+import { useMaterials } from "../API/useMaterials";
+import { useTypeSort } from "../API/useTypeSort";
 
 function BrowsePage() {
   const {
@@ -15,11 +16,13 @@ function BrowsePage() {
     setCurrentPage,
   } = useContext(APIResult);
 
-  const { categories, fetchCategories } = useCategories();
+  const { categories, fetchMaterials } = useMaterials();
+  const { sortTypes, fetchTypeSort } = useTypeSort();
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   useEffect(() => {
-    fetchCategories();
+    fetchMaterials();
+    fetchTypeSort();
   }, [fetchProducts]);
 
   useEffect(() => {
@@ -112,22 +115,36 @@ function BrowsePage() {
           <h1 className={style.browseHeader}>Alle Produkter</h1>
 
           {/* Category filter */}
-          {categories.length > 0 && (
-            <div className={style.filterMenu}>
+          <div className={style.filterMenu}>
+            {categories.length > 0 && (
               <select
                 className={style.categorySelect}
                 value={selectedCategory}
                 onChange={handleCategoryChange}
               >
-                <option value="">Alle kategorier</option>
+                <option value="">Materiale</option>
                 {categories.map((cat) => (
                   <option key={cat.id} value={cat.name}>
                     {cat.name}
                   </option>
                 ))}
               </select>
-            </div>
-          )}
+            )}
+            {sortTypes.length > 0 && (
+              <select
+                className={style.categorySelect}
+                value={selectedCategory}
+                onChange={handleCategoryChange}
+              >
+                <option value="">Smykke Type</option>
+                {sortTypes.map((cat) => (
+                  <option key={cat.id} value={cat.name}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
 
           <span className={style.divider}></span>
 
@@ -149,16 +166,16 @@ function BrowsePage() {
           </article>
 
           <span className={style.pageInfo}>
-              Side{" "}
-              <select onChange={handlePageChange} defaultValue={currentPage}>
-                {Array.from({ length: totalPages }, (_, i) => (
-                  <option key={i + 1} value={i + 1}>
-                    {i + 1}
-                  </option>
-                ))}
-              </select>
-              av {totalPages}
-            </span>
+            Side{" "}
+            <select onChange={handlePageChange} defaultValue={currentPage}>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <option key={i + 1} value={i + 1}>
+                  {i + 1}
+                </option>
+              ))}
+            </select>
+            av {totalPages}
+          </span>
 
           {/* Pagination Controls */}
           <div className={style.pagination}>

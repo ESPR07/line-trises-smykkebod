@@ -1,11 +1,13 @@
 import AdminCustomOptions from "../AdminCustomOptions/AdminCustomOptions";
-import CategoriesSettings from "../CategoriesSettings/CategoriesSettings";
+import MaterialsSettings from "../MaterialsSettings/MaterialsSettings";
+import TypeSortSettings from "../TypeSortSettings/TypeSortSettings";
 
 
 function AdminSettings() {
   return (
     <>
-      <CategoriesSettings />
+      <MaterialsSettings />
+      <TypeSortSettings />
       <AdminCustomOptions />
     </>
   );

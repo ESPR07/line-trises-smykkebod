@@ -1,19 +1,19 @@
 import { supabaseClient } from "../components/utils/supabaseClient";
 
-export function useDeleteCategory() {
-  const deleteCategory = async (id: string): Promise<boolean> => {
+export function useDeleteMaterials() {
+  const deleteMaterial = async (id: string): Promise<boolean> => {
     const { error } = await supabaseClient
-      .from("categories")
+      .from("materials")
       .delete()
       .eq("id", id);
 
     if (error) {
-      console.error("Failed to delete category:", error);
+      console.error("Failed to delete material:", error);
       return false;
     }
 
     return true;
   };
 
-  return { deleteCategory };
+  return { deleteMaterial };
 }
