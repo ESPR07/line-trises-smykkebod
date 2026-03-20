@@ -3,7 +3,7 @@
   height: 100vh;
   justify-content: center;
   align-items: center;
-  background-image: url("/src/assets/images/loginBackground.webp");
+  background-image: url("/public/images/loginBackground.webp");
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
