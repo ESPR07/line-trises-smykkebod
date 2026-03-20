@@ -74,7 +74,7 @@ function AdminProducts(canEdit?: AdminProductsProps) {
         {allProducts && allProducts.length === 0 && <h3>Her var det tomt</h3>}
 
         {allProducts?.map((product) => (
-          <AdminProductColumn key={product.id} data={product} />
+          <AdminProductColumn key={product.id} data={product} currentPage={currentPage}/>
         ))}
       </article>
     );
@@ -105,7 +105,7 @@ function AdminProducts(canEdit?: AdminProductsProps) {
       {allProducts && allProducts.length === 0 && <h3>Her var det tomt</h3>}
 
       {allProducts?.map((product) => (
-        <AdminProductColumn key={product.id} data={product} />
+        <AdminProductColumn key={product.id} data={product} currentPage={currentPage} />
       ))}
 
       {/* Pagination Controls */}

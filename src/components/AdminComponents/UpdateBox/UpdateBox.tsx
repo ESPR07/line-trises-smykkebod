@@ -44,12 +44,14 @@ interface UpdateBoxProps {
   product: FetchResult;
   updateBoxValue: boolean;
   toggleUpdateBox: (val: boolean) => void;
+  currentPage: number;
 }
 
 export default function UpdateBox({
   product,
   updateBoxValue,
   toggleUpdateBox,
+  currentPage,
 }: UpdateBoxProps) {
   const { fetchProducts } = useContext(APIResult);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -252,7 +254,7 @@ export default function UpdateBox({
 
   useEffect(() => {
     if (isSuccess) {
-      fetchProducts();
+      fetchProducts(currentPage);
       timeoutRef.current = setTimeout(() => toggleUpdateBox(false), 1200);
     }
     return () => {
