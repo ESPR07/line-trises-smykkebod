@@ -9,9 +9,10 @@ import UpdateBox from "../UpdateBox/UpdateBox";
 interface ProductCardProps {
   data: FetchResult;
   canEdit?: boolean
+  currentPage: number;
 }
 
-function AdminProductColumn({ data, canEdit = true }: ProductCardProps) {
+function AdminProductColumn({ data, canEdit = true, currentPage }: ProductCardProps) {
   const [deleteBox, setDeleteBox] = useState<boolean>(false);
   const [updateBox, setUpdateBox] = useState<boolean>(false);
 
@@ -113,6 +114,7 @@ function AdminProductColumn({ data, canEdit = true }: ProductCardProps) {
           product={data} 
           updateBoxValue={updateBox} 
           toggleUpdateBox={setUpdateBox}
+          currentPage={currentPage}
         />
       )}
     </>
