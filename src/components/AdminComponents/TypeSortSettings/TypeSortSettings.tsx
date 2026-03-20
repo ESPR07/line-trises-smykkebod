@@ -1,19 +1,19 @@
 import { useState, useEffect } from "react";
-import style from "./CategoriesSettings.module.css";
-import { useCategories } from "../../../API/useMaterials";
-import { useCreateCategory } from "../../../API/useCreateCategory";
-import { useDeleteCategory } from "../../../API/useDeleteCatgory";
+import style from "./TypeSortSettings.module.css";
+import { useCreateMaterial } from "../../../API/useCreateMaterial";
+import { useDeleteMaterials } from "../../../API/useDeleteMaterials";
+import { useTypeSort } from "../../../API/useTypeSort";
 
-function CategoriesSettings() {
-  const { categories, isLoading, isError, fetchCategories } = useCategories();
-  const { createCategory } = useCreateCategory();
-  const { deleteCategory } = useDeleteCategory();
+function TypeSortSettings() {
+  const { categories, isLoading, isError, fetchTypeSort } = useTypeSort();
+  const { createMaterial } = useCreateMaterial();
+  const { deleteMaterial } = useDeleteMaterials();
 
   const [allCategories, setAllCategories] = useState(categories);
   const [newCategory, setNewCategory] = useState("");
 
   useEffect(() => {
-    fetchCategories();
+    fetchTypeSort();
   }, []);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ function CategoriesSettings() {
       return;
     }
 
-    const created = await createCategory(trimmed);
+    const created = await createMaterial(trimmed);
     if (created) {
       setAllCategories(
         [...allCategories, created].sort((a, b) => a.name.localeCompare(b.name))
@@ -49,7 +49,7 @@ function CategoriesSettings() {
     );
     if (!confirmed) return;
 
-    const ok = await deleteCategory(id);
+    const ok = await deleteMaterial(id);
     if (ok) {
       setAllCategories(allCategories.filter((c) => c.id !== id));
     } else {
@@ -60,10 +60,10 @@ function CategoriesSettings() {
   if (isLoading) {
     return (
       <div className={style.categoriesSettingsContainer}>
-        <h2>Kategorier</h2>
+        <h2>Smykke Type</h2>
         <div className={style.loadingState}>
           <div className={style.spinner} />
-          <p>Laster kategorier...</p>
+          <p>Laster Typer...</p>
         </div>
       </div>
     );
@@ -72,12 +72,12 @@ function CategoriesSettings() {
   if (isError) {
     return (
       <div className={style.categoriesSettingsContainer}>
-        <h2>Kategorier</h2>
+        <h2>Smykke Typer</h2>
         <div className={style.errorState}>
           <div className={style.errorIcon}>⚠️</div>
-          <h3>Kunne ikke laste kategorier</h3>
+          <h3>Kunne ikke laste typer</h3>
           <p>Det oppstod et problem ved henting av data.</p>
-          <button className={style.retryButton} onClick={fetchCategories}>
+          <button className={style.retryButton} onClick={fetchTypeSort}>
             Prøv igjen
           </button>
         </div>
@@ -87,18 +87,18 @@ function CategoriesSettings() {
 
   return (
     <div className={style.categoriesSettingsContainer}>
-      <h2>Kategorier</h2>
+      <h2>Smykke Typer</h2>
 
       {/* Add new category */}
       <div className={style.addSection}>
         <label>
-          Legg til ny kategori (f.eks. "Ring", "Øredobber"):
+          Legg til ny type (f.eks. "Ring", "Øredobber"):
           <div className={style.inputWithButton}>
             <input
               type="text"
               value={newCategory}
               onChange={(e) => setNewCategory(e.target.value)}
-              placeholder="Kategorinavn..."
+              placeholder="Type Navn..."
               onKeyPress={(e) => e.key === "Enter" && addCategory()}
             />
             <button
@@ -116,7 +116,7 @@ function CategoriesSettings() {
       <div className={style.chipList}>
         {allCategories.length === 0 ? (
           <p className={style.emptyState}>
-            Ingen kategorier lagt til ennå. Legg til en ovenfor.
+            Ingen typer lagt til ennå. Legg til en ovenfor.
           </p>
         ) : (
           allCategories.map((cat) => (
@@ -126,7 +126,7 @@ function CategoriesSettings() {
                 type="button"
                 className={style.removeButton}
                 onClick={() => removeCategory(cat.id)}
-                title="Fjern kategori"
+                title="Fjern type"
               />
             </div>
           ))
@@ -136,4 +136,4 @@ function CategoriesSettings() {
   );
 }
 
-export default CategoriesSettings;
+export default TypeSortSettings;

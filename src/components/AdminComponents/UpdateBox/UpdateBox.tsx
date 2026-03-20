@@ -6,7 +6,7 @@ import { FetchResult } from "../../../@types/Database";
 import { supabaseClient } from "../../../components/utils/supabaseClient";
 import imageCompression from "browser-image-compression";
 import { APIResult } from "../../../context/siteContexts";
-import { useCategories } from "../../../API/useMaterials";
+import { useMaterials } from "../../../API/useMaterials";
 
 async function hashFile(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
@@ -52,7 +52,7 @@ export default function UpdateBox({
 }: UpdateBoxProps) {
   const { fetchProducts } = useContext(APIResult);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const { categories, fetchCategories } = useCategories();
+  const { categories, fetchMaterials } = useMaterials();
 
   const { updateProduct, isLoading, isSuccess, isError } = useUpdateProduct();
 
@@ -94,7 +94,7 @@ export default function UpdateBox({
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    fetchCategories();
+    fetchMaterials();
   }, []);
 
   const toggleCategory = (cat: Category) => {

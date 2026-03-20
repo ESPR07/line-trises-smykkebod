@@ -4,7 +4,7 @@ import { useCreateProduct } from "../../../API/useCreateProduct";
 import { uploadImage } from "../../../API/uploadImage";
 import imageCompression from "browser-image-compression";
 import { APIResult } from "../../../context/siteContexts";
-import { useCategories } from "../../../API/useMaterials";
+import { useMaterials } from "../../../API/useMaterials";
 
 // Hash utility for files
 async function hashFile(file: File): Promise<string> {
@@ -33,7 +33,7 @@ interface AddProductModalProps {
 
 function NewBox({ showModal, toggleModal }: AddProductModalProps) {
   const { fetchProducts } = useContext(APIResult);
-  const { categories, fetchCategories } = useCategories();
+  const { categories, fetchMaterials } = useMaterials();
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -51,7 +51,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
   const { createProduct, isLoading, isSuccess, isError } = useCreateProduct();
 
   useEffect(() => {
-    fetchCategories();
+    fetchMaterials();
   }, []);
 
   const toggleCategory = (cat: Category) => {
