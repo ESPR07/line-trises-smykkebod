@@ -5,6 +5,7 @@ import { uploadImage } from "../../../API/uploadImage";
 import imageCompression from "browser-image-compression";
 import { APIResult } from "../../../context/siteContexts";
 import { useMaterials } from "../../../API/useMaterials";
+import { useTypeSort } from "../../../API/useTypeSort";
 
 // Hash utility for files
 async function hashFile(file: File): Promise<string> {
@@ -34,6 +35,7 @@ interface AddProductModalProps {
 function NewBox({ showModal, toggleModal }: AddProductModalProps) {
   const { fetchProducts } = useContext(APIResult);
   const { categories, fetchMaterials } = useMaterials();
+  const { sortTypes, fetchTypeSort } = useTypeSort();
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -52,6 +54,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
 
   useEffect(() => {
     fetchMaterials();
+    fetchTypeSort();
   }, []);
 
   const toggleCategory = (cat: Category) => {
@@ -261,9 +264,34 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
         {/* Category selector */}
         {categories.length > 0 && (
           <div className={style.categorySelector}>
-            <span className={style.categorySelectorLabel}>Kategorier:</span>
+            <span className={style.categorySelectorLabel}>Materiale:</span>
             <div className={style.categoryChips}>
               {categories.map((cat) => {
+                const isSelected = selectedCategories.some(
+                  (c) => c.id === cat.id
+                );
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    className={`${style.categoryChip} ${
+                      isSelected ? style.categoryChipSelected : ""
+                    }`}
+                    onClick={() => toggleCategory(cat)}
+                  >
+                    {cat.name}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {sortTypes.length > 0 && (
+          <div className={style.categorySelector}>
+            <span className={style.categorySelectorLabel}>Smykke Type:</span>
+            <div className={style.categoryChips}>
+              {sortTypes.map((cat) => {
                 const isSelected = selectedCategories.some(
                   (c) => c.id === cat.id
                 );

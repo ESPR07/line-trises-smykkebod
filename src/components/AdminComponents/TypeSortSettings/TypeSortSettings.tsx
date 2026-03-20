@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
 import style from "./TypeSortSettings.module.css";
-import { useCreateMaterial } from "../../../API/useCreateMaterial";
-import { useDeleteMaterials } from "../../../API/useDeleteMaterials";
+import { useCreateSortType } from "../../../API/useCreateSortType";
 import { useTypeSort } from "../../../API/useTypeSort";
+import { useDeleteSortType } from "../../../API/UseDeleteSortType";
 
 function TypeSortSettings() {
-  const { categories, isLoading, isError, fetchTypeSort } = useTypeSort();
-  const { createMaterial } = useCreateMaterial();
-  const { deleteMaterial } = useDeleteMaterials();
+  const { sortTypes, isLoading, isError, fetchTypeSort } = useTypeSort();
+  const { createSortType } = useCreateSortType();
+  const { deleteSortType } = useDeleteSortType();
 
-  const [allCategories, setAllCategories] = useState(categories);
+  const [allCategories, setAllCategories] = useState(sortTypes);
   const [newCategory, setNewCategory] = useState("");
 
   useEffect(() => {
@@ -17,8 +17,8 @@ function TypeSortSettings() {
   }, []);
 
   useEffect(() => {
-    setAllCategories(categories);
-  }, [categories]);
+    setAllCategories(sortTypes);
+  }, [sortTypes]);
 
   const addCategory = async () => {
     const trimmed = newCategory.trim();
@@ -32,7 +32,7 @@ function TypeSortSettings() {
       return;
     }
 
-    const created = await createMaterial(trimmed);
+    const created = await createSortType(trimmed);
     if (created) {
       setAllCategories(
         [...allCategories, created].sort((a, b) => a.name.localeCompare(b.name))
@@ -49,7 +49,7 @@ function TypeSortSettings() {
     );
     if (!confirmed) return;
 
-    const ok = await deleteMaterial(id);
+    const ok = await deleteSortType(id);
     if (ok) {
       setAllCategories(allCategories.filter((c) => c.id !== id));
     } else {

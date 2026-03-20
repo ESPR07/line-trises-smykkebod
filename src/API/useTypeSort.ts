@@ -7,7 +7,7 @@ interface Category {
 }
 
 export function useTypeSort() {
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [sortTypes, setSortTypes] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
@@ -23,11 +23,11 @@ export function useTypeSort() {
     if (error || !data) {
       setIsError(true);
     } else {
-      setCategories(data);
+      setSortTypes(data);
     }
 
     setIsLoading(false);
   };
 
-  return { categories, isLoading, isError, fetchTypeSort };
+  return { sortTypes, isLoading, isError, fetchTypeSort };
 }
