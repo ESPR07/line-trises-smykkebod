@@ -1,11 +1,11 @@
 import AdminCustomOptions from "../AdminCustomOptions/AdminCustomOptions";
-import CategoriesSettings from "../CategoriesSettings/CategoriesSettings";
+import MaterialsSettings from "../MaterialsSettings/MaterialsSettings";
 
 
 function AdminSettings() {
   return (
     <>
-      <CategoriesSettings />
+      <MaterialsSettings />
       <AdminCustomOptions />
     </>
   );

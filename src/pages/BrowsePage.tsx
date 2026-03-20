@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard/ProductCard";
 import style from "./BrowsePage.module.css";
 import { APIResult } from "../context/siteContexts";
-import { useCategories } from "../API/useCategories";
+import { useMaterials } from "../API/useMaterials";
 
 function BrowsePage() {
   const {
@@ -15,11 +15,11 @@ function BrowsePage() {
     setCurrentPage,
   } = useContext(APIResult);
 
-  const { categories, fetchCategories } = useCategories();
+  const { categories, fetchMaterials } = useMaterials();
   const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   useEffect(() => {
-    fetchCategories();
+    fetchMaterials();
   }, [fetchProducts]);
 
   useEffect(() => {

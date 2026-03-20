@@ -4,7 +4,7 @@ import { useCreateProduct } from "../../../API/useCreateProduct";
 import { uploadImage } from "../../../API/uploadImage";
 import imageCompression from "browser-image-compression";
 import { APIResult } from "../../../context/siteContexts";
-import { useCategories } from "../../../API/useCategories";
+import { useCategories } from "../../../API/useMaterials";
 
 // Hash utility for files
 async function hashFile(file: File): Promise<string> {

@@ -6,17 +6,17 @@ interface Category {
   name: string;
 }
 
-export function useCategories() {
+export function useMaterials() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const fetchCategories = async () => {
+  const fetchMaterials = async () => {
     setIsLoading(true);
     setIsError(false);
 
     const { data, error } = await supabaseClient
-      .from("categories")
+      .from("materials")
       .select("id, name")
       .order("name", { ascending: true });
 
@@ -29,5 +29,5 @@ export function useCategories() {
     setIsLoading(false);
   };
 
-  return { categories, isLoading, isError, fetchCategories };
+  return { categories, isLoading, isError, fetchMaterials };
 }

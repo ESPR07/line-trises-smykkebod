@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import style from "./CategoriesSettings.module.css";
-import { useCategories } from "../../../API/useCategories";
+import { useCategories } from "../../../API/useMaterials";
 import { useCreateCategory } from "../../../API/useCreateCategory";
 import { useDeleteCategory } from "../../../API/useDeleteCatgory";
 
