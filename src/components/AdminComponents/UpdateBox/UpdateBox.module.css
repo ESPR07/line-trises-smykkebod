@@ -188,6 +188,35 @@
   transform: none;
 }
 
+.aiButton {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  width: 100%;
+  max-width: 250px;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  transition: all 0.2s ease;
+}
+.loader {
+  width: calc(100%);
+  height: 14px;
+  background: repeating-linear-gradient(-45deg,#ffffff 0 15px,#dddddd00 0 20px) left/200% 100%;
+  animation: l3 2s infinite linear;
+}
+@keyframes l3 {
+    100% {background-position:right}
+}
+
+.aiButton:hover {
+  cursor: pointer;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+}
+
 .previewGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
