@@ -193,6 +193,16 @@
   .browseContainer {
     width: calc(90% - 20px);
   }
+
+  .filterMenu {
+    flex-direction: column;
+    gap: 5px;
+    width: 90%;
+    
+    .categorySelect {
+      margin-right: 0px;
+    }
+  }
   
   .pagination {
     gap: 8px;
