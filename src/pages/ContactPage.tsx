@@ -60,8 +60,8 @@ function ContactPage() {
           <article className={style.contactBox2}>
             <p>
               Du kan nå meg på{" "}
-              <a href="mailto:line-trise@ltkunstsmykker.no">
-                line-trise@ltkunstsmykker.no
+              <a href="mailto:trine-lise@ltkunstsmykker.no">
+                trine-lise@ltkunstsmykker.no
               </a>
             </p>
           </article>
