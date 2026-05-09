@@ -7,6 +7,14 @@ import { APIResult } from "../../../context/siteContexts";
 import { useMaterials } from "../../../API/useMaterials";
 import { useTypeSort } from "../../../API/useTypeSort";
 
+const fileToBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = reject;
+  });
+
 // Hash utility for files
 async function hashFile(file: File): Promise<string> {
   const arrayBuffer = await file.arrayBuffer();
@@ -37,6 +45,8 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
   const { categories, fetchMaterials } = useMaterials();
   const { sortTypes, fetchTypeSort } = useTypeSort();
 
+  const [aiLoading, setAiLoading] = useState(false);
+
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [discountAmount, setDiscountAmount] = useState("0.00");
@@ -61,7 +71,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
     setSelectedCategories((prev) =>
       prev.some((c) => c.id === cat.id)
         ? prev.filter((c) => c.id !== cat.id)
-        : [...prev, cat]
+        : [...prev, cat],
     );
   };
 
@@ -87,7 +97,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
         const alreadyAdded = imageFiles.some(
           (existing) =>
             existing.name === compressed.name &&
-            existing.size === compressed.size
+            existing.size === compressed.size,
         );
 
         if (alreadyAdded) continue;
@@ -130,13 +140,45 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
   };
 
   const handleNumericInput = (value: string, setter: (val: string) => void) => {
-    if (value === "") { setter(""); return; }
+    if (value === "") {
+      setter("");
+      return;
+    }
     let sanitized = value.replace(/[^0-9.]/g, "");
     const parts = sanitized.split(".");
     if (parts.length > 2) sanitized = parts[0] + "." + parts[1];
     if (parts[1]?.length > 2) sanitized = parts[0] + "." + parts[1].slice(0, 2);
     sanitized = sanitized.replace(/^0+(\d)/, "$1");
     setter(sanitized);
+  };
+
+  const handleGenerateAI = async () => {
+    if (!imageFiles.length) return;
+
+    setAiLoading(true);
+
+    try {
+      const base64Images = await Promise.all(
+        imageFiles.map((file) => fileToBase64(file)),
+      );
+
+      const res = await fetch("/.netlify/functions/productAISuggestions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ images: base64Images }),
+      });
+
+      const data = await res.json();
+
+      if (data?.title) setName(data.title);
+      if (data?.description) setLongDesc(data.description);
+    } catch (err) {
+      console.error("AI failed:", err);
+    } finally {
+      setAiLoading(false);
+    }
   };
 
   const handleCreate = async () => {
@@ -150,7 +192,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
 
       if (imageFiles.length) {
         const results = await Promise.all(
-          imageFiles.map((file) => uploadImageWithHash(file))
+          imageFiles.map((file) => uploadImageWithHash(file)),
         );
         uploadedImages = results.filter((url): url is string => Boolean(url));
       }
@@ -268,7 +310,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
             <div className={style.categoryChips}>
               {categories.map((cat) => {
                 const isSelected = selectedCategories.some(
-                  (c) => c.id === cat.id
+                  (c) => c.id === cat.id,
                 );
                 return (
                   <button
@@ -293,7 +335,7 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
             <div className={style.categoryChips}>
               {sortTypes.map((cat) => {
                 const isSelected = selectedCategories.some(
-                  (c) => c.id === cat.id
+                  (c) => c.id === cat.id,
                 );
                 return (
                   <button
@@ -323,6 +365,17 @@ function NewBox({ showModal, toggleModal }: AddProductModalProps) {
         </label>
 
         {uploading && <p>Laster opp bilder...</p>}
+
+        {imageFiles.length > 0 && (
+          <button
+            type="button"
+            onClick={handleGenerateAI}
+            disabled={aiLoading}
+            className={style.aiButton}
+          >
+            {aiLoading ? <div className={style.loader}></div> : "✨AI-forslag"}
+          </button>
+        )}
 
         {imagePreviews.length > 0 && !previewError && (
           <div className={style.previewGrid}>

@@ -39,7 +39,10 @@ function AdminTopBar() {
   // Click outside to close dropdown
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
         setDropdownVisible(false);
       }
     }
@@ -55,10 +58,15 @@ function AdminTopBar() {
   }, [debouncedSearch]);
 
   // Filter JSON fields (customer names) client-side
-  const filteredOrders = orderList?.filter(order =>
-    order.customer_info.customer_firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    order.customer_info.customer_lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    order.order_id.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredOrders = orderList?.filter(
+    (order) =>
+      order.customer_info.customer_firstName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      order.customer_info.customer_lastName
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase()) ||
+      order.order_id.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,7 +99,7 @@ function AdminTopBar() {
         />
         {dropdownVisible && searchQuery && (
           <div className={style.searchDropdown}>
-            {productList?.slice(0, 5).map(product => (
+            {productList?.slice(0, 5).map((product) => (
               <div
                 key={product.id}
                 className={style.dropdownItem}
@@ -100,16 +108,18 @@ function AdminTopBar() {
                 Produkt: {product.name}
               </div>
             ))}
-            {filteredOrders?.slice(0, 5).map(order => (
+            {filteredOrders?.slice(0, 5).map((order) => (
               <div
                 key={order.id}
                 className={style.dropdownItem}
                 onClick={() => handleSelectOrder(order)}
               >
-                Bestilling: {order.order_id} – {order.customer_info.customer_firstName} {order.customer_info.customer_lastName}
+                Bestilling: {order.order_id} –{" "}
+                {order.customer_info.customer_firstName}{" "}
+                {order.customer_info.customer_lastName}
               </div>
             ))}
-            {(!productList?.length && !filteredOrders?.length) && (
+            {!productList?.length && !filteredOrders?.length && (
               <div className={style.dropdownItem}>Ingen resultater</div>
             )}
           </div>
@@ -122,6 +132,7 @@ function AdminTopBar() {
 
       {selectedProduct && modalOpen && (
         <UpdateBox
+          currentPage={1}
           product={selectedProduct}
           updateBoxValue={modalOpen}
           toggleUpdateBox={setModalOpen}
