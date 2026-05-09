@@ -129,7 +129,7 @@ export default function OrderStatusModal({
         <div className={style.orderProducts}>
           <h4>Produkter i bestillingen:</h4>
           {cartItems.map((item) => (
-            <AdminProductColumn canEdit={false} key={item.id} data={item} />
+            <AdminProductColumn currentPage={1} canEdit={false} key={item.id} data={item} />
           ))}
         </div>
 
