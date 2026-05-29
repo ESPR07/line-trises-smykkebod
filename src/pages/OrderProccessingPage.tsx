@@ -80,7 +80,7 @@ function OrderProcessingPage() {
     }
 
     let attempts = 0;
-    const maxAttempts = 30; // Poll for 1 min (30 * 2s)
+    const maxAttempts = 60; // Poll for 2 min (60 * 2s)
 
     const checkOrder = async () => {
       try {
@@ -111,7 +111,7 @@ function OrderProcessingPage() {
           clearInterval(intervalId);
           setStatus("error");
           setErrorMessage(
-            "Kunne ikke bekrefte bestillingen. Kontakt kundeservice hvis problemet vedvarer.",
+            "Vi behandler fortsatt bestillingen din, du vil motta en bekreftelse på e-post dersom betalingen gikk gjennom. Kontakt kundeservice hvis du ikke mottar bekreftelse innen 30 minutter."
           );
         }
       } catch (err) {
@@ -125,8 +125,8 @@ function OrderProcessingPage() {
     };
 
     // Check immediately and then every 2s
-    checkOrder();
     const intervalId: number = window.setInterval(checkOrder, 2000);
+    checkOrder();
 
     return () => clearInterval(intervalId);
   }, [paymentIntentId, klarnaLoaded, navigate]);
