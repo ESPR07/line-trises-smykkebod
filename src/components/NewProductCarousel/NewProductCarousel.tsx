@@ -4,6 +4,7 @@ import ProductCard from "../ProductCard/ProductCard";
 import style from "./NewProductCarousel.module.css";
 import { FetchResult } from "../../@types/Database";
 import { APIResult } from "../../context/siteContexts";
+import { Link } from "react-router";
 
 function NewProductCarousel() {
   const scrollRef = useRef<HTMLUListElement>(null);
@@ -86,6 +87,19 @@ function NewProductCarousel() {
             />
           </li>
         ))}
+        <li>
+          <Link to={"/produkter"} className={style.discoverCard}>
+            <div className={style.discoverArrow}>
+              <div className={style.innerCircle}>
+                <p>{">"}</p>
+              </div>
+            </div>
+            <div className={style.textWrapper}>
+              <h3>UTFORSK HELE KOLLEKSJONEN</h3>
+              <p>Masse produkter å se!</p>
+            </div>
+          </Link>
+        </li>
       </ul>
 
       <button

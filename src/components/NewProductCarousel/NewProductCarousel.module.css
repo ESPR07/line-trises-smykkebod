@@ -10,7 +10,7 @@
 
 .newProductsHeader {
   position: absolute;
-  font-family: 'storyScript', Courier, monospace;
+  font-family: "storyScript", Courier, monospace;
   top: -25px;
   left: 50%;
   transform: translateX(-50%);
@@ -25,7 +25,8 @@
   width: 300px;
 }
 
-.sideSwipeLeft, .sideSwipeRight {
+.sideSwipeLeft,
+.sideSwipeRight {
   height: 50px;
   width: 50px;
   border: none;
@@ -39,18 +40,103 @@
 .sideSwipeLeft {
   background-image: url("/src/assets/side_swipe.svg");
 
-    &:hover {
-      background-image: url("/src/assets/side_swipe_hovered.svg");
-    }
+  &:hover {
+    background-image: url("/src/assets/side_swipe_hovered.svg");
+  }
 }
 
 .sideSwipeRight {
   background-image: url("/src/assets/side_swipe.svg");
   rotate: 180deg;
 
-    &:hover {
-      background-image: url("/src/assets/side_swipe_hovered.svg");
-    }
+  &:hover {
+    background-image: url("/src/assets/side_swipe_hovered.svg");
+  }
+}
+
+.discoverCard {
+  position: relative;
+  background: var(--highlight);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  height: 100%;
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  h3 {
+    text-align: center;
+    font-size: 1.7rem;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1.3rem;
+  }
+}
+
+.discoverCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/encasedJewlery.webp');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+  z-index: 1
+}
+
+.discoverCard:hover {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.discoverArrow {
+  position: relative;
+  height: 125px;
+  width: 125px;
+  border-radius: 100%;
+  background-color: rgba(355, 355, 355, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.innerCircle {
+  width: 105px;
+  height: 105px;
+  border-radius: 100%;
+  background-color: white;
+  box-shadow: 0px 0px 10px 5px var(--highlight);
+
+  p {
+    font-size: 5rem;
+    font-weight: 500;
+    transform: scale(1, 1.5);
+    color: var(--highlight);
+    text-align: center;
+  }
+}
+
+.textWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+
+  h3 {
+    letter-spacing: 0.1rem;
+  }
 }
 
 .newProductList {
