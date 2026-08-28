@@ -9,22 +9,53 @@
   box-sizing: border-box;
 }
 
-.footerContent {
-  width: 100%;
-  max-width: 1200px;
+.sectionWrapper {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 40px;
-  flex-wrap: wrap;
 }
 
-.brandSection {
+.paymentInfoSection {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 15px;
+
+  ul {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 5px;
+  }
 }
+
+.listPoint {
+  color: var(--background);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  opacity: 0.9;
+  margin-top: 10px;
+  font-size: 1.1rem;
+
+  &:hover {
+    opacity: 1;
+    color: var(--CTA);
+    padding-left: 5px;
+  }
+}
+
+.paymentInfoHeader {
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.middleSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .logo {
   width: 150px;
   height: 100px;
@@ -33,17 +64,28 @@
   background-repeat: no-repeat;
   background-position: center;
 }
+
+.footerSellerInfo {
+  font-size: 1.3rem;
+  max-width: 40%;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
 .logoList {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   gap: 20px;
+  margin-bottom: 5px;
 }
+
 .logoList li {
   width: 30px;
   height: 30px;
 }
+
 .socials {
   display: block;
   width: 100%;
@@ -52,15 +94,19 @@
   background-repeat: no-repeat;
   background-size: contain;
 }
+
 .instagram {
   background-image: url("/src/assets/instagram_icon.svg");
 }
+
 .facebook {
   background-image: url("/src/assets/facebook_icon.svg");
 }
+
 .twitter {
   background-image: url("/src/assets/twitter_icon.svg");
 }
+
 .footerNav {
   display: flex;
   flex-direction: column;
@@ -83,6 +129,73 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+.paymentSafetySection {
+  display: flex;
+  flex-direction: column;
+}
+
+.pointList {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-top: 5px;
+}
+
+.paymentList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  margin-top: 30px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+}
+
+.klarna {
+  width: 70px;
+  height: 40px;
+  background-image: url("/public/Wordmark_Pink_And_Black.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.visa {
+  width: 70px;
+  height: 40px;
+  background-image: url("/public/visa-brandmark-blue-1960x622.png");
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.mastercard {
+  width: 70px;
+  height: 40px;
+  background-image: url("/public/ma_symbol_opt_63_1x.png");
+  background-size: 70%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.paymentSafetyHeader {
+  font-size: 1.3rem;
+  font-weight: 800;
+}
+
+.safetyPoint {
+  color: var(--background);
+  font-size: 1.1rem;
+  margin-top: 5px;
 }
 
 .footerLink {
@@ -112,7 +225,7 @@
 p {
   margin: 0;
   margin-top: 5px;
-  font-size: 0.7rem;
+  font-size: 1rem;
   color: var(--background);
 }
 
@@ -123,11 +236,41 @@ p {
     align-items: center;
     gap: 30px;
   }
-  
+
+  .sectionWrapper {
+    flex-direction: column;
+
+    .paymentInfoSection {
+      margin-bottom: 20px;
+      order: 2
+    }
+
+    .middleSection {
+      margin-bottom: 20px;
+      order: 1
+    }
+
+    .paymentSafetySection {
+      margin-bottom: 20px;
+      order: 3
+    }
+  }
+
+  .paymentInfoSection {
+    justify-content: center;
+  }
+
+  .footerSellerInfo {
+    font-size: 1.3rem;
+    max-width: 80%;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
   .brandSection {
     align-items: center;
   }
-  
+
   .footerNav {
     align-items: center;
     text-align: center;
