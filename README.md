@@ -1,5 +1,8 @@
 # Line Trise's Kunstsmykker
 
+<img width="2285" height="1308" alt="image" src="https://github.com/user-attachments/assets/d63bfb02-7842-4f24-bdde-9c328bf4a698" />
+
+
 A modern TypeScript + React e‑commerce storefront for custom jewelry with an admin panel, serverless Netlify functions (Stripe, Supabase), and a responsive UI.
 
 **Live demo / deployment**
