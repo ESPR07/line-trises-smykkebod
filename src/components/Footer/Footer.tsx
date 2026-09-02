@@ -7,10 +7,15 @@ function Footer() {
         <div className={style.paymentInfoSection}>
           <p className={style.paymentInfoHeader}>KUNDESERVICE</p>
           <ul>
-            <Link to={"/om-meg"} className={style.listPoint}>Om Meg</Link>
-            <Link to={"/retur-og-angrerett"} className={style.listPoint}>Retur og Angrerett</Link>
-            <Link to={"/kontakt"} className={style.listPoint}>Kontakt</Link>
-            
+            <Link to={"/om-meg"} className={style.listPoint}>
+              Om Meg
+            </Link>
+            <Link to={"/retur-og-angrerett"} className={style.listPoint}>
+              Retur og Angrerett
+            </Link>
+            <Link to={"/kontakt"} className={style.listPoint}>
+              Kontakt
+            </Link>
           </ul>
         </div>
         <div className={style.middleSection}>
@@ -46,7 +51,19 @@ function Footer() {
         </div>
       </div>
       <span className={style.divider}></span>
-      <p>© 2026 LT Kunstsmykker. Nettside utviklet av Sindre Strømsæther Derås</p>
+      <p>
+        © 2026 LT Kunstsmykker. Nettside utviklet av{" "}
+        {
+          <Link
+            aria-label="Utvikler Informasjon"
+            className={style.contribution}
+            target="_blank"
+            to={"https://sindrestromsaether.dev"}
+          >
+            Sindre Strømsæther Derås
+          </Link>
+        }
+      </p>
     </footer>
   );
 }

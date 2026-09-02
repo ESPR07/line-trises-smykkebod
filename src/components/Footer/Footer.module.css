@@ -229,6 +229,10 @@ p {
   color: var(--background);
 }
 
+.contribution {
+  text-decoration: underline;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .footerContent {
